@@ -1,0 +1,108 @@
+{
+  "common": {
+    "appName": "B-EASY",
+    "loading": "Loading...",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset",
+    "export": "Export",
+    "actions": "Actions",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "noResults": "No results found",
+    "rowsPerPage": "Rows per page",
+    "of": "of",
+    "page": "Page",
+    "profile": "Profile",
+    "logout": "Logout",
+    "settings": "Settings",
+    "all": "All"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "employees": "Employees",
+    "products": "Products",
+    "contactRequests": "Contact Requests",
+    "categories": "Categories",
+    "eCatalog": "E-Catalog"
+  },
+  "auth": {
+    "welcome": "Welcome Back",
+    "subtitle": "Sign in to your B-EASY account",
+    "email": "Email Address",
+    "emailPlaceholder": "admin@b-easy.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "invalidCredentials": "Invalid email or password"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "overview": "Overview",
+    "totalEmployees": "Total Employees",
+    "totalProducts": "Total Products",
+    "contactRequests": "Contact Requests",
+    "pendingRequests": "Pending",
+    "welcomeMessage": "Welcome to B-EASY Dashboard"
+  },
+  "contactRequests": {
+    "title": "Contact Requests",
+    "subtitle": "Manage and respond to incoming contact requests",
+    "id": "ID",
+    "clientName": "Client Name",
+    "email": "Email",
+    "companyName": "Company Name",
+    "status": "Status",
+    "sentAt": "Sent At",
+    "date": "Date",
+    "message": "Message",
+    "actions": "Actions",
+    "search": "Search",
+    "requestDate": "Request Date",
+    "respondDate": "Respond Date",
+    "chooseStatus": "Choose status",
+    "applyFilter": "Apply filter",
+    "downloadReport": "Download report",
+    "searchPlaceholder": "search by client name or email",
+    "searchPlaceholderShort": "search",
+    "filterByStatus": "Filter by status",
+    "filterByDate": "Filter by date",
+    "from": "From",
+    "to": "To",
+    "statuses": {
+      "all": "All Statuses",
+      "new": "New",
+      "inProgress": "In Progress",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "noRequests": "No contact requests found",
+    "totalRequests": "Total requests"
+  },
+  "employees": {
+    "title": "Employees",
+    "subtitle": "Manage your team members"
+  },
+  "products": {
+    "title": "Products",
+    "subtitle": "Manage your product catalog"
+  },
+  "categories": {
+    "title": "Categories",
+    "subtitle": "Manage product categories"
+  },
+  "eCatalog": {
+    "title": "E-Catalog",
+    "subtitle": "Manage your digital catalog"
+  }
+}

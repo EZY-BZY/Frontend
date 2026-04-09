@@ -1,26 +1,163 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..700;1,14..32,300..400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap");
+
 @import "tailwindcss";
 
+/* ─── Brand CSS Variables ──────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand */
+  --primary:            #0A3D62;
+  --primary-foreground: #ffffff;
+  --secondary:          #28B8B1;
+  --secondary-foreground: #ffffff;
+
+  /* Surface */
+  --background:         #ffffff;
+  --foreground:         #0f172a;
+  --card:               #ffffff;
+  --card-foreground:    #0f172a;
+  --muted:              #f1f5f9;
+  --muted-foreground:   #64748b;
+  --accent:             #28B8B1;
+  --accent-foreground:  #ffffff;
+
+  /* UI */
+  --border:             #e2e8f0;
+  --input:              #e2e8f0;
+  --ring:               #28B8B1;
+
+  /* Feedback */
+  --destructive:        #ef4444;
+  --destructive-foreground: #ffffff;
+
+  /* Radii */
+  --radius:             0.625rem;
+
+  /* Sidebar tokens */
+  --sidebar-bg:         #ffffff;
+  --sidebar-border:     #f1f5f9;
+  --sidebar-active-bg:  #EBF3FB;
+  --sidebar-active-fg:  #0A3D62;
+  --sidebar-accent:     #28B8B1;
 }
 
+/* ─── Tailwind theme mapping ───────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Color tokens → CSS variables */
+  --color-background:         var(--background);
+  --color-foreground:         var(--foreground);
+  --color-primary:            var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary:          var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted:              var(--muted);
+  --color-muted-foreground:   var(--muted-foreground);
+  --color-accent:             var(--accent);
+  --color-accent-foreground:  var(--accent-foreground);
+  --color-border:             var(--border);
+  --color-input:              var(--input);
+  --color-ring:               var(--ring);
+  --color-card:               var(--card);
+  --color-card-foreground:    var(--card-foreground);
+  --color-destructive:        var(--destructive);
+
+  /* Font */
+  --font-sans:   "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", ui-sans-serif, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Base reset ───────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-color: var(--border);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 }
+
+/* Arabic font for RTL */
+[dir="rtl"] body,
+[dir="rtl"] {
+  font-family: var(--font-arabic);
+}
+
+/* ─── Shadcn / Radix component token overrides ─────────────────── */
+
+/* Button → primary variant uses #0A3D62 */
+[data-slot="button"][data-variant="default"],
+button.bg-primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Focus rings */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Input focus */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
+/* ─── RTL ↔ LTR direction-flip transitions ─────────────────────── */
+/*
+ * When LocaleSync adds .dir-transitioning to <html>, we briefly fade the
+ * whole page to let the direction change land without a jarring jump.
+ * The fade-out starts, requestAnimationFrame flips `dir`, then the class
+ * is removed and the element fades back in — total ~300ms.
+ */
+html.dir-transitioning * {
+  transition:
+    opacity          0.18s ease,
+    margin-inline-start  0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    margin-inline-end    0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    padding-inline-start 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    padding-inline-end   0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    inset-inline-start   0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    inset-inline-end     0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+html.dir-transitioning {
+  opacity: 0.92;
+  transition: opacity 0.18s ease !important;
+}
+
+/*
+ * Persistent smooth transitions for layout-critical elements that use
+ * logical properties. These run on every render (not just during the flip)
+ * so that sidebar collapse / expand also looks polished.
+ */
+aside {
+  transition:
+    width              0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    margin-inline-start 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    margin-inline-end   0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Font switches smoothly between Inter (LTR) and IBM Plex Arabic (RTL) */
+body {
+  transition: font-family 0.1s;
+}
+
+/* ─── Custom scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--muted); border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }

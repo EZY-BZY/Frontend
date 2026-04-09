@@ -1,0 +1,108 @@
+{
+  "common": {
+    "appName": "B-EASY",
+    "loading": "جارٍ التحميل...",
+    "search": "بحث",
+    "filter": "تصفية",
+    "reset": "إعادة تعيين",
+    "export": "تصدير",
+    "actions": "الإجراءات",
+    "view": "عرض",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "noResults": "لا توجد نتائج",
+    "rowsPerPage": "صفوف في الصفحة",
+    "of": "من",
+    "page": "صفحة",
+    "profile": "الملف الشخصي",
+    "logout": "تسجيل الخروج",
+    "settings": "الإعدادات",
+    "all": "الكل"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "employees": "الموظفون",
+    "products": "المنتجات",
+    "contactRequests": "طلبات التواصل",
+    "categories": "التصنيفات",
+    "eCatalog": "الكتالوج الإلكتروني"
+  },
+  "auth": {
+    "welcome": "مرحباً بعودتك",
+    "subtitle": "تسجيل الدخول إلى حساب B-EASY الخاص بك",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "admin@b-easy.com",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "أدخل كلمة المرور",
+    "rememberMe": "تذكرني",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "signIn": "تسجيل الدخول",
+    "signingIn": "جارٍ تسجيل الدخول...",
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "overview": "نظرة عامة",
+    "totalEmployees": "إجمالي الموظفين",
+    "totalProducts": "إجمالي المنتجات",
+    "contactRequests": "طلبات التواصل",
+    "pendingRequests": "قيد الانتظار",
+    "welcomeMessage": "مرحباً بك في لوحة تحكم B-EASY"
+  },
+  "contactRequests": {
+    "title": "طلبات التواصل",
+    "subtitle": "إدارة طلبات التواصل الواردة والرد عليها",
+    "id": "الرقم",
+    "clientName": "اسم العميل",
+    "email": "البريد الإلكتروني",
+    "companyName": "اسم الشركة",
+    "status": "الحالة",
+    "sentAt": "أُرسل في",
+    "date": "التاريخ",
+    "message": "الرسالة",
+    "actions": "الإجراءات",
+    "search": "بحث",
+    "requestDate": "تاريخ الطلب",
+    "respondDate": "تاريخ الرد",
+    "chooseStatus": "اختر الحالة",
+    "applyFilter": "تطبيق التصفية",
+    "downloadReport": "تحميل التقرير",
+    "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني",
+    "searchPlaceholderShort": "بحث",
+    "filterByStatus": "تصفية حسب الحالة",
+    "filterByDate": "تصفية حسب التاريخ",
+    "from": "من",
+    "to": "إلى",
+    "statuses": {
+      "all": "جميع الحالات",
+      "new": "جديد",
+      "inProgress": "قيد التنفيذ",
+      "resolved": "تم الحل",
+      "closed": "مغلق"
+    },
+    "noRequests": "لا توجد طلبات تواصل",
+    "totalRequests": "إجمالي الطلبات"
+  },
+  "employees": {
+    "title": "الموظفون",
+    "subtitle": "إدارة أعضاء فريقك"
+  },
+  "products": {
+    "title": "المنتجات",
+    "subtitle": "إدارة كتالوج منتجاتك"
+  },
+  "categories": {
+    "title": "التصنيفات",
+    "subtitle": "إدارة تصنيفات المنتجات"
+  },
+  "eCatalog": {
+    "title": "الكتالوج الإلكتروني",
+    "subtitle": "إدارة كتالوجك الرقمي"
+  }
+}

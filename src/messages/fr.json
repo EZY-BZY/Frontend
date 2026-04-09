@@ -1,0 +1,108 @@
+{
+  "common": {
+    "appName": "B-EASY",
+    "loading": "Chargement...",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "reset": "Réinitialiser",
+    "export": "Exporter",
+    "actions": "Actions",
+    "view": "Voir",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "noResults": "Aucun résultat trouvé",
+    "rowsPerPage": "Lignes par page",
+    "of": "sur",
+    "page": "Page",
+    "profile": "Profil",
+    "logout": "Déconnexion",
+    "settings": "Paramètres",
+    "all": "Tous"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "employees": "Employés",
+    "products": "Produits",
+    "contactRequests": "Demandes de contact",
+    "categories": "Catégories",
+    "eCatalog": "E-Catalogue"
+  },
+  "auth": {
+    "welcome": "Bon retour",
+    "subtitle": "Connectez-vous à votre compte B-EASY",
+    "email": "Adresse e-mail",
+    "emailPlaceholder": "admin@b-easy.com",
+    "password": "Mot de passe",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "rememberMe": "Se souvenir de moi",
+    "forgotPassword": "Mot de passe oublié ?",
+    "signIn": "Se connecter",
+    "signingIn": "Connexion en cours...",
+    "invalidCredentials": "Email ou mot de passe invalide"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "overview": "Aperçu",
+    "totalEmployees": "Total des employés",
+    "totalProducts": "Total des produits",
+    "contactRequests": "Demandes de contact",
+    "pendingRequests": "En attente",
+    "welcomeMessage": "Bienvenue sur le tableau de bord B-EASY"
+  },
+  "contactRequests": {
+    "title": "Demandes de contact",
+    "subtitle": "Gérez et répondez aux demandes de contact entrantes",
+    "id": "ID",
+    "clientName": "Nom du client",
+    "email": "E-mail",
+    "companyName": "Nom de l'entreprise",
+    "status": "Statut",
+    "sentAt": "Envoyé le",
+    "date": "Date",
+    "message": "Message",
+    "actions": "Actions",
+    "search": "Rechercher",
+    "requestDate": "Date de demande",
+    "respondDate": "Date de réponse",
+    "chooseStatus": "Choisir un statut",
+    "applyFilter": "Appliquer le filtre",
+    "downloadReport": "Télécharger le rapport",
+    "searchPlaceholder": "Rechercher par nom ou e-mail",
+    "searchPlaceholderShort": "rechercher",
+    "filterByStatus": "Filtrer par statut",
+    "filterByDate": "Filtrer par date",
+    "from": "Du",
+    "to": "Au",
+    "statuses": {
+      "all": "Tous les statuts",
+      "new": "Nouveau",
+      "inProgress": "En cours",
+      "resolved": "Résolu",
+      "closed": "Fermé"
+    },
+    "noRequests": "Aucune demande de contact trouvée",
+    "totalRequests": "Total des demandes"
+  },
+  "employees": {
+    "title": "Employés",
+    "subtitle": "Gérez les membres de votre équipe"
+  },
+  "products": {
+    "title": "Produits",
+    "subtitle": "Gérez votre catalogue de produits"
+  },
+  "categories": {
+    "title": "Catégories",
+    "subtitle": "Gérez les catégories de produits"
+  },
+  "eCatalog": {
+    "title": "E-Catalogue",
+    "subtitle": "Gérez votre catalogue numérique"
+  }
+}
