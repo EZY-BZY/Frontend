@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Copy, Eye } from "lucide-react";
-import type { ContactRequest, RequestStatus } from "../data/mock";
+import type { ContactRequest, RequestStatus } from "@/types";
 
 /* ─── Status badge config ─────────────────────────────────────── */
 const statusStyles: Record<RequestStatus, string> = {
@@ -63,14 +63,17 @@ export function getColumns({
       ),
     },
     {
-      accessorKey: "email",
+      id: "phone",
       header: () => (
         <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-          {t("email")}
+          {t("phone")}
         </span>
       ),
       cell: ({ row }) => (
-        <span className="text-slate-500 text-sm">{row.original.email}</span>
+        /* Always LTR for phone numbers even in RTL mode */
+        <span className="text-slate-500 text-sm font-mono" dir="ltr">
+          {row.original.countryCode} {row.original.phone}
+        </span>
       ),
     },
     {
@@ -120,7 +123,7 @@ export function getColumns({
       try {
         return (
           <span className="text-slate-400 text-xs whitespace-nowrap font-mono">
-            {format(new Date(row.original.date), "yyyy-MM-dd HH:mm")}
+            {format(new Date(row.original.date), "yyyy-MM-dd")}
           </span>
         );
       } catch {

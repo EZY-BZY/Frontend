@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { CategoriesView } from "@/features/categories/components/CategoriesView";
+import { CategoriesView } from "@/features/categories/components/categories-view";
 import { PageTransition } from "@/components/shared/PageTransition";
 
 export default async function CategoriesPage({ params }: { params: Promise<{ locale: string }> }) {

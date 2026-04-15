@@ -28,10 +28,18 @@
   "nav": {
     "dashboard": "Dashboard",
     "employees": "Employees",
-    "products": "Products",
+    "clients": "Clients",
     "contactRequests": "Contact Requests",
     "categories": "Categories",
-    "eCatalog": "E-Catalog"
+    "subscriptions": "Subscriptions",
+    "legal": "Legal",
+    "countries": "Countries",
+    "governorates": "Governorates",
+    "companies": "Companies",
+    "privacyPolicy": "Privacy Policy",
+    "termsConditions": "Terms & Conditions",
+    "deliveryTerms": "Delivery Terms",
+    "refundTerms": "Refund Terms"
   },
   "auth": {
     "welcome": "Welcome Back",
@@ -50,7 +58,6 @@
     "title": "Dashboard",
     "overview": "Overview",
     "totalEmployees": "Total Employees",
-    "totalProducts": "Total Products",
     "contactRequests": "Contact Requests",
     "pendingRequests": "Pending",
     "welcomeMessage": "Welcome to B-EASY Dashboard"
@@ -60,7 +67,7 @@
     "subtitle": "Manage and respond to incoming contact requests",
     "id": "ID",
     "clientName": "Client Name",
-    "email": "Email",
+    "phone": "Phone",
     "companyName": "Company Name",
     "status": "Status",
     "sentAt": "Sent At",
@@ -71,9 +78,8 @@
     "requestDate": "Request Date",
     "respondDate": "Respond Date",
     "chooseStatus": "Choose status",
-    "applyFilter": "Apply filter",
     "downloadReport": "Download report",
-    "searchPlaceholder": "search by client name or email",
+    "searchPlaceholder": "search by client name or phone",
     "searchPlaceholderShort": "search",
     "filterByStatus": "Filter by status",
     "filterByDate": "Filter by date",
@@ -91,18 +97,67 @@
   },
   "employees": {
     "title": "Employees",
-    "subtitle": "Manage your team members"
+    "subtitle": "Manage your team members",
+    "addEmployee": "Add Employee",
+    "positions": {
+      "admin": "Admin",
+      "support": "Support"
+    }
   },
-  "products": {
-    "title": "Products",
-    "subtitle": "Manage your product catalog"
+  "clients": {
+    "title": "Clients",
+    "subtitle": "Manage personal accounts and their linked work accounts",
+    "personalAccounts": "Personal Accounts",
+    "workAccounts": "Work Accounts",
+    "searchPlaceholder": "Search by name, email or phone…",
+    "noResults": "No clients found",
+    "noWorkAccounts": "No work accounts linked",
+    "noSubscriptions": "No subscription history",
+    "notFound": "Client not found",
+    "backToClients": "Back to Clients",
+    "joinedDate": "Joined",
+    "subscriptionHistory": "Subscription History",
+    "off": "off",
+    "ofTotal": "clients shown of {total}",
+    "col": {
+      "client": "Client",
+      "email": "Email",
+      "phone": "Phone",
+      "workAccounts": "Work Accounts",
+      "joinedDate": "Joined Date",
+      "company": "Company",
+      "owner": "Owner",
+      "industry": "Industry",
+      "status": "Status",
+      "createdDate": "Created",
+      "workAccount": "Work Account",
+      "bundle": "Bundle",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "amount": "Amount"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "subscriptionStatus": {
+      "active": "Active",
+      "expired": "Expired",
+      "cancelled": "Cancelled"
+    }
   },
   "categories": {
     "title": "Categories",
-    "subtitle": "Manage product categories"
+    "subtitle": "Manage product categories",
+    "addCategory": "Add Category"
   },
-  "eCatalog": {
-    "title": "E-Catalog",
-    "subtitle": "Manage your digital catalog"
+  "subscriptions": {
+    "title": "Subscription Ledger",
+    "subtitle": "Manage client subscriptions and billing"
+  },
+  "legal": {
+    "title": "Legal",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy"
   }
 }

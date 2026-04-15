@@ -28,10 +28,18 @@
   "nav": {
     "dashboard": "لوحة التحكم",
     "employees": "الموظفون",
-    "products": "المنتجات",
+    "clients": "العملاء",
     "contactRequests": "طلبات التواصل",
     "categories": "التصنيفات",
-    "eCatalog": "الكتالوج الإلكتروني"
+    "subscriptions": "الاشتراكات",
+    "legal": "قانوني",
+    "countries": "الدول",
+    "governorates": "المحافظات",
+    "companies": "الشركات",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsConditions": "الشروط والأحكام",
+    "deliveryTerms": "شروط التوصيل",
+    "refundTerms": "شروط الاسترداد"
   },
   "auth": {
     "welcome": "مرحباً بعودتك",
@@ -50,7 +58,6 @@
     "title": "لوحة التحكم",
     "overview": "نظرة عامة",
     "totalEmployees": "إجمالي الموظفين",
-    "totalProducts": "إجمالي المنتجات",
     "contactRequests": "طلبات التواصل",
     "pendingRequests": "قيد الانتظار",
     "welcomeMessage": "مرحباً بك في لوحة تحكم B-EASY"
@@ -60,7 +67,7 @@
     "subtitle": "إدارة طلبات التواصل الواردة والرد عليها",
     "id": "الرقم",
     "clientName": "اسم العميل",
-    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
     "companyName": "اسم الشركة",
     "status": "الحالة",
     "sentAt": "أُرسل في",
@@ -71,9 +78,8 @@
     "requestDate": "تاريخ الطلب",
     "respondDate": "تاريخ الرد",
     "chooseStatus": "اختر الحالة",
-    "applyFilter": "تطبيق التصفية",
     "downloadReport": "تحميل التقرير",
-    "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني",
+    "searchPlaceholder": "البحث بالاسم أو رقم الهاتف",
     "searchPlaceholderShort": "بحث",
     "filterByStatus": "تصفية حسب الحالة",
     "filterByDate": "تصفية حسب التاريخ",
@@ -91,18 +97,67 @@
   },
   "employees": {
     "title": "الموظفون",
-    "subtitle": "إدارة أعضاء فريقك"
+    "subtitle": "إدارة أعضاء فريقك",
+    "addEmployee": "إضافة موظف",
+    "positions": {
+      "admin": "مشرف",
+      "support": "دعم"
+    }
   },
-  "products": {
-    "title": "المنتجات",
-    "subtitle": "إدارة كتالوج منتجاتك"
+  "clients": {
+    "title": "العملاء",
+    "subtitle": "إدارة الحسابات الشخصية وحسابات العمل المرتبطة بها",
+    "personalAccounts": "الحسابات الشخصية",
+    "workAccounts": "حسابات العمل",
+    "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني أو الهاتف…",
+    "noResults": "لا يوجد عملاء",
+    "noWorkAccounts": "لا توجد حسابات عمل مرتبطة",
+    "noSubscriptions": "لا يوجد سجل اشتراكات",
+    "notFound": "العميل غير موجود",
+    "backToClients": "العودة إلى العملاء",
+    "joinedDate": "تاريخ الانضمام",
+    "subscriptionHistory": "سجل الاشتراكات",
+    "off": "خصم",
+    "ofTotal": "عميل من أصل {total}",
+    "col": {
+      "client": "العميل",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "workAccounts": "حسابات العمل",
+      "joinedDate": "تاريخ الانضمام",
+      "company": "الشركة",
+      "owner": "المالك",
+      "industry": "القطاع",
+      "status": "الحالة",
+      "createdDate": "تاريخ الإنشاء",
+      "workAccount": "حساب العمل",
+      "bundle": "الباقة",
+      "startDate": "تاريخ البدء",
+      "endDate": "تاريخ الانتهاء",
+      "amount": "المبلغ"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "subscriptionStatus": {
+      "active": "نشط",
+      "expired": "منتهي",
+      "cancelled": "ملغى"
+    }
   },
   "categories": {
     "title": "التصنيفات",
-    "subtitle": "إدارة تصنيفات المنتجات"
+    "subtitle": "إدارة تصنيفات المنتجات",
+    "addCategory": "إضافة تصنيف"
   },
-  "eCatalog": {
-    "title": "الكتالوج الإلكتروني",
-    "subtitle": "إدارة كتالوجك الرقمي"
+  "subscriptions": {
+    "title": "سجل الاشتراكات",
+    "subtitle": "إدارة اشتراكات العملاء والفواتير"
+  },
+  "legal": {
+    "title": "قانوني",
+    "terms": "شروط الخدمة",
+    "privacy": "سياسة الخصوصية"
   }
 }

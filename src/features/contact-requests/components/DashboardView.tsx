@@ -28,7 +28,7 @@ export function DashboardView() {
       const matchesSearch =
         !search ||
         req.clientName.toLowerCase().includes(search.toLowerCase()) ||
-        req.email.toLowerCase().includes(search.toLowerCase());
+        req.phone.toLowerCase().includes(search.toLowerCase());
 
       const matchesDate = !date || req.date.startsWith(date);
 

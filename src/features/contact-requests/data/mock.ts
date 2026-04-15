@@ -1,20 +1,13 @@
-export type RequestStatus = "new" | "inProgress" | "resolved" | "closed";
+import type { ContactRequest, RequestStatus } from "@/types";
 
-export interface ContactRequest {
-  id: string;
-  clientName: string;
-  email: string;
-  companyName: string;
-  status: RequestStatus;
-  date: string;
-  message: string;
-}
+export type { RequestStatus };
 
 export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-001",
     clientName: "Alice Martin",
-    email: "alice.martin@nexcorp.com",
+    countryCode: "+1",
+    phone: "555-0191",
     companyName: "NexCorp Industries",
     status: "new",
     date: "2026-04-01",
@@ -23,7 +16,8 @@ export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-002",
     clientName: "Mohamed Al-Rashid",
-    email: "m.alrashid@globaltech.ae",
+    countryCode: "+971",
+    phone: "50 123 4567",
     companyName: "GlobalTech UAE",
     status: "inProgress",
     date: "2026-03-29",
@@ -32,7 +26,8 @@ export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-003",
     clientName: "Sophie Dupont",
-    email: "s.dupont@frenchbizz.fr",
+    countryCode: "+33",
+    phone: "6 12 34 56 78",
     companyName: "FrenchBizz SARL",
     status: "resolved",
     date: "2026-03-27",
@@ -41,7 +36,8 @@ export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-004",
     clientName: "Carlos Mendes",
-    email: "carlos@ibericagroup.es",
+    countryCode: "+34",
+    phone: "612 345 678",
     companyName: "Iberica Group",
     status: "new",
     date: "2026-03-26",
@@ -50,7 +46,8 @@ export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-005",
     clientName: "Yuki Tanaka",
-    email: "y.tanaka@nipponlogistics.jp",
+    countryCode: "+81",
+    phone: "90 1234 5678",
     companyName: "Nippon Logistics",
     status: "closed",
     date: "2026-03-22",
@@ -59,7 +56,8 @@ export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-006",
     clientName: "Anna Kowalski",
-    email: "a.kowalski@polbuild.pl",
+    countryCode: "+48",
+    phone: "601 234 567",
     companyName: "PolBuild Sp. z o.o.",
     status: "inProgress",
     date: "2026-03-20",
@@ -68,7 +66,8 @@ export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-007",
     clientName: "James Okafor",
-    email: "j.okafor@afrilinkng.com",
+    countryCode: "+234",
+    phone: "80 1234 5678",
     companyName: "AfriLink Nigeria",
     status: "new",
     date: "2026-03-18",
@@ -77,7 +76,8 @@ export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-008",
     clientName: "Lena Schneider",
-    email: "lena.s@techdrive.de",
+    countryCode: "+49",
+    phone: "151 1234 5678",
     companyName: "TechDrive GmbH",
     status: "resolved",
     date: "2026-03-15",
@@ -86,7 +86,8 @@ export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-009",
     clientName: "Priya Sharma",
-    email: "priya@quantumsols.in",
+    countryCode: "+91",
+    phone: "98765 43210",
     companyName: "Quantum Solutions India",
     status: "new",
     date: "2026-04-02",
@@ -95,7 +96,8 @@ export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-010",
     clientName: "Omar Benali",
-    email: "o.benali@maghrebtech.dz",
+    countryCode: "+213",
+    phone: "555 12 34 56",
     companyName: "Maghreb Tech",
     status: "inProgress",
     date: "2026-04-03",
@@ -104,7 +106,8 @@ export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-011",
     clientName: "Fatima Zahra Idrissi",
-    email: "fz.idrissi@atlasbiz.ma",
+    countryCode: "+212",
+    phone: "6 12 34 56 78",
     companyName: "Atlas Business Group",
     status: "closed",
     date: "2026-03-10",
@@ -113,7 +116,8 @@ export const mockContactRequests: ContactRequest[] = [
   {
     id: "REQ-012",
     clientName: "David Chen",
-    email: "d.chen@sinobridge.cn",
+    countryCode: "+86",
+    phone: "138 0013 8000",
     companyName: "SinoBridge Corp",
     status: "new",
     date: "2026-04-04",

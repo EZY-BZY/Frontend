@@ -28,10 +28,18 @@
   "nav": {
     "dashboard": "Tableau de bord",
     "employees": "Employés",
-    "products": "Produits",
+    "clients": "Clients",
     "contactRequests": "Demandes de contact",
     "categories": "Catégories",
-    "eCatalog": "E-Catalogue"
+    "subscriptions": "Abonnements",
+    "legal": "Juridique",
+    "countries": "Pays",
+    "governorates": "Gouvernorats",
+    "companies": "Entreprises",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsConditions": "Conditions générales",
+    "deliveryTerms": "Conditions de livraison",
+    "refundTerms": "Conditions de remboursement"
   },
   "auth": {
     "welcome": "Bon retour",
@@ -50,7 +58,6 @@
     "title": "Tableau de bord",
     "overview": "Aperçu",
     "totalEmployees": "Total des employés",
-    "totalProducts": "Total des produits",
     "contactRequests": "Demandes de contact",
     "pendingRequests": "En attente",
     "welcomeMessage": "Bienvenue sur le tableau de bord B-EASY"
@@ -60,7 +67,7 @@
     "subtitle": "Gérez et répondez aux demandes de contact entrantes",
     "id": "ID",
     "clientName": "Nom du client",
-    "email": "E-mail",
+    "phone": "Téléphone",
     "companyName": "Nom de l'entreprise",
     "status": "Statut",
     "sentAt": "Envoyé le",
@@ -71,9 +78,8 @@
     "requestDate": "Date de demande",
     "respondDate": "Date de réponse",
     "chooseStatus": "Choisir un statut",
-    "applyFilter": "Appliquer le filtre",
     "downloadReport": "Télécharger le rapport",
-    "searchPlaceholder": "Rechercher par nom ou e-mail",
+    "searchPlaceholder": "Rechercher par nom ou téléphone",
     "searchPlaceholderShort": "rechercher",
     "filterByStatus": "Filtrer par statut",
     "filterByDate": "Filtrer par date",
@@ -91,18 +97,67 @@
   },
   "employees": {
     "title": "Employés",
-    "subtitle": "Gérez les membres de votre équipe"
+    "subtitle": "Gérez les membres de votre équipe",
+    "addEmployee": "Ajouter un employé",
+    "positions": {
+      "admin": "Admin",
+      "support": "Support"
+    }
   },
-  "products": {
-    "title": "Produits",
-    "subtitle": "Gérez votre catalogue de produits"
+  "clients": {
+    "title": "Clients",
+    "subtitle": "Gérez les comptes personnels et leurs comptes professionnels associés",
+    "personalAccounts": "Comptes personnels",
+    "workAccounts": "Comptes professionnels",
+    "searchPlaceholder": "Rechercher par nom, e-mail ou téléphone…",
+    "noResults": "Aucun client trouvé",
+    "noWorkAccounts": "Aucun compte professionnel associé",
+    "noSubscriptions": "Aucun historique d'abonnement",
+    "notFound": "Client introuvable",
+    "backToClients": "Retour aux clients",
+    "joinedDate": "Inscrit le",
+    "subscriptionHistory": "Historique des abonnements",
+    "off": "de réduction",
+    "ofTotal": "clients affichés sur {total}",
+    "col": {
+      "client": "Client",
+      "email": "E-mail",
+      "phone": "Téléphone",
+      "workAccounts": "Comptes pro",
+      "joinedDate": "Date d'inscription",
+      "company": "Entreprise",
+      "owner": "Propriétaire",
+      "industry": "Secteur",
+      "status": "Statut",
+      "createdDate": "Créé le",
+      "workAccount": "Compte pro",
+      "bundle": "Offre",
+      "startDate": "Début",
+      "endDate": "Fin",
+      "amount": "Montant"
+    },
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif"
+    },
+    "subscriptionStatus": {
+      "active": "Actif",
+      "expired": "Expiré",
+      "cancelled": "Annulé"
+    }
   },
   "categories": {
     "title": "Catégories",
-    "subtitle": "Gérez les catégories de produits"
+    "subtitle": "Gérez les catégories de produits",
+    "addCategory": "Ajouter une catégorie"
   },
-  "eCatalog": {
-    "title": "E-Catalogue",
-    "subtitle": "Gérez votre catalogue numérique"
+  "subscriptions": {
+    "title": "Registre des abonnements",
+    "subtitle": "Gérez les abonnements clients et la facturation"
+  },
+  "legal": {
+    "title": "Juridique",
+    "terms": "Conditions d'utilisation",
+    "privacy": "Politique de confidentialité"
   }
 }

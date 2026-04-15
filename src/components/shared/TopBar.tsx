@@ -24,7 +24,6 @@ const pathToNavKey: Record<string, string> = {
   products: "products",
   "contact-requests": "contactRequests",
   categories: "categories",
-  "e-catalog": "eCatalog",
 };
 
 export function TopBar() {

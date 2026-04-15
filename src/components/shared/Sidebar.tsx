@@ -7,10 +7,17 @@ import { useLocale, useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   Users,
-  Package,
   MessageSquare,
   Tag,
   BookOpen,
+  Scale,
+  Shield,
+  Truck,
+  RotateCcw,
+  UserCircle2,
+  Globe2,
+  Map,
+  Briefcase,
   ChevronLeft,
   ChevronRight,
   X,
@@ -22,14 +29,31 @@ import { cn } from "@/lib/utils";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
 /* ─── Nav items ─────────────────────────────────────────────── */
-const navItems = [
-  { key: "dashboard", href: "", icon: LayoutDashboard },
-  { key: "employees", href: "/employees", icon: Users },
-  { key: "products", href: "/products", icon: Package },
-  { key: "contactRequests", href: "/contact-requests", icon: MessageSquare },
-  { key: "categories", href: "/categories", icon: Tag },
-  { key: "eCatalog", href: "/e-catalog", icon: BookOpen },
-] as const;
+type NavItem = {
+  key: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  /** If set, renders a group separator label above this item */
+  sectionLabel?: string;
+};
+
+const navItems: NavItem[] = [
+  { key: "dashboard",      href: "",                 icon: LayoutDashboard },
+  { key: "employees",      href: "/employees",       icon: Users },
+  { key: "clients",        href: "/clients",         icon: UserCircle2 },
+  { key: "contactRequests",href: "/contact-requests",icon: MessageSquare },
+  { key: "categories",     href: "/categories",      icon: Tag },
+  { key: "subscriptions",  href: "/subscriptions",   icon: BookOpen },
+  // Metadata group
+  { key: "countries",      href: "/countries",       icon: Globe2,    sectionLabel: "Metadata" },
+  { key: "governorates",   href: "/governorates",    icon: Map },
+  { key: "companies",      href: "/companies",       icon: Briefcase },
+  // Legal group
+  { key: "privacyPolicy",  href: "/privacy-policy",  icon: Shield,    sectionLabel: "Legal" },
+  { key: "termsConditions",href: "/terms-conditions",icon: Scale },
+  { key: "deliveryTerms",  href: "/delivery-terms",  icon: Truck },
+  { key: "refundTerms",    href: "/refund-terms",    icon: RotateCcw },
+];
 
 const SIDEBAR_W = 220; // px — collapsed is 68px
 
@@ -68,7 +92,7 @@ function NavList({
   return (
     <nav className="flex-1 overflow-y-auto py-3 px-2">
       <ul className="space-y-0.5">
-        {navItems.map(({ key, href, icon: Icon }) => {
+        {navItems.map(({ key, href, icon: Icon, sectionLabel }) => {
           const fullHref = `/${locale}${href}`;
           const isActive =
             href === ""
@@ -77,6 +101,15 @@ function NavList({
 
           return (
             <li key={key}>
+              {/* Group separator label */}
+              {sectionLabel && !collapsed && (
+                <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-400 select-none">
+                  {sectionLabel}
+                </p>
+              )}
+              {sectionLabel && collapsed && (
+                <div className="mx-3 my-2 h-px bg-slate-100" />
+              )}
               <Link
                 href={fullHref}
                 onClick={onLinkClick}

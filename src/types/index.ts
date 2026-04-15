@@ -34,13 +34,16 @@ export interface SortState {
 /* ─── Status ─────────────────────────────────────────────────── */
 export type RequestStatus = "new" | "inProgress" | "resolved" | "closed";
 export type EmployeeStatus = "active" | "inactive" | "onLeave";
-export type ProductStatus = "active" | "draft" | "archived";
+export type EmployeePosition = "Admin" | "Support";
 
 /* ─── Contact Request ────────────────────────────────────────── */
 export interface ContactRequest {
   id: string;
   clientName: string;
-  email: string;
+  /** E.164 country dial code e.g. "+971" */
+  countryCode: string;
+  /** Local phone number without country code */
+  phone: string;
   companyName: string;
   status: RequestStatus;
   date: string;
@@ -50,11 +53,13 @@ export interface ContactRequest {
 /* ─── Employee ───────────────────────────────────────────────── */
 export interface Employee {
   id: string;
-  name: string;
+  name_en: string;
+  name_ar: string;
+  name_fr: string;
   email: string;
   phone: string;
-  role: string;
-  department: string;
+  /** Hardcoded to "Admin" | "Support" */
+  position: EmployeePosition;
   status: EmployeeStatus;
   joinDate: string;
   avatarUrl?: string;
@@ -62,28 +67,56 @@ export interface Employee {
   avatarColor: string;
 }
 
-/* ─── Product ────────────────────────────────────────────────── */
-export interface Product {
-  id: string;
-  name: string;
-  sku: string;
-  category: string;
-  price: number;
-  stock: number;
-  status: ProductStatus;
-  imageUrl?: string;
-  description: string;
-  createdAt: string;
-}
-
 /* ─── Category ───────────────────────────────────────────────── */
 export interface Category {
   id: string;
-  name: string;
+  name_en: string;
+  name_ar: string;
+  name_fr: string;
   slug: string;
-  description: string;
+  description_en: string;
+  description_ar: string;
+  description_fr: string;
   productCount: number;
   parentId?: string;
+  /** Emoji icon displayed in the table and UI, e.g. "⚙️" */
+  iconEmoji?: string;
+  createdAt: string;
+}
+
+/* ─── Country ────────────────────────────────────────────────── */
+export interface Country {
+  id: string;
+  /** ISO 3166-1 alpha-2 code, e.g. "AE" */
+  iso: string;
+  name_en: string;
+  name_ar: string;
+  /** ISO 4217 currency code, e.g. "AED" */
+  currency: string;
+  /** Unicode flag emoji, e.g. "🇦🇪" */
+  flag: string;
+  createdAt: string;
+}
+
+/* ─── Governorate ────────────────────────────────────────────── */
+export interface Governorate {
+  id: string;
+  name_en: string;
+  name_ar: string;
+  /** Foreign key → Country.id */
+  countryId: string;
+  createdAt: string;
+}
+
+/* ─── Company ────────────────────────────────────────────────── */
+export interface Company {
+  id: string;
+  name_en: string;
+  name_ar: string;
+  /** Emoji or URL; used as a logo placeholder */
+  logo?: string;
+  /** Array of Country.id values where this company operates */
+  operatingIn: string[];
   createdAt: string;
 }
 
@@ -98,6 +131,64 @@ export interface CatalogItem {
   language: string;
   publishedAt: string;
   pages: number;
+}
+
+/* ─── Subscription Ledger ────────────────────────────────────── */
+export type SubscriptionStatus = "active" | "cancelled" | "expired" | "trial";
+
+export interface Subscription {
+  id: string;
+  clientName: string;
+  plan: string;
+  amount: number;
+  currency: string;
+  status: SubscriptionStatus;
+  startDate: string;
+  endDate: string;
+}
+
+/* ─── Clients Module ─────────────────────────────────────────── */
+export type WorkAccountStatus = "active" | "inactive";
+export type ClientSubscriptionStatus = "active" | "expired" | "cancelled";
+
+/** A business entity owned by a PersonalClient */
+export interface WorkAccount {
+  id: string;
+  name: string;
+  industry: string;
+  status: WorkAccountStatus;
+  /** Foreign key → PersonalClient.id */
+  ownerId: string;
+  createdAt: string;
+}
+
+/** A subscription purchase tied to a specific WorkAccount */
+export interface ClientSubscription {
+  id: string;
+  /** Foreign key → WorkAccount.id */
+  workAccountId: string;
+  workAccountName: string;
+  bundleType: string;
+  startDate: string;
+  endDate: string;
+  originalPrice: number;
+  discountedPrice: number;
+  currency: string;
+  status: ClientSubscriptionStatus;
+}
+
+/** A personal (individual) client who owns one or more WorkAccounts */
+export interface PersonalClient {
+  id: string;
+  name: string;
+  email: string;
+  countryCode: string;
+  phone: string;
+  joinDate: string;
+  avatarColor: string;
+  avatarInitials: string;
+  workAccounts: WorkAccount[];
+  subscriptions: ClientSubscription[];
 }
 
 /* ─── Nav Item ───────────────────────────────────────────────── */
