@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useLocale } from "next-intl";
 import { motion } from "framer-motion";
-import { Globe2 } from "lucide-react";
 import { FilterBar, AddButton } from "@/components/shared/FilterBar";
 import { CountrySheet } from "./country-sheet";
 import { mockCountries } from "@/features/countries/data/mock";
@@ -15,6 +15,7 @@ const rowAnim = (i: number) => ({
 });
 
 export function CountriesView() {
+  const locale = useLocale();
   const [countries, setCountries] = useState<Country[]>([...mockCountries]);
   const [search, setSearch] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -28,7 +29,8 @@ export function CountriesView() {
         c.name_en.toLowerCase().includes(q) ||
         c.name_ar.toLowerCase().includes(q) ||
         c.iso.toLowerCase().includes(q) ||
-        c.currency.toLowerCase().includes(q)
+        c.currencyEn.toLowerCase().includes(q) ||
+        c.phoneCode.includes(q)
     );
   }, [search, countries]);
 
@@ -47,12 +49,14 @@ export function CountriesView() {
     });
   };
 
+  const currencyKey = locale === "ar" ? "currencyAr" : locale === "fr" ? "currencyFr" : "currencyEn";
+
   return (
     <div className="space-y-4">
       <FilterBar
         search={search}
         onSearchChange={setSearch}
-        searchPlaceholder="Search by name, ISO or currency…"
+        searchPlaceholder="Search by name, ISO, phone code or currency…"
         actions={<AddButton onClick={openAdd}>Add Country</AddButton>}
       />
 
@@ -68,7 +72,7 @@ export function CountriesView() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-100">
-                {["Flag & Name", "ISO", "Currency", "Added"].map((h) => (
+                {["Flag & Name", "ISO", "Phone Code", "Currency", "Regex Field", "Added"].map((h) => (
                   <th key={h} className="px-5 py-3.5 text-start text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap">
                     {h}
                   </th>
@@ -78,7 +82,7 @@ export function CountriesView() {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="h-32 text-center text-slate-400 text-sm">
+                  <td colSpan={6} className="h-32 text-center text-slate-400 text-sm">
                     No countries found
                   </td>
                 </tr>
@@ -110,10 +114,24 @@ export function CountriesView() {
                       </span>
                     </td>
 
+                    {/* Phone Code */}
+                    <td className="px-5 py-3.5">
+                      <span className="rounded-full bg-[#E6F7F7] px-2.5 py-0.5 text-xs font-mono font-semibold text-[#28B8B1]" dir="ltr">
+                        {country.phoneCode}
+                      </span>
+                    </td>
+
                     {/* Currency */}
                     <td className="px-5 py-3.5">
-                      <span className="rounded-full bg-[#EBF3FB] px-2.5 py-0.5 text-xs font-mono font-semibold text-[#0A3D62]">
-                        {country.currency}
+                      <span className="rounded-full bg-[#EBF3FB] px-2.5 py-0.5 text-xs font-semibold text-[#0A3D62]">
+                        {country[currencyKey]}
+                      </span>
+                    </td>
+
+                    {/* Regex */}
+                    <td className="px-5 py-3.5">
+                      <span className="font-mono text-xs text-slate-400 truncate max-w-32 block" title={country.regex}>
+                        {country.regex}
                       </span>
                     </td>
 

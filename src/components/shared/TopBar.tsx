@@ -15,16 +15,39 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { MobileMenuButton } from "./Sidebar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
+/** URL path segment → `nav.*` message key (camelCase) */
 const pathToNavKey: Record<string, string> = {
   "": "dashboard",
   dashboard: "dashboard",
   employees: "employees",
+  clients: "clients",
   products: "products",
   "contact-requests": "contactRequests",
   categories: "categories",
+  subscriptions: "subscriptions",
+  "current-bundles": "bundles",
+  "work-account": "workAccounts",
+  companies: "companies",
+  countries: "countries",
+  "privacy-policy": "privacyPolicy",
+  "terms-conditions": "termsConditions",
+  "delivery-terms": "deliveryTerms",
+  "refund-terms": "refundTerms",
 };
+
+/** Short code + numeric id (e.g. CLT-001), not kebab-case route segments like current-bundles */
+function looksLikeResourceId(seg: string): boolean {
+  return /^[A-Za-z]{2,6}-\d+$/i.test(seg);
+}
+
+function fallbackSegmentLabel(seg: string): string {
+  return decodeURIComponent(seg)
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
 
 export function TopBar() {
   const t = useTranslations("nav");
@@ -36,12 +59,19 @@ export function TopBar() {
 
   const segments = pathname.replace(`/${locale}`, "").split("/").filter(Boolean);
 
+  let pathAcc = "";
   const breadcrumbs = [
     { label: t("dashboard"), href: `/${locale}` },
-    ...segments.map((seg) => ({
-      label: t((pathToNavKey[seg] ?? seg) as Parameters<typeof t>[0]),
-      href: `/${locale}/${seg}`,
-    })),
+    ...segments.map((seg) => {
+      pathAcc += `/${seg}`;
+      const navKey = pathToNavKey[seg];
+      const label = navKey
+        ? t(navKey as Parameters<typeof t>[0])
+        : looksLikeResourceId(seg)
+          ? decodeURIComponent(seg)
+          : fallbackSegmentLabel(seg);
+      return { label, href: `/${locale}${pathAcc}` };
+    }),
   ];
 
   const Chevron = isRTL ? ChevronLeft : ChevronRight;
@@ -51,8 +81,8 @@ export function TopBar() {
       className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-3 border-b border-slate-100 bg-white/95 px-4 md:px-5"
       style={{ backdropFilter: "blur(8px)" }}
     >
-      {/* Mobile hamburger */}
-      <MobileMenuButton />
+      {/* Sidebar toggle (mobile: open drawer / desktop: collapse) */}
+      <SidebarTrigger />
 
       {/* Breadcrumbs */}
       <nav className="flex-1 min-w-0 hidden sm:block" aria-label="breadcrumb">

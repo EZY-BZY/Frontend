@@ -1,0 +1,81 @@
+import type { Bundle, BundleArchive } from "@/types";
+
+export const mockBundles: Bundle[] = [
+  {
+    id: "BND-001",
+    name: "Starter",
+    price: 299,
+    currency: "USD",
+    duration: "12 months",
+    featuresSummary: "Up to 5 users, 10 GB storage, Basic support",
+    status: "active",
+    createdAt: "2024-01-01",
+  },
+  {
+    id: "BND-002",
+    name: "Pro",
+    price: 799,
+    currency: "USD",
+    duration: "12 months",
+    featuresSummary: "Up to 25 users, 100 GB storage, Priority support, Analytics",
+    status: "active",
+    createdAt: "2024-01-01",
+  },
+  {
+    id: "BND-003",
+    name: "Enterprise",
+    price: 2400,
+    currency: "USD",
+    duration: "12 months",
+    featuresSummary: "Unlimited users, 1 TB storage, 24/7 support, Custom integrations",
+    status: "active",
+    createdAt: "2024-01-01",
+  },
+  {
+    id: "BND-004",
+    name: "Growth",
+    price: 499,
+    currency: "USD",
+    duration: "6 months",
+    featuresSummary: "Up to 10 users, 50 GB storage, Email support",
+    status: "active",
+    createdAt: "2024-06-01",
+  },
+  {
+    id: "BND-005",
+    name: "Trial",
+    price: 0,
+    currency: "USD",
+    duration: "1 month",
+    featuresSummary: "Up to 3 users, 5 GB storage, Community support",
+    status: "active",
+    createdAt: "2025-01-01",
+  },
+];
+
+export const mockBundleArchive: BundleArchive[] = [
+  {
+    id: "BND-A001",
+    name: "Basic (Legacy)",
+    price: 99,
+    currency: "USD",
+    deactivationDate: "2024-06-30",
+    reason: "Superseded by the Starter bundle; pricing restructured.",
+  },
+  {
+    id: "BND-A002",
+    name: "Teams (Beta)",
+    price: 350,
+    currency: "USD",
+    deactivationDate: "2024-09-15",
+    reason: "Beta program ended; features merged into Pro tier.",
+  },
+  {
+    id: "BND-A003",
+    name: "Annual Promo 2023",
+    price: 599,
+    currency: "USD",
+    deactivationDate: "2024-01-01",
+    reason: "Promotional offer expired.",
+  },
+];

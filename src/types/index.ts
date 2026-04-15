@@ -91,14 +91,22 @@ export interface Country {
   iso: string;
   name_en: string;
   name_ar: string;
-  /** ISO 4217 currency code, e.g. "AED" */
-  currency: string;
+  /** Currency name in English, e.g. "UAE Dirham" */
+  currencyEn: string;
+  /** Currency name in Arabic, e.g. "درهم إماراتي" */
+  currencyAr: string;
+  /** Currency name in French, e.g. "Dirham des Émirats arabes unis" */
+  currencyFr: string;
   /** Unicode flag emoji, e.g. "🇦🇪" */
   flag: string;
+  /** Phone country dial code, e.g. "+971" */
+  phoneCode: string;
+  /** Phone number validation regex pattern */
+  regex: string;
   createdAt: string;
 }
 
-/* ─── Governorate ────────────────────────────────────────────── */
+/** Administrative region within a Country */
 export interface Governorate {
   id: string;
   name_en: string;
@@ -106,6 +114,31 @@ export interface Governorate {
   /** Foreign key → Country.id */
   countryId: string;
   createdAt: string;
+}
+
+/* ─── Bundles ────────────────────────────────────────────────── */
+export type BundleStatus = "active" | "deactivated";
+
+export interface Bundle {
+  id: string;
+  name: string;
+  price: number;
+  currency: string;
+  /** Duration label, e.g. "12 months" */
+  duration: string;
+  /** Short summary of included features */
+  featuresSummary: string;
+  status: BundleStatus;
+  createdAt: string;
+}
+
+export interface BundleArchive {
+  id: string;
+  name: string;
+  price: number;
+  currency: string;
+  deactivationDate: string;
+  reason: string;
 }
 
 /* ─── Company ────────────────────────────────────────────────── */
@@ -160,6 +193,8 @@ export interface WorkAccount {
   /** Foreign key → PersonalClient.id */
   ownerId: string;
   createdAt: string;
+  employeesCount: number;
+  productsCount: number;
 }
 
 /** A subscription purchase tied to a specific WorkAccount */

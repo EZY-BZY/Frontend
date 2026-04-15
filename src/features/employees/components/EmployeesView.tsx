@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { UserCheck, UserX, Coffee } from "lucide-react";
 import { FilterBar, AddButton, DownloadButton } from "@/components/shared/FilterBar";
 import {
   Sheet,
@@ -19,23 +18,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { mockEmployees } from "../data/mock";
-import type { Employee, EmployeeStatus, EmployeePosition } from "@/types";
-
-/* ─── Status config ─────────────────────────────────────────────── */
-const statusConfig: Record<EmployeeStatus, { label: string; icon: React.ReactNode; cls: string }> = {
-  active: { label: "Active", icon: <UserCheck className="h-3 w-3" />, cls: "bg-emerald-50 text-emerald-700 border-emerald-100" },
-  inactive: { label: "Inactive", icon: <UserX className="h-3 w-3" />, cls: "bg-red-50 text-red-600 border-red-100" },
-  onLeave: { label: "On Leave", icon: <Coffee className="h-3 w-3" />, cls: "bg-amber-50 text-amber-700 border-amber-100" },
-};
+import type { Employee, EmployeePosition } from "@/types";
 
 /* ─── Zod schema ─────────────────────────────────────────────────── */
 const addEmployeeSchema = z.object({
-  name_en: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Enter a valid email"),
-  position: z.enum(["Admin", "Support"]),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  name_en:     z.string().min(2, "Name must be at least 2 characters"),
+  email:       z.string().email("Enter a valid email"),
+  phone:       z.string().min(5, "Phone number required"),
+  position:    z.enum(["Admin", "Support"]),
+  password:    z.string().min(8, "Password must be at least 8 characters"),
 });
 
 type AddEmployeeForm = z.infer<typeof addEmployeeSchema>;
@@ -51,7 +43,7 @@ async function createEmployee(data: AddEmployeeForm): Promise<Employee> {
     name_ar: data.name_en,
     name_fr: data.name_en,
     email: data.email,
-    phone: "—",
+    phone: data.phone,
     position: data.position,
     status: "active",
     joinDate: new Date().toISOString().slice(0, 10),
@@ -148,8 +140,8 @@ export function EmployeesView() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
-                {["Employee", "Position", "Phone", "Status", "Joined"].map((col) => (
-                  <th key={col} className="px-5 py-3.5 text-start font-semibold text-gray-500 whitespace-nowrap">
+                {["Employee", "Email", "Position", "Phone", "Joined"].map((col) => (
+                  <th key={col} className="px-5 py-3.5 text-start font-semibold text-gray-500 whitespace-nowrap text-xs uppercase tracking-wide">
                     {col}
                   </th>
                 ))}
@@ -161,9 +153,7 @@ export function EmployeesView() {
                   <td colSpan={5} className="h-32 text-center text-gray-400">No employees found</td>
                 </tr>
               ) : (
-                filtered.map((emp, i) => {
-                  const s = statusConfig[emp.status];
-                  return (
+                filtered.map((emp, i) => (
                     <motion.tr
                       key={emp.id}
                       initial={{ opacity: 0, y: 6 }}
@@ -181,44 +171,33 @@ export function EmployeesView() {
                           </span>
                           <div>
                             <p className="font-semibold text-gray-800 leading-tight">{emp[nameKey]}</p>
-                            <p className="text-xs text-gray-400">{emp.email}</p>
+                            <p className="text-xs text-gray-400 font-mono">{emp.id}</p>
                           </div>
                         </div>
                       </td>
+                      <td className="px-5 py-3.5 text-sm text-slate-500">{emp.email}</td>
                       <td className="px-5 py-3.5">
                         <span className="rounded-full bg-[#EBF3FB] text-[#0A3D62] px-2.5 py-0.5 text-xs font-medium">
                           {emp.position}
                         </span>
                       </td>
                       <td className="px-5 py-3.5 text-gray-500 font-mono text-xs" dir="ltr">{emp.phone}</td>
-                      <td className="px-5 py-3.5">
-                        <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${s.cls}`}>
-                          {s.icon}
-                          {s.label}
-                        </span>
-                      </td>
                       <td className="px-5 py-3.5 text-gray-400 text-xs whitespace-nowrap">
                         {new Date(emp.joinDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
                       </td>
                     </motion.tr>
-                  );
-                })
+                ))
               )}
             </tbody>
           </table>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-5 py-3 border-t border-gray-50 text-xs text-gray-400">
+        <div className="flex items-center px-5 py-3 border-t border-gray-50 text-xs text-gray-400">
           <span>
             Showing <strong className="text-gray-600">{filtered.length}</strong> of{" "}
             <strong className="text-gray-600">{employees.length}</strong> employees
           </span>
-          <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-emerald-400" /> Active: {employees.filter((e) => e.status === "active").length}
-            <span className="ms-2 h-2 w-2 rounded-full bg-amber-400" /> On leave: {employees.filter((e) => e.status === "onLeave").length}
-            <span className="ms-2 h-2 w-2 rounded-full bg-red-400" /> Inactive: {employees.filter((e) => e.status === "inactive").length}
-          </div>
         </div>
       </div>
 
@@ -256,6 +235,20 @@ export function EmployeesView() {
                 className={errors.email ? "border-red-400 focus-visible:ring-red-300" : ""}
               />
               {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
+            </div>
+
+            {/* Phone */}
+            <div className="space-y-1.5">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+1 555-0101"
+                {...register("phone")}
+                dir="ltr"
+                className={errors.phone ? "border-red-400 focus-visible:ring-red-300" : ""}
+              />
+              {errors.phone && <p className="text-xs text-red-500">{errors.phone.message}</p>}
             </div>
 
             {/* Position */}

@@ -197,8 +197,8 @@ export function DashboardHome() {
               +31% vs last quarter
             </div>
           </div>
-          <div className="px-2 pt-4 pb-2 h-64">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="px-2 pt-4 pb-2 h-64 min-w-0">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
               <AreaChart data={revenueData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">

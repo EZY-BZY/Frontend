@@ -16,11 +16,15 @@ import { saveCountry } from "@/features/countries/data/mock";
 import type { Country } from "@/types";
 
 const schema = z.object({
-  iso:      z.string().min(2).max(3).toUpperCase(),
-  name_en:  z.string().min(2, "English name required"),
-  name_ar:  z.string().min(2, "Arabic name required"),
-  currency: z.string().min(2).max(4),
-  flag:     z.string().min(1, "Flag emoji required"),
+  iso:        z.string().min(2).max(3).toUpperCase(),
+  name_en:    z.string().min(2, "English name required"),
+  name_ar:    z.string().min(2, "Arabic name required"),
+  currencyEn: z.string().min(2, "English currency name required"),
+  currencyAr: z.string().min(2, "Arabic currency name required"),
+  currencyFr: z.string().min(2, "French currency name required"),
+  flag:       z.string().min(1, "Flag emoji required"),
+  phoneCode:  z.string().min(2, "Phone code required").regex(/^\+\d+$/, "Must start with + followed by digits"),
+  regex:      z.string().min(1, "Regex pattern required"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -33,7 +37,6 @@ interface CountrySheetProps {
 }
 
 export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySheetProps) {
-  /* "preview" only exists when viewing an existing country */
   const [mode, setMode] = useState<"preview" | "edit">(country ? "preview" : "edit");
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } =
@@ -43,8 +46,18 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
     if (open) {
       setMode(country ? "preview" : "edit");
       reset(country
-        ? { iso: country.iso, name_en: country.name_en, name_ar: country.name_ar, currency: country.currency, flag: country.flag }
-        : { iso: "", name_en: "", name_ar: "", currency: "", flag: "" }
+        ? {
+            iso: country.iso,
+            name_en: country.name_en,
+            name_ar: country.name_ar,
+            currencyEn: country.currencyEn,
+            currencyAr: country.currencyAr,
+            currencyFr: country.currencyFr,
+            flag: country.flag,
+            phoneCode: country.phoneCode,
+            regex: country.regex,
+          }
+        : { iso: "", name_en: "", name_ar: "", currencyEn: "", currencyAr: "", currencyFr: "", flag: "", phoneCode: "+", regex: "" }
       );
     }
   }, [open, country, reset]);
@@ -55,7 +68,7 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
     onOpenChange(false);
   };
 
-  /* ─── Preview card ─────────────────────────────────────────────── */
+  /* ─── Preview card ──────────────────────────────────────────────── */
   if (mode === "preview" && country) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
@@ -80,14 +93,18 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
             {/* Details grid */}
             <div className="grid grid-cols-2 gap-3">
               {[
-                { label: "ISO Code", value: country.iso },
-                { label: "Currency", value: country.currency },
-                { label: "ID", value: country.id },
-                { label: "Added", value: new Date(country.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) },
+                { label: "ISO Code",   value: country.iso },
+                { label: "Phone Code", value: country.phoneCode },
+                { label: "Currency (EN)", value: country.currencyEn },
+                { label: "Currency (AR)", value: country.currencyAr },
+                { label: "Currency (FR)", value: country.currencyFr },
+                { label: "Regex",      value: country.regex },
+                { label: "ID",         value: country.id },
+                { label: "Added",      value: new Date(country.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) },
               ].map(({ label, value }) => (
                 <div key={label} className="rounded-xl border border-slate-100 bg-white px-4 py-3">
                   <p className="text-xs font-medium text-slate-400">{label}</p>
-                  <p className="mt-0.5 font-semibold text-slate-800 font-mono text-sm">{value}</p>
+                  <p className="mt-0.5 font-semibold text-slate-800 font-mono text-sm break-all">{value}</p>
                 </div>
               ))}
             </div>
@@ -109,7 +126,7 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
     );
   }
 
-  /* ─── Edit form ────────────────────────────────────────────────── */
+  /* ─── Edit form ─────────────────────────────────────────────────── */
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="overflow-y-auto">
@@ -124,27 +141,18 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
         </SheetHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 px-6 py-6">
+          {/* ISO + Flag */}
           <div className="grid grid-cols-2 gap-4">
-            {/* ISO code */}
             <div className="space-y-1.5">
               <Label htmlFor="iso">ISO Code</Label>
               <Input id="iso" placeholder="AE" {...register("iso")} className="uppercase" />
               {errors.iso && <p className="text-xs text-red-500">{errors.iso.message}</p>}
             </div>
-
-            {/* Currency */}
             <div className="space-y-1.5">
-              <Label htmlFor="currency">Currency</Label>
-              <Input id="currency" placeholder="AED" {...register("currency")} className="uppercase" />
-              {errors.currency && <p className="text-xs text-red-500">{errors.currency.message}</p>}
+              <Label htmlFor="flag">Flag Emoji</Label>
+              <Input id="flag" placeholder="🇦🇪" {...register("flag")} />
+              {errors.flag && <p className="text-xs text-red-500">{errors.flag.message}</p>}
             </div>
-          </div>
-
-          {/* Flag emoji */}
-          <div className="space-y-1.5">
-            <Label htmlFor="flag">Flag Emoji</Label>
-            <Input id="flag" placeholder="🇦🇪" {...register("flag")} />
-            {errors.flag && <p className="text-xs text-red-500">{errors.flag.message}</p>}
           </div>
 
           {/* English name */}
@@ -159,6 +167,42 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
             <Label htmlFor="name_ar">Name (Arabic)</Label>
             <Input id="name_ar" placeholder="الإمارات العربية المتحدة" {...register("name_ar")} dir="rtl" />
             {errors.name_ar && <p className="text-xs text-red-500">{errors.name_ar.message}</p>}
+          </div>
+
+          {/* Phone Code + Regex */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="phoneCode">Phone Code</Label>
+              <Input id="phoneCode" placeholder="+971" {...register("phoneCode")} dir="ltr" />
+              {errors.phoneCode && <p className="text-xs text-red-500">{errors.phoneCode.message}</p>}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="regex">Regex Field</Label>
+              <Input id="regex" placeholder="^5[024568]\d{7}$" {...register("regex")} dir="ltr" className="font-mono text-xs" />
+              {errors.regex && <p className="text-xs text-red-500">{errors.regex.message}</p>}
+            </div>
+          </div>
+
+          {/* Currency trilingual */}
+          <div className="space-y-1 rounded-xl border border-slate-100 bg-slate-50 p-4">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Currency (3 Languages)</p>
+            <div className="space-y-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="currencyEn">English</Label>
+                <Input id="currencyEn" placeholder="UAE Dirham" {...register("currencyEn")} dir="ltr" />
+                {errors.currencyEn && <p className="text-xs text-red-500">{errors.currencyEn.message}</p>}
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="currencyAr">Arabic</Label>
+                <Input id="currencyAr" placeholder="درهم إماراتي" {...register("currencyAr")} dir="rtl" />
+                {errors.currencyAr && <p className="text-xs text-red-500">{errors.currencyAr.message}</p>}
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="currencyFr">French</Label>
+                <Input id="currencyFr" placeholder="Dirham des Émirats arabes unis" {...register("currencyFr")} dir="ltr" />
+                {errors.currencyFr && <p className="text-xs text-red-500">{errors.currencyFr.message}</p>}
+              </div>
+            </div>
           </div>
         </form>
 

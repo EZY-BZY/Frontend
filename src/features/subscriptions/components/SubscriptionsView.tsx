@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { XCircle } from "lucide-react";
 import { FilterBar, DownloadButton } from "@/components/shared/FilterBar";
 import {
   Select,
@@ -29,7 +28,7 @@ const planColor: Record<string, string> = {
 };
 
 export function SubscriptionsView() {
-  const [subs, setSubs] = useState<Subscription[]>(mockSubscriptions);
+  const [subs] = useState<Subscription[]>(mockSubscriptions);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
@@ -41,13 +40,6 @@ export function SubscriptionsView() {
       return matchesSearch && matchesStatus;
     });
   }, [search, statusFilter, subs]);
-
-  /* Simulate cancellation */
-  const handleCancel = (id: string) => {
-    setSubs((prev) =>
-      prev.map((s) => s.id === id ? { ...s, status: "cancelled" as SubscriptionStatus } : s)
-    );
-  };
 
   const totalRevenue = filtered
     .filter((s) => s.status === "active" || s.status === "trial")
@@ -114,7 +106,7 @@ export function SubscriptionsView() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-100">
-                {["ID", "Client", "Plan", "Amount", "Status", "Start Date", "Cancellable", "Action"].map((col) => (
+                {["ID", "Client", "Plan", "Amount", "Status", "Start Date", "Cancellable"].map((col) => (
                   <th key={col} className="px-5 py-3.5 text-start text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap">
                     {col}
                   </th>
@@ -124,7 +116,7 @@ export function SubscriptionsView() {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="h-32 text-center text-slate-400">No subscriptions found</td>
+                  <td colSpan={7} className="h-32 text-center text-slate-400">No subscriptions found</td>
                 </tr>
               ) : (
                 filtered.map((sub, i) => {
@@ -167,17 +159,6 @@ export function SubscriptionsView() {
                           </span>
                         ) : (
                           <span className="text-xs text-slate-400">No</span>
-                        )}
-                      </td>
-                      <td className="px-5 py-3.5">
-                        {sub.status === "active" && cancellable && (
-                          <button
-                            onClick={() => handleCancel(sub.id)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-2.5 py-1 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
-                          >
-                            <XCircle className="h-3.5 w-3.5" />
-                            Cancel
-                          </button>
                         )}
                       </td>
                     </motion.tr>

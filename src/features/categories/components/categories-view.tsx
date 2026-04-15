@@ -60,15 +60,9 @@ export function CategoriesView() {
 
       <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
         {/* Summary bar */}
-        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-2.5">
+        <div className="border-b border-slate-100 px-5 py-2.5">
           <span className="text-xs text-slate-400">
             <strong className="text-slate-700">{filtered.length}</strong> categories
-          </span>
-          <span className="text-xs text-slate-400">
-            Total products:{" "}
-            <strong className="text-[#0A3D62]">
-              {filtered.reduce((s, c) => s + c.productCount, 0)}
-            </strong>
           </span>
         </div>
 

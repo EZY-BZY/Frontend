@@ -16,313 +16,357 @@ import {
   RotateCcw,
   UserCircle2,
   Globe2,
-  Map,
   Briefcase,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  Menu,
+  Package,
+  ChevronDown,
+  LogOut,
+  Settings,
+  Database,
 } from "lucide-react";
+import * as Collapsible from "@radix-ui/react-collapsible";
 import { motion, AnimatePresence } from "framer-motion";
-import { createContext, useContext, useState, useCallback } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
 
-/* ─── Nav items ─────────────────────────────────────────────── */
+/* ─── Nav data ───────────────────────────────────────────────────── */
 type NavItem = {
   key: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  /** If set, renders a group separator label above this item */
-  sectionLabel?: string;
 };
 
-const navItems: NavItem[] = [
-  { key: "dashboard",      href: "",                 icon: LayoutDashboard },
-  { key: "employees",      href: "/employees",       icon: Users },
-  { key: "clients",        href: "/clients",         icon: UserCircle2 },
-  { key: "contactRequests",href: "/contact-requests",icon: MessageSquare },
-  { key: "categories",     href: "/categories",      icon: Tag },
-  { key: "subscriptions",  href: "/subscriptions",   icon: BookOpen },
-  // Metadata group
-  { key: "countries",      href: "/countries",       icon: Globe2,    sectionLabel: "Metadata" },
-  { key: "governorates",   href: "/governorates",    icon: Map },
-  { key: "companies",      href: "/companies",       icon: Briefcase },
-  // Legal group
-  { key: "privacyPolicy",  href: "/privacy-policy",  icon: Shield,    sectionLabel: "Legal" },
-  { key: "termsConditions",href: "/terms-conditions",icon: Scale },
-  { key: "deliveryTerms",  href: "/delivery-terms",  icon: Truck },
-  { key: "refundTerms",    href: "/refund-terms",    icon: RotateCcw },
+const mainItems: NavItem[] = [
+  { key: "dashboard",       href: "",                               icon: LayoutDashboard },
+  { key: "employees",       href: "/employees",                    icon: Users },
+  { key: "clients",         href: "/clients",                      icon: UserCircle2 },
+  { key: "contactRequests", href: "/contact-requests",             icon: MessageSquare },
+  { key: "categories",      href: "/categories",                   icon: Tag },
 ];
 
-const SIDEBAR_W = 220; // px — collapsed is 68px
+const companiesItem: NavItem = {
+  key: "companies", href: "/companies", icon: Briefcase,
+};
 
-/* ─── Context ────────────────────────────────────────────────── */
-interface SidebarCtx {
-  collapsed: boolean;
-  mobileOpen: boolean;
-  toggleCollapsed: () => void;
-  openMobile: () => void;
-  closeMobile: () => void;
+const financialItems: NavItem[] = [
+  { key: "subscriptions", href: "/subscriptions", icon: BookOpen },
+  { key: "bundles",       href: "/subscriptions/current-bundles", icon: Package },
+];
+
+const metadataItems: NavItem[] = [
+  { key: "countries", href: "/countries", icon: Globe2 },
+];
+
+const legalItems: NavItem[] = [
+  { key: "privacyPolicy",   href: "/privacy-policy",   icon: Shield },
+  { key: "termsConditions", href: "/terms-conditions", icon: Scale },
+  { key: "deliveryTerms",   href: "/delivery-terms",   icon: Truck },
+  { key: "refundTerms",     href: "/refund-terms",     icon: RotateCcw },
+];
+
+/* ─── isActive ───────────────────────────────────────────────────── */
+function getIsActive(href: string, locale: string, pathname: string): boolean {
+  const full = `/${locale}${href}`;
+  if (href === "") return pathname === `/${locale}` || pathname === `/${locale}/dashboard`;
+  return (
+    pathname === full ||
+    (href !== "/subscriptions" && pathname.startsWith(full))
+  );
 }
 
-const SidebarContext = createContext<SidebarCtx>({
-  collapsed: false,
-  mobileOpen: false,
-  toggleCollapsed: () => {},
-  openMobile: () => {},
-  closeMobile: () => {},
-});
-
-export const useSidebarCtx = () => useContext(SidebarContext);
-
-/* ─── Inner nav list (shared by desktop + drawer) ───────────── */
-function NavList({
-  collapsed,
+/* ─── NavRow — a single menu item ───────────────────────────────── */
+function NavRow({
+  item,
   onLinkClick,
 }: {
-  collapsed: boolean;
+  item: NavItem;
   onLinkClick?: () => void;
 }) {
   const t = useTranslations("nav");
   const locale = useLocale();
   const pathname = usePathname();
+  const { state } = useSidebar();
   const isRTL = locale === "ar";
+  const isActive = getIsActive(item.href, locale, pathname);
+  const fullHref = `/${locale}${item.href}`;
+  const Icon = item.icon;
 
   return (
-    <nav className="flex-1 overflow-y-auto py-3 px-2">
-      <ul className="space-y-0.5">
-        {navItems.map(({ key, href, icon: Icon, sectionLabel }) => {
-          const fullHref = `/${locale}${href}`;
-          const isActive =
-            href === ""
-              ? pathname === `/${locale}` || pathname === `/${locale}/dashboard`
-              : pathname.startsWith(`/${locale}${href}`);
-
-          return (
-            <li key={key}>
-              {/* Group separator label */}
-              {sectionLabel && !collapsed && (
-                <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-400 select-none">
-                  {sectionLabel}
-                </p>
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        asChild
+        isActive={isActive}
+        tooltip={t(item.key as Parameters<typeof t>[0])}
+      >
+        <Link href={fullHref} onClick={onLinkClick}>
+          {isActive && (
+            <motion.span
+              layoutId="sidebar-active-bar"
+              className={cn(
+                "absolute inset-y-2 w-0.5 rounded-full bg-[#28B8B1]",
+                isRTL ? "inset-e-0" : "inset-s-0"
               )}
-              {sectionLabel && collapsed && (
-                <div className="mx-3 my-2 h-px bg-slate-100" />
-              )}
-              <Link
-                href={fullHref}
-                onClick={onLinkClick}
-                aria-current={isActive ? "page" : undefined}
-                title={collapsed ? t(key as Parameters<typeof t>[0]) : undefined}
-                className={cn(
-                  "relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 group select-none",
-                  isActive
-                    ? "bg-[#EBF3FB] text-[#0A3D62]"
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
-                )}
-              >
-                {/* Animated active side-bar */}
-                {isActive && (
-                  <motion.span
-                    layoutId="sidebar-active-bar"
-                    className={cn(
-                      "absolute inset-y-2 w-0.5 rounded-full bg-[#28B8B1]",
-                      isRTL ? "inset-e-0" : "inset-s-0"
-                    )}
-                    transition={{ type: "spring", stiffness: 500, damping: 40 }}
-                  />
-                )}
-
-                <Icon
-                  className={cn(
-                    "h-[18px] w-[18px] shrink-0",
-                    isActive ? "text-[#0A3D62]" : "text-gray-400 group-hover:text-gray-600"
-                  )}
-                />
-
-                <AnimatePresence initial={false}>
-                  {!collapsed && (
-                    <motion.span
-                      key="label"
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: "auto" }}
-                      exit={{ opacity: 0, width: 0 }}
-                      transition={{ duration: 0.15 }}
-                      className="overflow-hidden whitespace-nowrap"
-                    >
-                      {t(key as Parameters<typeof t>[0])}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
-  );
-}
-
-/* ─── Desktop Sidebar Panel (flex child in the layout) ──────── */
-export function SidebarPanel() {
-  const { collapsed, toggleCollapsed } = useSidebarCtx();
-  const isRTL = useLocale() === "ar";
-
-  return (
-    <motion.aside
-      animate={{ width: collapsed ? 68 : SIDEBAR_W }}
-      transition={{ type: "spring", stiffness: 380, damping: 38, mass: 0.8 }}
-      className="relative z-30 hidden min-h-0 h-screen shrink-0 flex-col bg-white md:flex"
-      style={{
-        borderInlineEnd: "1px solid #f1f5f9",
-        direction: "ltr", // always LTR internally
-      }}
-      aria-label="Main navigation"
-    >
-      {/* Inner column clips horizontal overflow; toggle stays outside this wrapper so it is not clipped */}
-      <div className="flex min-h-0 flex-1 flex-col overflow-x-hidden">
-        {/* Logo */}
-        <div className="flex h-14 shrink-0 items-center gap-2.5 border-b border-slate-100 px-4">
-          <Image src="/logo.png" alt="B-EASY" width={32} height={32} className="shrink-0 object-contain" priority />
+              transition={{ type: "spring", stiffness: 500, damping: 40 }}
+            />
+          )}
+          <Icon
+            className={cn(
+              "h-[18px] w-[18px] shrink-0",
+              isActive
+                ? "text-[#0A3D62]"
+                : "text-gray-400 group-hover/btn:text-gray-600"
+            )}
+          />
           <AnimatePresence initial={false}>
-            {!collapsed && (
+            {state === "expanded" && (
               <motion.span
-                key="brand"
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -8 }}
+                key="label"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.15 }}
-                className="overflow-hidden whitespace-nowrap font-extrabold text-base text-[#0A3D62]"
+                className="overflow-hidden whitespace-nowrap"
               >
-                B‑<span className="text-[#28B8B1]">EASY</span>
+                {t(item.key as Parameters<typeof t>[0])}
               </motion.span>
             )}
           </AnimatePresence>
-        </div>
-
-        <NavList collapsed={collapsed} />
-
-        {/* Language switcher (visible only when expanded) */}
-        <AnimatePresence initial={false}>
-          {!collapsed && (
-            <motion.div
-              key="lang"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="shrink-0 border-t border-slate-100 px-3 pb-4 pt-2"
-            >
-              <LanguageSwitcher variant="sidebar" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Collapse toggle — half outside the rail; aside z-30 > TopBar z-20 so it is not covered at the seam */}
-      <button
-        type="button"
-        onClick={toggleCollapsed}
-        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        className={cn(
-          "absolute top-14 z-40 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200/90 bg-white text-slate-500 shadow-md ring-1 ring-black/4 transition-[color,box-shadow,border-color] hover:border-[#28B8B1] hover:text-[#0A3D62] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28B8B1]/40",
-          isRTL ? "inset-s-0 -translate-x-1/2" : "inset-e-0 translate-x-1/2"
-        )}
-      >
-        {collapsed ? (
-          <ChevronRight className="h-3.5 w-3.5" strokeWidth={2.25} />
-        ) : (
-          <ChevronLeft className="h-3.5 w-3.5" strokeWidth={2.25} />
-        )}
-      </button>
-    </motion.aside>
+        </Link>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
   );
 }
 
-/* ─── Mobile Drawer ──────────────────────────────────────────── */
-function MobileDrawer() {
-  const { mobileOpen, closeMobile } = useSidebarCtx();
+/* ─── CollapsibleNavGroup — accordion item styled like a nav row ─── */
+function CollapsibleNavGroup({
+  navKey,
+  icon: Icon,
+  items,
+  onLinkClick,
+  defaultOpen = false,
+}: {
+  navKey: string;
+  icon: React.ComponentType<{ className?: string }>;
+  items: NavItem[];
+  onLinkClick?: () => void;
+  defaultOpen?: boolean;
+}) {
+  const t = useTranslations("nav");
+  const { state } = useSidebar();
+  const locale = useLocale();
+  const pathname = usePathname();
+  const [open, setOpen] = useState(defaultOpen);
+
+  const hasActiveChild = items.some((item) =>
+    getIsActive(item.href, locale, pathname)
+  );
+
+  if (state === "collapsed") {
+    return (
+      <SidebarGroup className="p-0">
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {items.map((item) => (
+              <NavRow key={item.key} item={item} onLinkClick={onLinkClick} />
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    );
+  }
 
   return (
-    <AnimatePresence>
-      {mobileOpen && (
-        <>
+    <Collapsible.Root open={open} onOpenChange={setOpen}>
+      <SidebarGroup className="p-0">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <Collapsible.Trigger asChild>
+              <button
+                type="button"
+                className={cn(
+                  "group/btn relative flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors select-none",
+                  hasActiveChild
+                    ? "text-[#0A3D62]"
+                    : "text-gray-500 hover:bg-slate-100 hover:text-gray-700"
+                )}
+              >
+                <Icon
+                  className={cn(
+                    "h-[18px] w-[18px] shrink-0",
+                    hasActiveChild ? "text-[#0A3D62]" : "text-gray-400"
+                  )}
+                />
+                <span className="flex-1 text-start">
+                  {t(navKey as Parameters<typeof t>[0])}
+                </span>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 text-gray-400 transition-transform duration-200",
+                    open ? "rotate-180" : ""
+                  )}
+                />
+              </button>
+            </Collapsible.Trigger>
+          </SidebarMenuItem>
+        </SidebarMenu>
+        <Collapsible.Content>
+          <SidebarGroupContent className="ps-3">
+            <SidebarMenu>
+              {items.map((item) => (
+                <NavRow key={item.key} item={item} onLinkClick={onLinkClick} />
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </Collapsible.Content>
+      </SidebarGroup>
+    </Collapsible.Root>
+  );
+}
+
+/* ─── Footer user card ───────────────────────────────────────────── */
+function UserFooter() {
+  const { state } = useSidebar();
+  const tCommon = useTranslations("common");
+
+  return (
+    <SidebarFooter>
+      <div className="border-t border-slate-100 px-3 py-3">
+        {state === "collapsed" ? (
+          <div className="flex justify-center">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0A3D62] text-white text-xs font-bold select-none">
+              A
+            </span>
+          </div>
+        ) : (
           <motion.div
-            key="overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/40 md:hidden"
-            onClick={closeMobile}
-            aria-hidden
-          />
-          <motion.aside
-            key="drawer"
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ type: "spring", stiffness: 380, damping: 38 }}
-            className="fixed inset-y-0 inset-s-0 z-50 flex w-64 flex-col bg-white shadow-2xl md:hidden"
-            aria-label="Mobile navigation"
+            transition={{ duration: 0.15 }}
+            className="flex items-center gap-2.5 rounded-xl bg-slate-50 px-3 py-2.5"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between px-4 h-14 border-b border-slate-100 shrink-0">
-              <div className="flex items-center gap-2.5">
-                <Image src="/logo.png" alt="B-EASY" width={32} height={32} className="object-contain" />
-                <span className="font-extrabold text-base text-[#0A3D62]">
-                  B‑<span className="text-[#28B8B1]">EASY</span>
-                </span>
-              </div>
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0A3D62] text-white text-xs font-bold select-none">
+              A
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-gray-800 truncate leading-none">
+                Admin User
+              </p>
+              <p className="text-[10px] text-gray-400 truncate mt-0.5 leading-none">
+                admin@b-easy.com
+              </p>
+            </div>
+            <div className="flex items-center gap-0.5 shrink-0">
               <button
-                onClick={closeMobile}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
-                aria-label="Close menu"
+                type="button"
+                title={tCommon("settings")}
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-200 hover:text-[#0A3D62] transition-colors"
               >
-                <X className="h-4 w-4" />
+                <Settings className="h-3.5 w-3.5" />
+              </button>
+              <button
+                type="button"
+                title={tCommon("logout")}
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors"
+              >
+                <LogOut className="h-3.5 w-3.5" />
               </button>
             </div>
-
-            <NavList collapsed={false} onLinkClick={closeMobile} />
-
-            <div className="px-3 pb-4 pt-2 border-t border-slate-100 shrink-0">
-              <LanguageSwitcher variant="sidebar" />
-            </div>
-          </motion.aside>
-        </>
-      )}
-    </AnimatePresence>
+          </motion.div>
+        )}
+      </div>
+    </SidebarFooter>
   );
 }
 
-/* ─── Mobile hamburger button (used in TopBar) ───────────────── */
-export function MobileMenuButton() {
-  const { openMobile } = useSidebarCtx();
-  return (
-    <button
-      onClick={openMobile}
-      className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
-      aria-label="Open menu"
-    >
-      <Menu className="h-5 w-5" />
-    </button>
-  );
-}
-
-/* ─── Context Provider (pure context + mobile drawer) ────────── */
-export function SidebarProvider({ children }: { children: React.ReactNode }) {
-  const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const toggleCollapsed = useCallback(() => setCollapsed((v) => !v), []);
-  const openMobile = useCallback(() => setMobileOpen(true), []);
-  const closeMobile = useCallback(() => setMobileOpen(false), []);
+/* ─── AppSidebar ─────────────────────────────────────────────────── */
+export function AppSidebar({ onLinkClick }: { onLinkClick?: () => void } = {}) {
+  const locale = useLocale();
+  const { state } = useSidebar();
+  const isRTL = locale === "ar";
 
   return (
-    <SidebarContext.Provider value={{ collapsed, mobileOpen, toggleCollapsed, openMobile, closeMobile }}>
-      <MobileDrawer />
-      {children}
-    </SidebarContext.Provider>
+    <Sidebar side={isRTL ? "right" : "left"} collapsible="icon">
+      {/* Header */}
+      <SidebarHeader>
+        <div className="flex h-14 shrink-0 items-center justify-center border-b border-slate-100 px-4">
+          <Image
+            src="/logo.png"
+            alt="B-EASY"
+            width={100}
+            height={40}
+            className="shrink-0 object-contain"
+            priority
+          />
+        </div>
+      </SidebarHeader>
+
+      {/* Nav scrolls; language switcher stays pinned above footer */}
+      <SidebarContent className="min-h-0 overflow-hidden py-2">
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {mainItems.map((item) => (
+                    <NavRow key={item.key} item={item} onLinkClick={onLinkClick} />
+                  ))}
+                  <NavRow item={companiesItem} onLinkClick={onLinkClick} />
+                  {financialItems.map((item) => (
+                    <NavRow key={item.key} item={item} onLinkClick={onLinkClick} />
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+
+            <CollapsibleNavGroup
+              navKey="metadata"
+              icon={Database}
+              items={metadataItems}
+              onLinkClick={onLinkClick}
+            />
+
+            <CollapsibleNavGroup
+              navKey="legal"
+              icon={Scale}
+              items={legalItems}
+              onLinkClick={onLinkClick}
+            />
+          </div>
+
+          <AnimatePresence initial={false}>
+            {state === "expanded" && (
+              <motion.div
+                key="lang"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                className="mt-auto shrink-0 border-t border-slate-100 px-3 pb-1 pt-2"
+              >
+                <LanguageSwitcher variant="sidebar" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </SidebarContent>
+
+      {/* Footer */}
+      <UserFooter />
+    </Sidebar>
   );
 }
+
+/* ─── Re-export SidebarTrigger as MobileMenuButton for TopBar ───── */
+export { SidebarTrigger as MobileMenuButton } from "@/components/ui/sidebar";

@@ -1,4 +1,4 @@
-import type { PersonalClient, WorkAccount } from "@/types";
+import type { ClientSubscription, PersonalClient, WorkAccount } from "@/types";
 
 /* ─── Brand palette for avatars ─────────────────────────────────── */
 const COLORS = [
@@ -28,6 +28,8 @@ export const mockClients: PersonalClient[] = [
         status: "active",
         ownerId: "CLT-001",
         createdAt: "2024-02-15",
+        employeesCount: 48,
+        productsCount: 120,
       },
       {
         id: "WA-002",
@@ -36,6 +38,8 @@ export const mockClients: PersonalClient[] = [
         status: "active",
         ownerId: "CLT-001",
         createdAt: "2024-06-01",
+        employeesCount: 22,
+        productsCount: 35,
       },
     ],
     subscriptions: [
@@ -82,6 +86,8 @@ export const mockClients: PersonalClient[] = [
         status: "active",
         ownerId: "CLT-002",
         createdAt: "2023-09-10",
+        employeesCount: 67,
+        productsCount: 200,
       },
     ],
     subscriptions: [
@@ -128,6 +134,8 @@ export const mockClients: PersonalClient[] = [
         status: "active",
         ownerId: "CLT-003",
         createdAt: "2024-01-22",
+        employeesCount: 34,
+        productsCount: 85,
       },
       {
         id: "WA-005",
@@ -136,6 +144,8 @@ export const mockClients: PersonalClient[] = [
         status: "inactive",
         ownerId: "CLT-003",
         createdAt: "2024-03-10",
+        employeesCount: 12,
+        productsCount: 300,
       },
       {
         id: "WA-006",
@@ -144,6 +154,8 @@ export const mockClients: PersonalClient[] = [
         status: "active",
         ownerId: "CLT-003",
         createdAt: "2024-05-01",
+        employeesCount: 55,
+        productsCount: 60,
       },
     ],
     subscriptions: [
@@ -202,6 +214,8 @@ export const mockClients: PersonalClient[] = [
         status: "active",
         ownerId: "CLT-004",
         createdAt: "2023-11-20",
+        employeesCount: 18,
+        productsCount: 45,
       },
     ],
     subscriptions: [
@@ -248,6 +262,8 @@ export const mockClients: PersonalClient[] = [
         status: "active",
         ownerId: "CLT-005",
         createdAt: "2024-04-05",
+        employeesCount: 89,
+        productsCount: 410,
       },
       {
         id: "WA-009",
@@ -256,6 +272,8 @@ export const mockClients: PersonalClient[] = [
         status: "active",
         ownerId: "CLT-005",
         createdAt: "2024-07-01",
+        employeesCount: 31,
+        productsCount: 75,
       },
     ],
     subscriptions: [
@@ -302,6 +320,8 @@ export const mockClients: PersonalClient[] = [
         status: "inactive",
         ownerId: "CLT-006",
         createdAt: "2023-08-01",
+        employeesCount: 9,
+        productsCount: 22,
       },
     ],
     subscriptions: [
@@ -336,6 +356,8 @@ export const mockClients: PersonalClient[] = [
         status: "active",
         ownerId: "CLT-007",
         createdAt: "2024-03-15",
+        employeesCount: 210,
+        productsCount: 530,
       },
       {
         id: "WA-012",
@@ -344,6 +366,8 @@ export const mockClients: PersonalClient[] = [
         status: "active",
         ownerId: "CLT-007",
         createdAt: "2024-03-15",
+        employeesCount: 145,
+        productsCount: 88,
       },
     ],
     subscriptions: [
@@ -390,6 +414,8 @@ export const mockClients: PersonalClient[] = [
         status: "active",
         ownerId: "CLT-008",
         createdAt: "2024-05-22",
+        employeesCount: 27,
+        productsCount: 640,
       },
     ],
     subscriptions: [
@@ -420,4 +446,32 @@ export const allWorkAccounts: (WorkAccount & { ownerName: string })[] =
 /** Look up a single client by id */
 export function getClientById(id: string): PersonalClient | undefined {
   return mockClients.find((c) => c.id === id);
+}
+
+/** Look up a single WorkAccount by id, enriched with owner info */
+export function getWorkAccountById(
+  id: string
+): (WorkAccount & { ownerName: string; ownerAvatarColor: string; ownerAvatarInitials: string }) | undefined {
+  for (const client of mockClients) {
+    const wa = client.workAccounts.find((w) => w.id === id);
+    if (wa) {
+      return {
+        ...wa,
+        ownerName: client.name,
+        ownerAvatarColor: client.avatarColor,
+        ownerAvatarInitials: client.avatarInitials,
+      };
+    }
+  }
+  return undefined;
+}
+
+/** Get all subscriptions for a given WorkAccount id */
+export function getWorkAccountSubscriptions(workAccountId: string): ClientSubscription[] {
+  for (const client of mockClients) {
+    if (client.workAccounts.some((wa) => wa.id === workAccountId)) {
+      return client.subscriptions.filter((s) => s.workAccountId === workAccountId);
+    }
+  }
+  return [];
 }

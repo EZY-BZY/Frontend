@@ -41,7 +41,7 @@ export function MultiSelect({
     }
   };
 
-  const remove = (e: React.MouseEvent, optionValue: string) => {
+  const remove = (e: React.SyntheticEvent, optionValue: string) => {
     e.stopPropagation();
     onChange(value.filter((v) => v !== optionValue));
   };
@@ -69,13 +69,21 @@ export function MultiSelect({
               >
                 {o.flag && <span>{o.flag}</span>}
                 {o.label}
-                <button
-                  type="button"
+                <span
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Remove"
                   onClick={(e) => remove(e, o.value)}
-                  className="ms-0.5 rounded-full hover:bg-[#0A3D62]/10 transition-colors p-0.5"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      remove(e, o.value);
+                    }
+                  }}
+                  className="ms-0.5 inline-flex cursor-pointer rounded-full hover:bg-[#0A3D62]/10 transition-colors p-0.5"
                 >
                   <X className="h-2.5 w-2.5" />
-                </button>
+                </span>
               </span>
             ))
           )}

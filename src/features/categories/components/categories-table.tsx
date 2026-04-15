@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Tag, Package } from "lucide-react";
+import { Tag } from "lucide-react";
 import type { Category } from "@/types";
 
 const COLORS = [
@@ -69,36 +69,6 @@ export function getCategoryColumns({ locale, onEdit, allCategories = [] }: CatCo
       cell: ({ row }) => (
         <span className="font-mono text-xs text-slate-400">{row.original.slug}</span>
       ),
-    },
-    {
-      accessorKey: "productCount",
-      header: () => (
-        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Products</span>
-      ),
-      cell: ({ row, table }) => {
-        const idx = table.getRowModel().rows.findIndex((r) => r.id === row.id);
-        const color = COLORS[idx % COLORS.length];
-        return (
-          <div className="flex items-center gap-2.5 min-w-32">
-            <span
-              className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold"
-              style={{ backgroundColor: color + "18", color }}
-            >
-              <Package className="h-3 w-3" />
-              {row.original.productCount}
-            </span>
-            <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-500"
-                style={{
-                  width: `${Math.min(100, (row.original.productCount / 50) * 100)}%`,
-                  backgroundColor: color,
-                }}
-              />
-            </div>
-          </div>
-        );
-      },
     },
     {
       accessorKey: "createdAt",
