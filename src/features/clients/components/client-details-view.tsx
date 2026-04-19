@@ -55,6 +55,13 @@ export function ClientDetailsView({ clientId }: ClientDetailsViewProps) {
 
   const BackIcon = isRTL ? ArrowRight : ArrowLeft;
 
+  /* Active subscription always at top, then by startDate descending */
+  const sortedSubscriptions = [...client.subscriptions].sort((a, b) => {
+    if (a.status === "active" && b.status !== "active") return -1;
+    if (b.status === "active" && a.status !== "active") return 1;
+    return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+  });
+
   /* ─── Section A: Header ──────────────────────────────────────────── */
   return (
     <div className="space-y-6">
@@ -231,15 +238,20 @@ export function ClientDetailsView({ clientId }: ClientDetailsViewProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {client.subscriptions.map((sub, i) => {
+                    {sortedSubscriptions.map((sub, i) => {
                       const hasDiscount = sub.discountedPrice < sub.originalPrice;
+                      const isActiveSub = sub.status === "active";
                       return (
                         <motion.tr
                           key={sub.id}
                           initial={{ opacity: 0, y: 6 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.24 + i * 0.04, duration: 0.2 }}
-                          className="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors"
+                          className={`border-b border-slate-50 last:border-0 transition-colors ${
+                            isActiveSub
+                              ? "bg-[#E6F7F7]/40 hover:bg-[#E6F7F7]/70"
+                              : "hover:bg-slate-50/50"
+                          }`}
                         >
                           {/* Work Account name */}
                           <td className="px-5 py-3.5">
@@ -295,9 +307,16 @@ export function ClientDetailsView({ clientId }: ClientDetailsViewProps) {
 
                           {/* Status */}
                           <td className="px-5 py-3.5">
-                            <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${subStatusCls[sub.status]}`}>
-                              {t(`subscriptionStatus.${sub.status}`)}
-                            </span>
+                            {isActiveSub ? (
+                              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#28B8B1]/30 bg-[#E6F7F7] px-2.5 py-0.5 text-xs font-semibold text-[#28B8B1]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#28B8B1]" />
+                                {t(`subscriptionStatus.${sub.status}`)}
+                              </span>
+                            ) : (
+                              <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${subStatusCls[sub.status]}`}>
+                                {t(`subscriptionStatus.${sub.status}`)}
+                              </span>
+                            )}
                           </td>
                         </motion.tr>
                       );

@@ -160,6 +160,35 @@
     "title": "سجل الاشتراكات",
     "subtitle": "إدارة اشتراكات العملاء والفواتير"
   },
+  "bundles": {
+    "title": "إدارة الباقات",
+    "subtitle": "إدارة باقات الاشتراك والأسعار",
+    "tabs": {
+      "active": "الباقات النشطة",
+      "previous": "الباقات السابقة"
+    },
+    "createBundle": "إنشاء باقة",
+    "deactivate": "إلغاء التفعيل",
+    "viewDetails": "عرض التفاصيل",
+    "duplicateToNew": "نسخ كباقة جديدة",
+    "free": "مجاني",
+    "noActiveBundles": "لا توجد باقات نشطة",
+    "noPreviousBundles": "لا توجد باقات سابقة",
+    "status": {
+      "active": "نشط",
+      "deactivated": "ملغى"
+    },
+    "col": {
+      "bundleName": "اسم الباقة",
+      "price": "السعر",
+      "duration": "المدة",
+      "features": "المميزات",
+      "status": "الحالة",
+      "actions": "الإجراءات",
+      "deactivatedOn": "تاريخ الإلغاء",
+      "reason": "سبب الإلغاء"
+    }
+  },
   "legal": {
     "title": "قانوني",
     "terms": "شروط الخدمة",

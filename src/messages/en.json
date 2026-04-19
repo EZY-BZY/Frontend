@@ -160,6 +160,35 @@
     "title": "Subscription Ledger",
     "subtitle": "Manage client subscriptions and billing"
   },
+  "bundles": {
+    "title": "Bundle Management",
+    "subtitle": "Manage subscription bundles and pricing",
+    "tabs": {
+      "active": "Active Bundles",
+      "previous": "Previous Bundles"
+    },
+    "createBundle": "Create Bundle",
+    "deactivate": "Deactivate",
+    "viewDetails": "View Details",
+    "duplicateToNew": "Duplicate to New",
+    "free": "Free",
+    "noActiveBundles": "No active bundles found",
+    "noPreviousBundles": "No previous bundles found",
+    "status": {
+      "active": "Active",
+      "deactivated": "Deactivated"
+    },
+    "col": {
+      "bundleName": "Bundle Name",
+      "price": "Price",
+      "duration": "Duration",
+      "features": "Features",
+      "status": "Status",
+      "actions": "Actions",
+      "deactivatedOn": "Deactivated On",
+      "reason": "Reason"
+    }
+  },
   "legal": {
     "title": "Legal",
     "terms": "Terms of Service",

@@ -117,28 +117,22 @@ export interface Governorate {
 }
 
 /* ─── Bundles ────────────────────────────────────────────────── */
-export type BundleStatus = "active" | "deactivated";
-
 export interface Bundle {
   id: string;
-  name: string;
+  nameEn: string;
+  nameAr: string;
   price: number;
   currency: string;
-  /** Duration label, e.g. "12 months" */
-  duration: string;
-  /** Short summary of included features */
-  featuresSummary: string;
-  status: BundleStatus;
+  durationEn: string;
+  durationAr: string;
+  featuresEn: string[];
+  featuresAr: string[];
+  /** true = live catalog; false = deactivated/archived */
+  isActive: boolean;
   createdAt: string;
-}
-
-export interface BundleArchive {
-  id: string;
-  name: string;
-  price: number;
-  currency: string;
-  deactivationDate: string;
-  reason: string;
+  deactivatedAt?: string;
+  deactivationReasonEn?: string;
+  deactivationReasonAr?: string;
 }
 
 /* ─── Company ────────────────────────────────────────────────── */

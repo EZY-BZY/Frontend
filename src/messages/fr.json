@@ -160,6 +160,35 @@
     "title": "Registre des abonnements",
     "subtitle": "Gérez les abonnements clients et la facturation"
   },
+  "bundles": {
+    "title": "Gestion des forfaits",
+    "subtitle": "Gérez les forfaits d'abonnement et la tarification",
+    "tabs": {
+      "active": "Forfaits actifs",
+      "previous": "Forfaits précédents"
+    },
+    "createBundle": "Créer un forfait",
+    "deactivate": "Désactiver",
+    "viewDetails": "Voir les détails",
+    "duplicateToNew": "Dupliquer en nouveau",
+    "free": "Gratuit",
+    "noActiveBundles": "Aucun forfait actif trouvé",
+    "noPreviousBundles": "Aucun forfait précédent trouvé",
+    "status": {
+      "active": "Actif",
+      "deactivated": "Désactivé"
+    },
+    "col": {
+      "bundleName": "Nom du forfait",
+      "price": "Prix",
+      "duration": "Durée",
+      "features": "Fonctionnalités",
+      "status": "Statut",
+      "actions": "Actions",
+      "deactivatedOn": "Désactivé le",
+      "reason": "Raison"
+    }
+  },
   "legal": {
     "title": "Juridique",
     "terms": "Conditions d'utilisation",

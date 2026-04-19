@@ -51,6 +51,26 @@ export const mockCountries: Country[] = [
     currencyEn: "Moroccan Dirham", currencyAr: "درهم مغربي", currencyFr: "Dirham marocain",
     flag: "🇲🇦", phoneCode: "+212", regex: "^[67]\\d{8}$", createdAt: "2024-02-01",
   },
+  {
+    id: "C-011", iso: "FR", name_en: "France", name_ar: "فرنسا",
+    currencyEn: "Euro", currencyAr: "يورو", currencyFr: "Euro",
+    flag: "🇫🇷", phoneCode: "+33", regex: "^[67]\\d{8}$", createdAt: "2024-03-01",
+  },
+  {
+    id: "C-012", iso: "IT", name_en: "Italy", name_ar: "إيطاليا",
+    currencyEn: "Euro", currencyAr: "يورو", currencyFr: "Euro",
+    flag: "🇮🇹", phoneCode: "+39", regex: "^3\\d{9}$", createdAt: "2024-03-01",
+  },
+  {
+    id: "C-013", iso: "SN", name_en: "Senegal", name_ar: "السنغال",
+    currencyEn: "West African Franc", currencyAr: "فرنك غرب أفريقي", currencyFr: "Franc CFA",
+    flag: "🇸🇳", phoneCode: "+221", regex: "^7[0-8]\\d{7}$", createdAt: "2024-03-15",
+  },
+  {
+    id: "C-014", iso: "JP", name_en: "Japan", name_ar: "اليابان",
+    currencyEn: "Japanese Yen", currencyAr: "ين ياباني", currencyFr: "Yen japonais",
+    flag: "🇯🇵", phoneCode: "+81", regex: "^[789]0\\d{8}$", createdAt: "2024-03-15",
+  },
 ];
 
 export function getCountryById(id: string): Country | undefined {

@@ -49,6 +49,22 @@ export const mockCompanies: Company[] = [
     operatingIn: ["C-001", "C-002", "C-008"],
     createdAt: "2024-03-01",
   },
+  {
+    id: "CO-007",
+    name_en: "Apex Logistics UAE",
+    name_ar: "أبيكس للخدمات اللوجستية",
+    logo: "🚛",
+    operatingIn: ["C-001", "C-002", "C-004", "C-006"],
+    createdAt: "2024-05-01",
+  },
+  {
+    id: "CO-008",
+    name_en: "Étoile Distribution",
+    name_ar: "إيتوال للتوزيع",
+    logo: "⭐",
+    operatingIn: ["C-011", "C-010", "C-009"],
+    createdAt: "2024-06-01",
+  },
 ];
 
 export async function saveCompany(
