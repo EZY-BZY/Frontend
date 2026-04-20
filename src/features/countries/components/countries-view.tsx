@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { FilterBar, AddButton } from "@/components/shared/FilterBar";
 import { CountrySheet } from "./country-sheet";
@@ -16,6 +16,9 @@ const rowAnim = (i: number) => ({
 
 export function CountriesView() {
   const locale = useLocale();
+  const t = useTranslations("countries");
+  const tCommon = useTranslations("common");
+
   const [countries, setCountries] = useState<Country[]>([...mockCountries]);
   const [search, setSearch] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -56,15 +59,14 @@ export function CountriesView() {
       <FilterBar
         search={search}
         onSearchChange={setSearch}
-        searchPlaceholder="Search by name, ISO, phone code or currency…"
-        actions={<AddButton onClick={openAdd}>Add Country</AddButton>}
+        searchPlaceholder={t("searchPlaceholder")}
+        actions={<AddButton onClick={openAdd}>{t("addCountry")}</AddButton>}
       />
 
       <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
-        {/* Summary */}
         <div className="border-b border-slate-100 px-5 py-2.5">
           <span className="text-xs text-slate-400">
-            <strong className="text-slate-700">{filtered.length}</strong> countries
+            <strong className="text-slate-700">{filtered.length}</strong> {t("countryCountLabel")}
           </span>
         </div>
 
@@ -72,9 +74,9 @@ export function CountriesView() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-100">
-                {["Flag & Name", "ISO", "Phone Code", "Currency", "Regex Field", "Added"].map((h) => (
+                {(["flagName", "iso", "phoneCode", "currency", "regexField", "added"] as const).map((h) => (
                   <th key={h} className="px-5 py-3.5 text-start text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap">
-                    {h}
+                    {t(`col.${h}`)}
                   </th>
                 ))}
               </tr>
@@ -82,9 +84,7 @@ export function CountriesView() {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="h-32 text-center text-slate-400 text-sm">
-                    No countries found
-                  </td>
+                  <td colSpan={6} className="h-32 text-center text-slate-400 text-sm">{t("noCountries")}</td>
                 </tr>
               ) : (
                 filtered.map((country, i) => (
@@ -94,7 +94,6 @@ export function CountriesView() {
                     onClick={() => openView(country)}
                     className="border-b border-slate-50 last:border-0 hover:bg-[#EBF3FB]/40 cursor-pointer transition-colors"
                   >
-                    {/* Flag + Name */}
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
                         <span className="text-2xl leading-none">{country.flag}</span>
@@ -106,38 +105,20 @@ export function CountriesView() {
                         </div>
                       </div>
                     </td>
-
-                    {/* ISO */}
                     <td className="px-5 py-3.5">
-                      <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-mono font-semibold text-slate-600">
-                        {country.iso}
-                      </span>
+                      <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-mono font-semibold text-slate-600">{country.iso}</span>
                     </td>
-
-                    {/* Phone Code */}
                     <td className="px-5 py-3.5">
-                      <span className="rounded-full bg-[#E6F7F7] px-2.5 py-0.5 text-xs font-mono font-semibold text-[#28B8B1]" dir="ltr">
-                        {country.phoneCode}
-                      </span>
+                      <span className="rounded-full bg-[#E6F7F7] px-2.5 py-0.5 text-xs font-mono font-semibold text-[#28B8B1]" dir="ltr">{country.phoneCode}</span>
                     </td>
-
-                    {/* Currency */}
                     <td className="px-5 py-3.5">
-                      <span className="rounded-full bg-[#EBF3FB] px-2.5 py-0.5 text-xs font-semibold text-[#0A3D62]">
-                        {country[currencyKey]}
-                      </span>
+                      <span className="rounded-full bg-[#EBF3FB] px-2.5 py-0.5 text-xs font-semibold text-[#0A3D62]">{country[currencyKey]}</span>
                     </td>
-
-                    {/* Regex */}
                     <td className="px-5 py-3.5">
-                      <span className="font-mono text-xs text-slate-400 truncate max-w-32 block" title={country.regex}>
-                        {country.regex}
-                      </span>
+                      <span className="font-mono text-xs text-slate-400 truncate max-w-32 block" title={country.regex}>{country.regex}</span>
                     </td>
-
-                    {/* Date */}
                     <td className="px-5 py-3.5 text-xs text-slate-400 font-mono whitespace-nowrap">
-                      {new Date(country.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                      {new Date(country.createdAt).toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", { day: "2-digit", month: "short", year: "numeric" })}
                     </td>
                   </motion.tr>
                 ))
@@ -147,7 +128,7 @@ export function CountriesView() {
         </div>
 
         <div className="border-t border-slate-50 px-5 py-2.5 text-xs text-slate-400">
-          {filtered.length} of {countries.length} countries
+          {filtered.length} {tCommon("of")} {countries.length} {t("countryCountLabel")}
         </div>
       </div>
 

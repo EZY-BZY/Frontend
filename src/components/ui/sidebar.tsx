@@ -4,6 +4,7 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { PanelLeft } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
@@ -92,7 +93,11 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent
             side={side}
-            className={cn("w-[260px] p-0 flex flex-col gap-0", className)}
+            className={cn(
+              "w-[300px] p-0 flex flex-col gap-0",
+              "transition-transform duration-300 ease-in-out",
+              className
+            )}
           >
             {children}
           </SheetContent>
@@ -139,6 +144,9 @@ export function SidebarTrigger({
   ...props
 }: React.ComponentProps<"button">) {
   const { toggleSidebar } = useSidebar();
+  const locale = useLocale();
+  const t = useTranslations("common");
+  const isRTL = locale === "ar";
   return (
     <button
       type="button"
@@ -147,13 +155,16 @@ export function SidebarTrigger({
         onClick?.(e);
       }}
       className={cn(
-        "flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 transition-colors",
+        "flex h-11 w-11 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 transition-colors",
         className
       )}
-      aria-label="Toggle Sidebar"
+      aria-label={t("toggleSidebar")}
       {...props}
     >
-      <PanelLeft className="h-4 w-4" />
+      <PanelLeft
+        className={cn("h-5 w-5", isRTL && "-scale-x-100")}
+        aria-hidden
+      />
     </button>
   );
 }

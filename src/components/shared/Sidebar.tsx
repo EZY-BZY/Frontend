@@ -123,7 +123,7 @@ function NavRow({
           )}
           <Icon
             className={cn(
-              "h-[18px] w-[18px] shrink-0",
+              "h-5 w-5 shrink-0",
               isActive
                 ? "text-[#0A3D62]"
                 : "text-gray-400 group-hover/btn:text-gray-600"
@@ -137,7 +137,7 @@ function NavRow({
                 animate={{ opacity: 1, width: "auto" }}
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.15 }}
-                className="overflow-hidden whitespace-nowrap"
+                className="overflow-hidden whitespace-nowrap text-base"
               >
                 {t(item.key as Parameters<typeof t>[0])}
               </motion.span>
@@ -204,16 +204,16 @@ function CollapsibleNavGroup({
               >
                 <Icon
                   className={cn(
-                    "h-[18px] w-[18px] shrink-0",
+                    "h-5 w-5 shrink-0",
                     hasActiveChild ? "text-[#0A3D62]" : "text-gray-400"
                   )}
                 />
-                <span className="flex-1 text-start">
+                <span className="flex-1 text-start text-base">
                   {t(navKey as Parameters<typeof t>[0])}
                 </span>
                 <ChevronDown
                   className={cn(
-                    "h-4 w-4 text-gray-400 transition-transform duration-200",
+                    "h-4 w-4 text-gray-400 transition-transform duration-200 shrink-0",
                     open ? "rotate-180" : ""
                   )}
                 />
@@ -261,7 +261,7 @@ function UserFooter() {
             </span>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-gray-800 truncate leading-none">
-                Admin User
+                {tCommon("adminUser")}
               </p>
               <p className="text-[10px] text-gray-400 truncate mt-0.5 leading-none">
                 admin@b-easy.com
@@ -293,14 +293,21 @@ function UserFooter() {
 /* ─── AppSidebar ─────────────────────────────────────────────────── */
 export function AppSidebar({ onLinkClick }: { onLinkClick?: () => void } = {}) {
   const locale = useLocale();
-  const { state } = useSidebar();
+  const { state, setOpenMobile, isMobile } = useSidebar();
   const isRTL = locale === "ar";
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+    onLinkClick?.();
+  };
 
   return (
     <Sidebar side={isRTL ? "right" : "left"} collapsible="icon">
       {/* Header */}
       <SidebarHeader>
-        <div className="flex h-14 shrink-0 items-center justify-center border-b border-slate-100 px-4">
+        <div className="flex h-16 shrink-0 items-center justify-center border-b border-slate-100 px-4">
           <Image
             src="/logo.png"
             alt="B-EASY"
@@ -320,11 +327,11 @@ export function AppSidebar({ onLinkClick }: { onLinkClick?: () => void } = {}) {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {mainItems.map((item) => (
-                    <NavRow key={item.key} item={item} onLinkClick={onLinkClick} />
+                    <NavRow key={item.key} item={item} onLinkClick={handleLinkClick} />
                   ))}
-                  <NavRow item={companiesItem} onLinkClick={onLinkClick} />
+                  <NavRow item={companiesItem} onLinkClick={handleLinkClick} />
                   {financialItems.map((item) => (
-                    <NavRow key={item.key} item={item} onLinkClick={onLinkClick} />
+                    <NavRow key={item.key} item={item} onLinkClick={handleLinkClick} />
                   ))}
                 </SidebarMenu>
               </SidebarGroupContent>
@@ -334,14 +341,14 @@ export function AppSidebar({ onLinkClick }: { onLinkClick?: () => void } = {}) {
               navKey="metadata"
               icon={Database}
               items={metadataItems}
-              onLinkClick={onLinkClick}
+              onLinkClick={handleLinkClick}
             />
 
             <CollapsibleNavGroup
               navKey="legal"
               icon={Scale}
               items={legalItems}
-              onLinkClick={onLinkClick}
+              onLinkClick={handleLinkClick}
             />
           </div>
 

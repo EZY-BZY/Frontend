@@ -59,11 +59,10 @@ export function TopBar() {
 
   const segments = pathname.replace(`/${locale}`, "").split("/").filter(Boolean);
 
-  let pathAcc = "";
   const breadcrumbs = [
     { label: t("dashboard"), href: `/${locale}` },
-    ...segments.map((seg) => {
-      pathAcc += `/${seg}`;
+    ...segments.map((seg, index) => {
+      const pathAcc = `/${segments.slice(0, index + 1).join("/")}`;
       const navKey = pathToNavKey[seg];
       const label = navKey
         ? t(navKey as Parameters<typeof t>[0])
@@ -78,14 +77,14 @@ export function TopBar() {
 
   return (
     <header
-      className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-3 border-b border-slate-100 bg-white/95 px-4 md:px-5"
+      className="sticky top-0 z-20 flex h-16 shrink-0 items-center gap-3 border-b border-slate-100 bg-white/95 px-6 md:px-8"
       style={{ backdropFilter: "blur(8px)" }}
     >
       {/* Sidebar toggle (mobile: open drawer / desktop: collapse) */}
       <SidebarTrigger />
 
       {/* Breadcrumbs */}
-      <nav className="flex-1 min-w-0 hidden sm:block" aria-label="breadcrumb">
+      <nav className="flex-1 min-w-0 hidden sm:block" aria-label={tCommon("breadcrumb")}>
         <ol
           className={cn(
             "flex items-center gap-1 text-sm min-w-0",
@@ -119,11 +118,11 @@ export function TopBar() {
 
         {/* Notification bell */}
         <button
-          className="relative flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
-          aria-label="Notifications"
+          className="relative flex h-11 w-11 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
+          aria-label={tCommon("notifications")}
         >
-          <Bell className="h-4.5 w-4.5" />
-          <span className="absolute top-1.5 inset-e-1.5 h-2 w-2 rounded-full bg-[#28B8B1] ring-2 ring-white" />
+          <Bell className="h-5 w-5" />
+          <span className="absolute top-2 inset-e-2 h-2 w-2 rounded-full bg-[#28B8B1] ring-2 ring-white" />
         </button>
 
         {/* Divider */}
@@ -141,7 +140,7 @@ export function TopBar() {
               A
             </span>
             <div className={cn("hidden sm:block", isRTL ? "text-end" : "text-start")}>
-              <p className="text-xs font-semibold text-gray-800 leading-none">Admin</p>
+              <p className="text-xs font-semibold text-gray-800 leading-none">{tCommon("admin")}</p>
               <p className="text-[10px] text-gray-400 leading-none mt-0.5">
                 admin@b-easy.com
               </p>
@@ -175,7 +174,7 @@ export function TopBar() {
                   role="menu"
                 >
                   <div className="px-3 py-2 border-b border-slate-50">
-                    <p className="text-xs font-semibold text-gray-800">Admin User</p>
+                    <p className="text-xs font-semibold text-gray-800">{tCommon("adminUser")}</p>
                     <p className="text-[11px] text-gray-400">admin@b-easy.com</p>
                   </div>
                   <button

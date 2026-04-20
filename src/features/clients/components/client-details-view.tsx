@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import {
   ArrowLeft, ArrowRight,
   Mail, Phone, Calendar,
@@ -124,9 +125,9 @@ export function ClientDetailsView({ clientId }: ClientDetailsViewProps) {
                 {/* Join date */}
                 <span className="inline-flex items-center gap-2 text-sm text-slate-500">
                   <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#EBF3FB]">
-                    <Calendar className="h-3.5 w-3.5 text-[#0A3D62]" />
+                    <Phone className="h-3.5 w-3.5 text-[#0A3D62]" />
                   </div>
-                  {t("joinedDate")}: {new Date(client.joinDate).toLocaleDateString("en-GB", {
+                  {t("joinedDate")}: {new Date(client.joinDate).toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", {
                     day: "2-digit", month: "long", year: "numeric",
                   })}
                 </span>
@@ -172,25 +173,27 @@ export function ClientDetailsView({ clientId }: ClientDetailsViewProps) {
                       <p className="font-semibold text-slate-800 leading-tight">{wa.name}</p>
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className="text-xs text-slate-400 font-mono">{wa.id}</span>
-                        <span className="text-slate-300">·</span>
-                        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500">
-                          {wa.industry}
-                        </span>
-                      </div>
-                    </div>
+                <span className="text-slate-300">·</span>
+                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500">
+                  {wa.industry}
+                </span>
+              </div>
+            </div>
 
-                    {/* Status badge */}
-                    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${waStatusCls[wa.status]}`}>
-                      <span className={`me-1.5 h-1.5 w-1.5 rounded-full ${wa.status === "active" ? "bg-emerald-400" : "bg-slate-400"}`} />
-                      {wa.status === "active" ? t("status.active") : t("status.inactive")}
-                    </span>
+            {/* Status badge */}
+            <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${waStatusCls[wa.status]}`}>
+              <span className={cn("h-1.5 w-1.5 rounded-full", isRTL ? "ml-1.5" : "mr-1.5", wa.status === "active" ? "bg-emerald-400" : "bg-slate-400")} />
+              {wa.status === "active" ? t("status.active") : t("status.inactive")}
+            </span>
 
-                    {/* Created date */}
-                    <span className="hidden sm:block text-xs text-slate-400 font-mono whitespace-nowrap">
-                      {new Date(wa.createdAt).toLocaleDateString("en-GB", {
-                        day: "2-digit", month: "short", year: "numeric",
-                      })}
-                    </span>
+                  {/* Created date */}
+                  <span className="hidden sm:block text-xs text-slate-400 font-mono whitespace-nowrap">
+                    {new Date(wa.createdAt).toLocaleDateString(useLocale() === "ar" ? "ar-EG" : "en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
                   </motion.div>
                 ))}
               </div>

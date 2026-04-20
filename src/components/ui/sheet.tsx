@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 const Sheet = DialogPrimitive.Root;
@@ -28,47 +29,63 @@ SheetOverlay.displayName = "SheetOverlay";
 interface SheetContentProps
   extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
   side?: "top" | "right" | "bottom" | "left";
+  srOnlyTitle?: string;
 }
 
 const SheetContent = React.forwardRef<
   React.ComponentRef<typeof DialogPrimitive.Content>,
   SheetContentProps
->(({ side = "right", className, children, ...props }, ref) => (
+>(({ side = "right", className, children, srOnlyTitle = "Dialog", ...props }, ref) => {
+  const t = useTranslations("common");
+  return (
   <SheetPortal>
     <SheetOverlay />
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed z-50 flex flex-col gap-0 bg-white shadow-xl transition-all duration-300 ease-in-out focus:outline-none",
-        "data-[state=open]:animate-in data-[state=closed]:animate-out",
+        "fixed z-50 flex flex-col gap-0 bg-white shadow-xl focus:outline-none will-change-transform",
+        /* Physical left/right so RTL pages still open from the correct screen edge */
         side === "right" && [
-          "inset-y-0 inset-e-0 h-full w-full max-w-md border-s border-slate-100",
-          "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
+          "inset-y-0 right-0 h-full w-full max-w-md border-l border-slate-100",
+          "data-[state=open]:animate-[sheet-in-from-right_280ms_cubic-bezier(0.22,1,0.36,1)]",
+          "data-[state=closed]:animate-[sheet-out-to-right_220ms_cubic-bezier(0.4,0,1,1)]",
         ],
         side === "left" && [
-          "inset-y-0 inset-s-0 h-full w-full max-w-md border-e border-slate-100",
-          "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
+          "inset-y-0 left-0 h-full w-full max-w-md border-r border-slate-100",
+          "data-[state=open]:animate-[sheet-in-from-left_280ms_cubic-bezier(0.22,1,0.36,1)]",
+          "data-[state=closed]:animate-[sheet-out-to-left_220ms_cubic-bezier(0.4,0,1,1)]",
         ],
         side === "top" && [
           "inset-x-0 top-0 h-auto border-b border-slate-100",
-          "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
+          "data-[state=open]:animate-[sheet-in-from-top_280ms_cubic-bezier(0.22,1,0.36,1)]",
+          "data-[state=closed]:animate-[sheet-out-to-top_220ms_cubic-bezier(0.4,0,1,1)]",
         ],
         side === "bottom" && [
           "inset-x-0 bottom-0 h-auto border-t border-slate-100",
-          "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+          "data-[state=open]:animate-[sheet-in-from-bottom_280ms_cubic-bezier(0.22,1,0.36,1)]",
+          "data-[state=closed]:animate-[sheet-out-to-bottom_220ms_cubic-bezier(0.4,0,1,1)]",
         ],
         className
       )}
       {...props}
     >
+      <DialogPrimitive.Title className="sr-only">
+        {srOnlyTitle}
+      </DialogPrimitive.Title>
       {children}
-      <DialogPrimitive.Close className="absolute inset-e-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 ring-offset-white transition-colors hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#28B8B1] focus:ring-offset-2">
+      <DialogPrimitive.Close
+        className={cn(
+          "absolute top-4 flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 ring-offset-white transition-colors hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#28B8B1] focus:ring-offset-2",
+          side === "right" ? "left-4" : "right-4"
+        )}
+      >
         <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
+        <span className="sr-only">{t("close")}</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </SheetPortal>
-));
+  );
+});
 SheetContent.displayName = "SheetContent";
 
 function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

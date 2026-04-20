@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { DataTable } from "@/components/shared/DataTable";
 import { FilterBar, AddButton } from "@/components/shared/FilterBar";
 import { getCategoryColumns } from "./categories-table";
@@ -11,6 +11,8 @@ import type { Category } from "@/types";
 
 export function CategoriesView() {
   const locale = useLocale();
+  const t = useTranslations("categories");
+  const tCommon = useTranslations("common");
 
   const [categories, setCategories] = useState<Category[]>(mockCategories);
   const [search, setSearch] = useState("");
@@ -52,9 +54,9 @@ export function CategoriesView() {
       <FilterBar
         search={search}
         onSearchChange={setSearch}
-        searchPlaceholder="Search categories…"
+        searchPlaceholder={t("searchPlaceholder")}
         actions={
-          <AddButton onClick={openAdd}>Add Category</AddButton>
+          <AddButton onClick={openAdd}>{t("addCategory")}</AddButton>
         }
       />
 
@@ -62,14 +64,14 @@ export function CategoriesView() {
         {/* Summary bar */}
         <div className="border-b border-slate-100 px-5 py-2.5">
           <span className="text-xs text-slate-400">
-            <strong className="text-slate-700">{filtered.length}</strong> categories
+            <strong className="text-slate-700">{filtered.length}</strong> {t("categoryCountLabel")}
           </span>
         </div>
 
         <DataTable
           columns={columns}
           data={filtered}
-          emptyMessage="No categories found"
+          emptyMessage={t("noCategories")}
           className="rounded-none border-0 shadow-none"
         />
       </div>

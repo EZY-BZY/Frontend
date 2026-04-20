@@ -28,13 +28,6 @@ export const statusStyles: Record<RequestStatus, string> = {
   closed: "bg-red-50 text-red-600 border-red-100",
 };
 
-export const statusLabel: Record<RequestStatus, string> = {
-  new: "New",
-  inProgress: "In Progress",
-  resolved: "Resolved",
-  closed: "Closed",
-};
-
 export function ContactRequestsTable() {
   const t = useTranslations("contactRequests");
 
@@ -129,7 +122,7 @@ export function ContactRequestsTable() {
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
             className="flex h-7 w-7 items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            aria-label="Previous page"
+            aria-label={t("previous")}
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -155,7 +148,7 @@ export function ContactRequestsTable() {
             onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
             disabled={page >= pageCount - 1}
             className="flex h-7 w-7 items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            aria-label="Next page"
+            aria-label={t("next")}
           >
             <ChevronRight className="h-4 w-4" />
           </button>

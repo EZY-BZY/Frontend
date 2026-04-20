@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
   SheetDescription, SheetFooter, SheetClose,
@@ -16,14 +17,12 @@ import { MultiSelect } from "@/components/ui/multi-select";
 import { saveCompany } from "@/features/companies/data/mock";
 import type { Company, Country } from "@/types";
 
-const schema = z.object({
-  name_en:     z.string().min(2, "English name required"),
-  name_ar:     z.string().min(2, "Arabic name required"),
-  logo:        z.string().optional(),
-  operatingIn: z.array(z.string()).min(1, "Select at least one country"),
-});
-
-type FormData = z.infer<typeof schema>;
+type FormData = {
+  name_en: string;
+  name_ar: string;
+  logo?: string;
+  operatingIn: string[];
+};
 
 interface CompanySheetProps {
   open: boolean;
@@ -34,6 +33,16 @@ interface CompanySheetProps {
 }
 
 export function CompanySheet({ open, onOpenChange, company, countries, onSaved }: CompanySheetProps) {
+  const t = useTranslations("companies");
+  const tCommon = useTranslations("common");
+
+  const schema = z.object({
+    name_en:     z.string().min(2, t("validation.nameEnRequired")),
+    name_ar:     z.string().min(2, t("validation.nameArRequired")),
+    logo:        z.string().optional(),
+    operatingIn: z.array(z.string()).min(1, t("validation.countriesRequired")),
+  });
+
   const { register, handleSubmit, reset, control, formState: { errors, isSubmitting } } =
     useForm<FormData>({ resolver: zodResolver(schema), defaultValues: { operatingIn: [] } });
 
@@ -55,46 +64,38 @@ export function CompanySheet({ open, onOpenChange, company, countries, onSaved }
     onOpenChange(false);
   };
 
-  const countryOptions = countries.map((c) => ({
-    value: c.id,
-    label: c.name_en,
-    flag: c.flag,
-  }));
+  const countryOptions = countries.map((c) => ({ value: c.id, label: c.name_en, flag: c.flag }));
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>{company ? "Edit Company" : "Add Company"}</SheetTitle>
+          <SheetTitle>{company ? t("sheet.editTitle") : t("sheet.addTitle")}</SheetTitle>
           <SheetDescription>
-            {company ? "Update company details and operating countries." : "Add a new company with bilingual names."}
+            {company ? t("sheet.editDesc") : t("sheet.addDesc")}
           </SheetDescription>
         </SheetHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 px-6 py-6">
-          {/* Logo emoji */}
           <div className="space-y-1.5">
-            <Label htmlFor="logo">Logo Emoji (optional)</Label>
+            <Label htmlFor="logo">{t("sheet.logoEmoji")}</Label>
             <Input id="logo" placeholder="⚙️" {...register("logo")} />
           </div>
 
-          {/* English name */}
           <div className="space-y-1.5">
-            <Label htmlFor="name_en">Name (English)</Label>
+            <Label htmlFor="name_en">{t("sheet.nameEn")}</Label>
             <Input id="name_en" placeholder="Company name…" {...register("name_en")} dir="ltr" />
             {errors.name_en && <p className="text-xs text-red-500">{errors.name_en.message}</p>}
           </div>
 
-          {/* Arabic name */}
           <div className="space-y-1.5">
-            <Label htmlFor="name_ar">Name (Arabic)</Label>
+            <Label htmlFor="name_ar">{t("sheet.nameAr")}</Label>
             <Input id="name_ar" placeholder="اسم الشركة…" {...register("name_ar")} dir="rtl" />
             {errors.name_ar && <p className="text-xs text-red-500">{errors.name_ar.message}</p>}
           </div>
 
-          {/* Operating in — Multi-Select */}
           <div className="space-y-1.5">
-            <Label>Operating In</Label>
+            <Label>{t("sheet.operatingIn")}</Label>
             <Controller
               name="operatingIn"
               control={control}
@@ -103,28 +104,21 @@ export function CompanySheet({ open, onOpenChange, company, countries, onSaved }
                   options={countryOptions}
                   value={field.value}
                   onChange={field.onChange}
-                  placeholder="Select countries…"
+                  placeholder={t("sheet.selectCountries")}
                 />
               )}
             />
-            {errors.operatingIn && (
-              <p className="text-xs text-red-500">{errors.operatingIn.message}</p>
-            )}
+            {errors.operatingIn && <p className="text-xs text-red-500">{errors.operatingIn.message}</p>}
           </div>
         </form>
 
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="outline" type="button" disabled={isSubmitting}>Cancel</Button>
+            <Button variant="outline" type="button" disabled={isSubmitting}>{tCommon("cancel")}</Button>
           </SheetClose>
-          <Button
-            type="button"
-            onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
-            className="bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90"
-          >
+          <Button type="button" onClick={handleSubmit(onSubmit)} disabled={isSubmitting} className="bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90">
             {isSubmitting && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
-            {company ? "Save Changes" : "Add Company"}
+            {company ? tCommon("saveChanges") : t("addCompany")}
           </Button>
         </SheetFooter>
       </SheetContent>

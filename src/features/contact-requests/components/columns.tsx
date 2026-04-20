@@ -71,7 +71,7 @@ export function getColumns({
       ),
       cell: ({ row }) => (
         /* Always LTR for phone numbers even in RTL mode */
-        <span className="text-slate-500 text-sm font-mono" dir="ltr">
+        <span className="text-slate-500 text-sm font-mono whitespace-nowrap" dir="ltr">
           {row.original.countryCode} {row.original.phone}
         </span>
       ),
@@ -144,13 +144,13 @@ export function getColumns({
         <div className="flex items-center gap-1.5">
           <button
             className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-slate-400 hover:border-[#28B8B1] hover:text-[#28B8B1] transition-colors"
-            title="Copy"
+            title={t("copy")}
           >
             <Copy className="h-3.5 w-3.5" />
           </button>
           <button
             className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-slate-400 hover:border-[#28B8B1] hover:text-[#28B8B1] transition-colors"
-            title="View"
+            title={t("view")}
           >
             <Eye className="h-3.5 w-3.5" />
           </button>

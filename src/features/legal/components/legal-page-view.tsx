@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Pencil, Trash2, FileText } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { LegalSectionSheet, type LegalSectionFormData } from "./legal-section-sheet";
 import {
@@ -51,22 +52,24 @@ function DeleteButton({
   onConfirm: () => void;
 }) {
   const [confirming, setConfirming] = useState(false);
+  const t = useTranslations("legal");
+  const tCommon = useTranslations("common");
 
   if (confirming) {
     return (
       <div className="flex items-center gap-1.5">
-        <span className="text-xs text-red-500 font-medium">Confirm?</span>
+        <span className="text-xs text-red-500 font-medium">{t("confirmDelete")}</span>
         <button
           onClick={onConfirm}
           className="rounded px-2 py-0.5 text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
         >
-          Yes
+          {tCommon("yes")}
         </button>
         <button
           onClick={() => setConfirming(false)}
           className="rounded px-2 py-0.5 text-xs font-semibold bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors"
         >
-          No
+          {tCommon("no")}
         </button>
       </div>
     );
@@ -76,7 +79,7 @@ function DeleteButton({
     <button
       onClick={() => setConfirming(true)}
       className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors"
-      title="Delete section"
+      title={t("deleteSection")}
     >
       <Trash2 className="h-4 w-4" />
     </button>
@@ -89,6 +92,9 @@ interface LegalPageViewProps {
 }
 
 export function LegalPageView({ docType }: LegalPageViewProps) {
+  const t = useTranslations("legal");
+  const tCommon = useTranslations("common");
+  const locale = useLocale();
   const meta = DOC_META[docType];
 
   /* Clone initial mock data into local state so edits are reactive */
@@ -142,16 +148,11 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
             <FileText className="h-5 w-5 text-[#0A3D62]" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900 leading-tight">{meta.titleEn}</h2>
-            <p className="text-sm text-slate-500" dir="ltr">
-              {meta.titleFr}
-            </p>
-            <p
-              className="text-sm text-slate-400"
-              dir="rtl"
-              style={{ fontFamily: "var(--font-tajawal)" }}
-            >
-              {meta.titleAr}
+            <h2 className="text-lg font-bold text-slate-900 leading-tight">
+              {locale === "ar" ? meta.titleAr : locale === "fr" ? meta.titleFr : meta.titleEn}
+            </h2>
+            <p className="text-sm text-slate-500">
+              {locale === "en" ? meta.titleFr : meta.titleEn}
             </p>
           </div>
         </div>
@@ -161,7 +162,7 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
           className="gap-2 bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90 shrink-0"
         >
           <Plus className="h-4 w-4" />
-          Add Section
+          {t("addSection")}
         </Button>
       </motion.div>
 
@@ -174,7 +175,7 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
         >
           <div className="text-center">
             <FileText className="mx-auto h-8 w-8 text-slate-300 mb-2" />
-            <p className="text-sm text-slate-400">No sections yet. Add your first section.</p>
+            <p className="text-sm text-slate-400">{t("noSections")}</p>
           </div>
         </motion.div>
       ) : (
@@ -192,13 +193,13 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
                   {/* Card header: section number + actions */}
                   <div className="flex items-center justify-between border-b border-slate-50 px-5 py-3">
                     <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                      Section {section.order}
+                      {t("sectionPrefix")} {section.order}
                     </span>
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => handleEdit(section)}
                         className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-[#EBF3FB] hover:text-[#0A3D62] transition-colors"
-                        title="Edit section"
+                        title={t("editSectionBtn")}
                       >
                         <Pencil className="h-4 w-4" />
                       </button>

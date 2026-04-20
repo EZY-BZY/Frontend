@@ -23,7 +23,30 @@
     "profile": "Profile",
     "logout": "Logout",
     "settings": "Settings",
-    "all": "All"
+    "all": "All",
+    "saving": "Saving…",
+    "saveChanges": "Save Changes",
+    "addNew": "Add New",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "admin": "Admin",
+    "adminUser": "Admin User",
+    "toggleSidebar": "Toggle sidebar",
+    "notifications": "Notifications",
+    "breadcrumb": "Breadcrumb",
+    "selectPlaceholder": "Select…",
+    "searchEllipsis": "Search…",
+    "noOptions": "No options",
+    "removeItem": "Remove",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "copy": "Copy",
+    "view": "View",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -39,6 +62,8 @@
     "legal": "Legal",
     "countries": "Countries",
     "companies": "Companies",
+    "governorates": "Governorates",
+    "workAccounts": "Work Accounts",
     "privacyPolicy": "Privacy Policy",
     "termsConditions": "Terms & Conditions",
     "deliveryTerms": "Delivery Terms",
@@ -63,7 +88,24 @@
     "totalEmployees": "Total Employees",
     "contactRequests": "Contact Requests",
     "pendingRequests": "Pending",
-    "welcomeMessage": "Welcome to B-EASY Dashboard"
+    "welcomeMessage": "Welcome to B-EASY Dashboard",
+    "activeEmployees": "Active Employees",
+    "categories": "Categories",
+    "deltaThisMonth": "+2 this month",
+    "deltaNew": "{count} new",
+    "deltaTotalProducts": "{count} total products",
+    "deltaOnLeave": "{count} on leave",
+    "employeesActive": "{count} employees active",
+    "openRequests": "{count} open requests",
+    "activeCategories": "{count} active categories",
+    "revenueOverview": "Revenue Overview",
+    "last7Months": "Last 7 months",
+    "vsLastQuarter": "+31% vs last quarter",
+    "recentRequests": "Recent Requests",
+    "viewAll": "View all",
+    "teamByPosition": "Team by Position",
+    "subscriptions": "subscriptions",
+    "statusInProgress": "In Progress"
   },
   "contactRequests": {
     "title": "Contact Requests",
@@ -96,7 +138,11 @@
       "closed": "Closed"
     },
     "noRequests": "No contact requests found",
-    "totalRequests": "Total requests"
+    "totalRequests": "Total requests",
+    "previous": "Previous",
+    "next": "Next",
+    "copy": "Copy",
+    "view": "View"
   },
   "employees": {
     "title": "Employees",
@@ -105,6 +151,37 @@
     "positions": {
       "admin": "Admin",
       "support": "Support"
+    },
+    "col": {
+      "employee": "Employee",
+      "email": "Email",
+      "position": "Position",
+      "phone": "Phone",
+      "joined": "Joined"
+    },
+    "noEmployees": "No employees found",
+    "showing": "Showing",
+    "employeeCountLabel": "employees",
+    "searchPlaceholder": "Search by name or email…",
+    "exportBtn": "Export",
+    "addNewTitle": "Add New Employee",
+    "addNewDesc": "Fill in the details below. The employee will appear in the table immediately.",
+    "form": {
+      "fullName": "Full Name",
+      "emailAddress": "Email Address",
+      "phoneNumber": "Phone Number",
+      "position": "Position",
+      "initialPassword": "Initial Password",
+      "namePlaceholder": "e.g. Sarah Johnson",
+      "emailPlaceholder": "name@b-easy.com",
+      "phonePlaceholder": "+1 555-0101",
+      "passwordPlaceholder": "Min. 8 characters"
+    },
+    "validation": {
+      "nameMin": "Name must be at least 2 characters",
+      "emailInvalid": "Enter a valid email",
+      "phoneRequired": "Phone number required",
+      "passwordMin": "Password must be at least 8 characters"
     }
   },
   "clients": {
@@ -154,11 +231,61 @@
   "categories": {
     "title": "Categories",
     "subtitle": "Manage product categories",
-    "addCategory": "Add Category"
+    "addCategory": "Add Category",
+    "searchPlaceholder": "Search categories…",
+    "categoryCountLabel": "categories",
+    "noCategories": "No categories found",
+    "col": {
+      "category": "Category",
+      "slug": "Slug",
+      "created": "Created"
+    },
+    "sheet": {
+      "editTitle": "Edit Category",
+      "addTitle": "Add New Category",
+      "description": "Provide bilingual names so the UI switches correctly across locales.",
+      "iconEmoji": "Icon Emoji",
+      "parentCategory": "Parent Category",
+      "noneTopLevel": "None (top-level)",
+      "nameEn": "Name (English)",
+      "nameAr": "Name (Arabic)",
+      "nameFr": "Name (French)",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Short description…"
+    },
+    "validation": {
+      "nameEnRequired": "English name required",
+      "nameArRequired": "Arabic name required",
+      "nameFrRequired": "French name required",
+      "descEnRequired": "English description required"
+    }
   },
   "subscriptions": {
     "title": "Subscription Ledger",
-    "subtitle": "Manage client subscriptions and billing"
+    "subtitle": "Manage client subscriptions and billing",
+    "searchPlaceholder": "Search by client or plan…",
+    "countLabel": "subscriptions",
+    "activeMRR": "Active MRR:",
+    "perYear": "/yr",
+    "noSubscriptions": "No subscriptions found",
+    "cancellableYes": "Yes",
+    "cancellableNo": "No",
+    "col": {
+      "id": "ID",
+      "client": "Client",
+      "plan": "Plan",
+      "amount": "Amount",
+      "status": "Status",
+      "startDate": "Start Date",
+      "cancellable": "Cancellable"
+    },
+    "statuses": {
+      "all": "All Statuses",
+      "active": "Active",
+      "trial": "Trial",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    }
   },
   "bundles": {
     "title": "Bundle Management",
@@ -167,6 +294,7 @@
       "active": "Active Bundles",
       "previous": "Previous Bundles"
     },
+    "searchPlaceholder": "Search bundles…",
     "createBundle": "Create Bundle",
     "deactivate": "Deactivate",
     "viewDetails": "View Details",
@@ -187,11 +315,197 @@
       "actions": "Actions",
       "deactivatedOn": "Deactivated On",
       "reason": "Reason"
+    },
+    "form": {
+      "nameEn": "Name (English)",
+      "nameAr": "Name (Arabic)",
+      "price": "Price",
+      "currency": "Currency",
+      "durationEn": "Duration (English)",
+      "durationAr": "Duration (Arabic)",
+      "featuresEn": "Features (English)",
+      "featuresAr": "Features (Arabic)",
+      "separateWithCommas": "Separate features with commas",
+      "separateWithArabicComma": "Separate with Arabic comma ،",
+      "deactivationReasonEn": "Deactivation Reason (English)",
+      "deactivationReasonAr": "Deactivation Reason (Arabic)"
+    },
+    "sheet": {
+      "createTitle": "Create Bundle",
+      "createDesc": "Fill in bilingual details. The bundle will appear in Active Bundles immediately.",
+      "deactivateTitle": "Deactivate Bundle",
+      "deactivateWillMove": "\"{name}\" will be moved to Previous Bundles and hidden from users.",
+      "deactivateWarning": "This action is permanent. You can still duplicate this bundle later to create a new active one.",
+      "bundleDetailsDesc": "Bundle details — read only",
+      "deactivationInfo": "Deactivation Info",
+      "createdLabel": "Created:",
+      "englishName": "English Name",
+      "arabicName": "Arabic Name"
+    },
+    "validation": {
+      "nameEnRequired": "English name required",
+      "nameArRequired": "Arabic name required",
+      "priceMin": "Price must be ≥ 0",
+      "durationRequired": "Duration required",
+      "featuresEnRequired": "At least one English feature required",
+      "featuresArRequired": "At least one Arabic feature required",
+      "reasonEnRequired": "Reason required (min 5 characters)",
+      "reasonArRequired": "Reason required (min 5 characters)"
+    },
+    "deactivating": "Deactivating…",
+    "confirmDeactivation": "Confirm Deactivation",
+    "deactivateBundle": "Deactivate Bundle",
+    "activeBundlesFooter": "{shown} of {total} active bundles",
+    "previousBundlesFooter": "{shown} of {total} previous bundles",
+    "closeBtn": "Close"
+  },
+  "countries": {
+    "title": "Countries",
+    "subtitle": "Manage country metadata",
+    "searchPlaceholder": "Search by name, ISO, phone code or currency…",
+    "addCountry": "Add Country",
+    "countryCountLabel": "countries",
+    "noCountries": "No countries found",
+    "col": {
+      "flagName": "Flag & Name",
+      "iso": "ISO",
+      "phoneCode": "Phone Code",
+      "currency": "Currency",
+      "regexField": "Regex Field",
+      "added": "Added"
+    },
+    "details": {
+      "isoCode": "ISO Code",
+      "phoneCode": "Phone Code",
+      "currencyEn": "Currency (EN)",
+      "currencyAr": "Currency (AR)",
+      "currencyFr": "Currency (FR)",
+      "regex": "Regex",
+      "id": "ID",
+      "added": "Added"
+    },
+    "sheet": {
+      "detailsTitle": "Country Details",
+      "editTitle": "Edit Country",
+      "addTitle": "Add Country",
+      "detailsDesc": "View and edit country information.",
+      "editDesc": "Update the country details.",
+      "addDesc": "Fill in the fields to add a new country.",
+      "isoCode": "ISO Code",
+      "flagEmoji": "Flag Emoji",
+      "nameEn": "Name (English)",
+      "nameAr": "Name (Arabic)",
+      "phoneCode": "Phone Code",
+      "regexField": "Regex Field",
+      "currencySection": "Currency (3 Languages)",
+      "currencyEn": "English",
+      "currencyAr": "Arabic",
+      "currencyFr": "French"
+    },
+    "validation": {
+      "nameEnRequired": "English name required",
+      "nameArRequired": "Arabic name required",
+      "currencyEnRequired": "English currency name required",
+      "currencyArRequired": "Arabic currency name required",
+      "currencyFrRequired": "French currency name required",
+      "flagRequired": "Flag emoji required",
+      "phoneCodeRequired": "Phone code required",
+      "phoneCodeFormat": "Must start with + followed by digits",
+      "regexRequired": "Regex pattern required"
+    }
+  },
+  "companies": {
+    "title": "Companies",
+    "subtitle": "Manage companies",
+    "searchPlaceholder": "Search companies…",
+    "addCompany": "Add Company",
+    "companyCountLabel": "companies",
+    "noCompanies": "No companies found",
+    "col": {
+      "company": "Company",
+      "operatingIn": "Operating In",
+      "added": "Added",
+      "actions": "Actions"
+    },
+    "sheet": {
+      "editTitle": "Edit Company",
+      "addTitle": "Add Company",
+      "editDesc": "Update company details and operating countries.",
+      "addDesc": "Add a new company with bilingual names.",
+      "logoEmoji": "Logo Emoji (optional)",
+      "nameEn": "Name (English)",
+      "nameAr": "Name (Arabic)",
+      "operatingIn": "Operating In",
+      "selectCountries": "Select countries…"
+    },
+    "validation": {
+      "nameEnRequired": "English name required",
+      "nameArRequired": "Arabic name required",
+      "countriesRequired": "Select at least one country"
+    }
+  },
+  "governorates": {
+    "title": "Governorates",
+    "subtitle": "Manage governorates and regions",
+    "searchPlaceholder": "Search governorates…",
+    "addGovernorates": "Add Governorate",
+    "allCountries": "All countries",
+    "governorateCountLabel": "governorates",
+    "noGovernorates": "No governorates found",
+    "col": {
+      "governorate": "Governorate",
+      "country": "Country",
+      "added": "Added",
+      "actions": "Actions"
+    },
+    "sheet": {
+      "editTitle": "Edit Governorate",
+      "addTitle": "Add Governorate",
+      "editDesc": "Update governorate details.",
+      "addDesc": "Add a new region or governorate.",
+      "parentCountry": "Parent Country",
+      "nameEn": "Name (English)",
+      "nameAr": "Name (Arabic)",
+      "selectCountry": "Select country…"
+    },
+    "validation": {
+      "nameEnRequired": "English name required",
+      "nameArRequired": "Arabic name required",
+      "countryRequired": "Parent country required"
     }
   },
   "legal": {
     "title": "Legal",
     "terms": "Terms of Service",
-    "privacy": "Privacy Policy"
+    "privacy": "Privacy Policy",
+    "addSection": "Add Section",
+    "sectionPrefix": "Section",
+    "languageEn": "English",
+    "languageFr": "French",
+    "languageAr": "Arabic",
+    "noSections": "No sections yet. Add your first section.",
+    "confirmDelete": "Confirm?",
+    "deleteSection": "Delete section",
+    "editSectionBtn": "Edit section",
+    "sheet": {
+      "editTitle": "Edit Section",
+      "addTitle": "Add Section",
+      "editDesc": "Update the English, French, and Arabic content for this section.",
+      "addDesc": "Fill in English, French, and Arabic fields to add a new section.",
+      "titleEn": "Title (English)",
+      "contentEn": "Content (English)",
+      "titleFr": "Title (French)",
+      "contentFr": "Content (French)",
+      "titleAr": "Title (Arabic)",
+      "contentAr": "Content (Arabic)"
+    },
+    "validation": {
+      "titleEnRequired": "Title (English) is required",
+      "titleFrRequired": "Title (French) is required",
+      "titleArRequired": "Title (Arabic) is required",
+      "contentEnMin": "English content must be at least 10 characters",
+      "contentFrMin": "French content must be at least 10 characters",
+      "contentArRequired": "Arabic content is required"
+    }
   }
 }

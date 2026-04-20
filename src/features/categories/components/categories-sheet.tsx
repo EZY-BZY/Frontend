@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
   SheetDescription, SheetFooter,
@@ -16,16 +17,14 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import type { Category } from "@/types";
 
-const schema = z.object({
-  name_en:     z.string().min(2, "English name required"),
-  name_ar:     z.string().min(2, "Arabic name required"),
-  name_fr:     z.string().min(2, "French name required"),
-  description_en: z.string().min(4, "English description required"),
-  iconEmoji:   z.string().optional(),
-  parentId:    z.string().optional(),
-});
-
-type FormData = z.infer<typeof schema>;
+type FormData = {
+  name_en: string;
+  name_ar: string;
+  name_fr: string;
+  description_en: string;
+  iconEmoji?: string;
+  parentId?: string;
+};
 
 async function saveCategory(data: FormData, existingId?: string): Promise<Category> {
   await new Promise((r) => setTimeout(r, 600));
@@ -50,12 +49,23 @@ interface CategorySheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   category?: Category;
-  /** Existing categories for parent selection */
   allCategories?: Category[];
   onSaved: (cat: Category) => void;
 }
 
 export function CategorySheet({ open, onOpenChange, category, allCategories = [], onSaved }: CategorySheetProps) {
+  const t = useTranslations("categories");
+  const tCommon = useTranslations("common");
+
+  const schema = z.object({
+    name_en:        z.string().min(2, t("validation.nameEnRequired")),
+    name_ar:        z.string().min(2, t("validation.nameArRequired")),
+    name_fr:        z.string().min(2, t("validation.nameFrRequired")),
+    description_en: z.string().min(4, t("validation.descEnRequired")),
+    iconEmoji:      z.string().optional(),
+    parentId:       z.string().optional(),
+  });
+
   const {
     register, handleSubmit, reset, setValue, watch,
     formState: { errors, isSubmitting },
@@ -83,38 +93,35 @@ export function CategorySheet({ open, onOpenChange, category, allCategories = []
     onOpenChange(false);
   };
 
-  /* Exclude current category from parent options (can't be its own parent) */
   const parentOptions = allCategories.filter((c) => c.id !== category?.id);
 
   return (
     <Sheet open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) reset(); }}>
       <SheetContent side="right" className="overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>{category ? "Edit Category" : "Add New Category"}</SheetTitle>
-          <SheetDescription>
-            Provide bilingual names so the UI switches correctly across locales.
-          </SheetDescription>
+          <SheetTitle>{category ? t("sheet.editTitle") : t("sheet.addTitle")}</SheetTitle>
+          <SheetDescription>{t("sheet.description")}</SheetDescription>
         </SheetHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 px-6 py-6">
           {/* Icon emoji + parent */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label htmlFor="iconEmoji">Icon Emoji</Label>
+              <Label htmlFor="iconEmoji">{t("sheet.iconEmoji")}</Label>
               <Input id="iconEmoji" placeholder="⚙️" {...register("iconEmoji")} />
             </div>
 
             <div className="space-y-1.5">
-              <Label>Parent Category</Label>
+              <Label>{t("sheet.parentCategory")}</Label>
               <Select
                 value={selectedParentId ?? ""}
                 onValueChange={(v) => setValue("parentId", v === "none" ? "" : v)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="None (top-level)" />
+                  <SelectValue placeholder={t("sheet.noneTopLevel")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">None (top-level)</SelectItem>
+                  <SelectItem value="none">{t("sheet.noneTopLevel")}</SelectItem>
                   {parentOptions.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
                       {c.iconEmoji ? `${c.iconEmoji} ` : ""}{c.name_en}
@@ -127,29 +134,29 @@ export function CategorySheet({ open, onOpenChange, category, allCategories = []
 
           {/* English name */}
           <div className="space-y-1.5">
-            <Label htmlFor="name_en">Name (English)</Label>
+            <Label htmlFor="name_en">{t("sheet.nameEn")}</Label>
             <Input id="name_en" placeholder="e.g. Industrial Equipment" {...register("name_en")} />
             {errors.name_en && <p className="text-xs text-red-500">{errors.name_en.message}</p>}
           </div>
 
           {/* Arabic name */}
           <div className="space-y-1.5">
-            <Label htmlFor="name_ar">Name (Arabic)</Label>
+            <Label htmlFor="name_ar">{t("sheet.nameAr")}</Label>
             <Input id="name_ar" placeholder="مثل: المعدات الصناعية" dir="rtl" {...register("name_ar")} />
             {errors.name_ar && <p className="text-xs text-red-500">{errors.name_ar.message}</p>}
           </div>
 
           {/* French name */}
           <div className="space-y-1.5">
-            <Label htmlFor="name_fr">Name (French)</Label>
+            <Label htmlFor="name_fr">{t("sheet.nameFr")}</Label>
             <Input id="name_fr" placeholder="ex. Équipements industriels" {...register("name_fr")} />
             {errors.name_fr && <p className="text-xs text-red-500">{errors.name_fr.message}</p>}
           </div>
 
           {/* Description */}
           <div className="space-y-1.5">
-            <Label htmlFor="description_en">Description</Label>
-            <Input id="description_en" placeholder="Short description…" {...register("description_en")} />
+            <Label htmlFor="description_en">{t("sheet.descriptionLabel")}</Label>
+            <Input id="description_en" placeholder={t("sheet.descriptionPlaceholder")} {...register("description_en")} />
             {errors.description_en && <p className="text-xs text-red-500">{errors.description_en.message}</p>}
           </div>
         </form>
@@ -161,7 +168,7 @@ export function CategorySheet({ open, onOpenChange, category, allCategories = []
             className="flex-1"
             onClick={() => { onOpenChange(false); reset(); }}
           >
-            Cancel
+            {tCommon("cancel")}
           </Button>
           <Button
             type="button"
@@ -172,9 +179,9 @@ export function CategorySheet({ open, onOpenChange, category, allCategories = []
             {isSubmitting ? (
               <span className="flex items-center gap-2">
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                Saving…
+                {tCommon("saving")}
               </span>
-            ) : category ? "Save Changes" : "Add Category"}
+            ) : category ? tCommon("saveChanges") : t("addCategory")}
           </Button>
         </SheetFooter>
       </SheetContent>

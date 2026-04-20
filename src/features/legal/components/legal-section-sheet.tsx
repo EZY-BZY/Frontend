@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Sheet,
   SheetContent,
@@ -44,7 +45,18 @@ export function LegalSectionSheet({
   section,
   onSave,
 }: LegalSectionSheetProps) {
+  const t = useTranslations("legal");
+  const tCommon = useTranslations("common");
   const isEditing = Boolean(section);
+
+  const schema = z.object({
+    titleEn: z.string().min(2, t("validation.titleEnRequired")),
+    titleFr: z.string().min(2, t("validation.titleFrRequired")),
+    titleAr: z.string().min(2, t("validation.titleArRequired")),
+    contentEn: z.string().min(10, t("validation.contentEnMin")),
+    contentFr: z.string().min(10, t("validation.contentFrMin")),
+    contentAr: z.string().min(10, t("validation.contentArRequired")),
+  });
 
   const {
     register,
@@ -52,7 +64,7 @@ export function LegalSectionSheet({
     reset,
     formState: { errors, isSubmitting },
   } = useForm<LegalSectionFormData>({
-    resolver: zodResolver(sectionSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       titleEn: "",
       titleFr: "",
@@ -95,11 +107,9 @@ export function LegalSectionSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full max-w-lg overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>{isEditing ? "Edit Section" : "Add Section"}</SheetTitle>
+          <SheetTitle>{isEditing ? t("sheet.editTitle") : t("sheet.addTitle")}</SheetTitle>
           <SheetDescription>
-            {isEditing
-              ? "Update the English, French, and Arabic content for this section."
-              : "Fill in English, French, and Arabic fields to add a new section."}
+            {isEditing ? t("sheet.editDesc") : t("sheet.addDesc")}
           </SheetDescription>
         </SheetHeader>
 
@@ -107,14 +117,14 @@ export function LegalSectionSheet({
           {/* ── English fields ─────────────────────────────────────── */}
           <fieldset className="space-y-4">
             <legend className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
-              English
+              {tCommon("all")} (EN)
             </legend>
 
             <div className="space-y-1.5">
-              <Label htmlFor="titleEn">Title (English)</Label>
+              <Label htmlFor="titleEn">{t("sheet.titleEn")}</Label>
               <Input
                 id="titleEn"
-                placeholder="Section title…"
+                placeholder={t("sheet.titleEn") + "..."}
                 {...register("titleEn")}
                 dir="ltr"
               />
@@ -124,11 +134,11 @@ export function LegalSectionSheet({
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="contentEn">Content (English)</Label>
+              <Label htmlFor="contentEn">{t("sheet.contentEn")}</Label>
               <textarea
                 id="contentEn"
                 rows={5}
-                placeholder="Section body text…"
+                placeholder={t("sheet.contentEn") + "..."}
                 {...register("contentEn")}
                 dir="ltr"
                 className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#28B8B1] focus:ring-offset-1 resize-none"
@@ -142,14 +152,14 @@ export function LegalSectionSheet({
           {/* ── French fields ─────────────────────────────────────── */}
           <fieldset className="space-y-4">
             <legend className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
-              Français
+              Français (FR)
             </legend>
 
             <div className="space-y-1.5">
-              <Label htmlFor="titleFr">Titre (français)</Label>
+              <Label htmlFor="titleFr">{t("sheet.titleFr")}</Label>
               <Input
                 id="titleFr"
-                placeholder="Titre de la section…"
+                placeholder={t("sheet.titleFr") + "..."}
                 {...register("titleFr")}
                 dir="ltr"
               />
@@ -159,11 +169,11 @@ export function LegalSectionSheet({
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="contentFr">Contenu (français)</Label>
+              <Label htmlFor="contentFr">{t("sheet.contentFr")}</Label>
               <textarea
                 id="contentFr"
                 rows={5}
-                placeholder="Texte du corps de la section…"
+                placeholder={t("sheet.contentFr") + "..."}
                 {...register("contentFr")}
                 dir="ltr"
                 className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#28B8B1] focus:ring-offset-1 resize-none"
@@ -177,17 +187,17 @@ export function LegalSectionSheet({
           {/* ── Arabic fields ──────────────────────────────────────── */}
           <fieldset className="space-y-4">
             <legend className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
-              العربية
+              العربية (AR)
             </legend>
 
             <div className="space-y-1.5">
-              <Label htmlFor="titleAr">العنوان (عربي)</Label>
+              <Label htmlFor="titleAr">{t("sheet.titleAr")}</Label>
               <Input
                 id="titleAr"
-                placeholder="عنوان القسم…"
+                placeholder={t("sheet.titleAr") + "..."}
                 {...register("titleAr")}
                 dir="rtl"
-                style={{ fontFamily: "var(--font-tajawal)" }}
+                style={{ fontFamily: "var(--font-arabic)" }}
               />
               {errors.titleAr && (
                 <p className="text-xs text-red-500 text-end">{errors.titleAr.message}</p>
@@ -195,14 +205,14 @@ export function LegalSectionSheet({
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="contentAr">المحتوى (عربي)</Label>
+              <Label htmlFor="contentAr">{t("sheet.contentAr")}</Label>
               <textarea
                 id="contentAr"
                 rows={5}
-                placeholder="نص القسم…"
+                placeholder={t("sheet.contentAr") + "..."}
                 {...register("contentAr")}
                 dir="rtl"
-                style={{ fontFamily: "var(--font-tajawal)" }}
+                style={{ fontFamily: "var(--font-arabic)" }}
                 className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#28B8B1] focus:ring-offset-1 resize-none"
               />
               {errors.contentAr && (
@@ -215,7 +225,7 @@ export function LegalSectionSheet({
         <SheetFooter>
           <SheetClose asChild>
             <Button variant="outline" type="button" disabled={isSubmitting}>
-              Cancel
+              {tCommon("cancel")}
             </Button>
           </SheetClose>
           <Button
@@ -225,7 +235,7 @@ export function LegalSectionSheet({
             className="bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90"
           >
             {isSubmitting && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
-            {isEditing ? "Save Changes" : "Add Section"}
+            {isEditing ? tCommon("saveChanges") : t("addSection")}
           </Button>
         </SheetFooter>
       </SheetContent>

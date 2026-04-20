@@ -2,6 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { Tag } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { Category } from "@/types";
 
 const COLORS = [
@@ -12,7 +13,6 @@ const COLORS = [
 interface CatColumnsOptions {
   locale: string;
   onEdit?: (cat: Category) => void;
-  /** All categories — used to resolve parent names */
   allCategories?: Category[];
 }
 
@@ -24,16 +24,13 @@ export function getCategoryColumns({ locale, onEdit, allCategories = [] }: CatCo
   return [
     {
       id: "name",
-      header: () => (
-        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Category</span>
-      ),
+      header: () => <CategoryColHeader colKey="category" />,
       cell: ({ row, table }) => {
         const idx = table.getRowModel().rows.findIndex((r) => r.id === row.id);
         const color = COLORS[idx % COLORS.length];
         const parent = row.original.parentId ? parentMap[row.original.parentId] : undefined;
         return (
           <div className="flex items-center gap-3">
-            {/* Icon: emoji if available, else colored Tag */}
             <div
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg"
               style={{ backgroundColor: color + "18" }}
@@ -63,37 +60,54 @@ export function getCategoryColumns({ locale, onEdit, allCategories = [] }: CatCo
     },
     {
       accessorKey: "slug",
-      header: () => (
-        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Slug</span>
-      ),
+      header: () => <CategoryColHeader colKey="slug" />,
       cell: ({ row }) => (
         <span className="font-mono text-xs text-slate-400">{row.original.slug}</span>
       ),
     },
     {
       accessorKey: "createdAt",
-      header: () => (
-        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Created</span>
-      ),
+      header: () => <CategoryColHeader colKey="created" />,
       cell: ({ row }) => (
         <span className="text-xs text-slate-400 font-mono">
-          {new Date(row.original.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+          {new Date(row.original.createdAt).toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", { day: "2-digit", month: "short", year: "numeric" })}
         </span>
       ),
     },
     ...(onEdit
       ? [{
           id: "actions",
-          header: () => <span className="sr-only">Actions</span>,
+          header: () => <ActionsHeader />,
           cell: ({ row }: { row: { original: Category } }) => (
-            <button
-              onClick={() => onEdit(row.original)}
-              className="rounded-lg px-3 py-1.5 text-xs font-medium border border-slate-200 text-slate-500 hover:border-[#28B8B1] hover:text-[#0A3D62] transition-colors"
-            >
-              Edit
-            </button>
+            <EditButton onEdit={onEdit} row={row.original} />
           ),
         } satisfies ColumnDef<Category>]
       : []),
   ];
+}
+
+function CategoryColHeader({ colKey }: { colKey: "category" | "slug" | "created" }) {
+  const t = useTranslations("categories");
+  return (
+    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+      {t(`col.${colKey}`)}
+    </span>
+  );
+}
+
+function ActionsHeader() {
+  const t = useTranslations("common");
+  return <span className="sr-only">{t("actions")}</span>;
+}
+
+function EditButton({ onEdit, row }: { onEdit: (cat: Category) => void; row: Category }) {
+  const t = useTranslations("common");
+  return (
+    <button
+      onClick={() => onEdit(row)}
+      className="rounded-lg px-3 py-1.5 text-xs font-medium border border-slate-200 text-slate-500 hover:border-[#28B8B1] hover:text-[#0A3D62] transition-colors"
+    >
+      {t("edit")}
+    </button>
+  );
 }

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
   SheetDescription, SheetFooter, SheetClose,
@@ -18,13 +19,7 @@ import { Button } from "@/components/ui/button";
 import { saveGovernorate } from "@/features/governorates/data/mock";
 import type { Country, Governorate } from "@/types";
 
-const schema = z.object({
-  name_en:   z.string().min(2, "English name required"),
-  name_ar:   z.string().min(2, "Arabic name required"),
-  countryId: z.string().min(1, "Parent country required"),
-});
-
-type FormData = z.infer<typeof schema>;
+type FormData = { name_en: string; name_ar: string; countryId: string };
 
 interface GovernorateSheetProps {
   open: boolean;
@@ -34,9 +29,16 @@ interface GovernorateSheetProps {
   onSaved: (governorate: Governorate) => void;
 }
 
-export function GovernorateSheet({
-  open, onOpenChange, governorate, countries, onSaved,
-}: GovernorateSheetProps) {
+export function GovernorateSheet({ open, onOpenChange, governorate, countries, onSaved }: GovernorateSheetProps) {
+  const t = useTranslations("governorates");
+  const tCommon = useTranslations("common");
+
+  const schema = z.object({
+    name_en:   z.string().min(2, t("validation.nameEnRequired")),
+    name_ar:   z.string().min(2, t("validation.nameArRequired")),
+    countryId: z.string().min(1, t("validation.countryRequired")),
+  });
+
   const { register, handleSubmit, reset, setValue, watch, formState: { errors, isSubmitting } } =
     useForm<FormData>({ resolver: zodResolver(schema) });
 
@@ -61,22 +63,21 @@ export function GovernorateSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>{governorate ? "Edit Governorate" : "Add Governorate"}</SheetTitle>
+          <SheetTitle>{governorate ? t("sheet.editTitle") : t("sheet.addTitle")}</SheetTitle>
           <SheetDescription>
-            {governorate ? "Update governorate details." : "Add a new region or governorate."}
+            {governorate ? t("sheet.editDesc") : t("sheet.addDesc")}
           </SheetDescription>
         </SheetHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 px-6 py-6">
-          {/* Parent country */}
           <div className="space-y-1.5">
-            <Label>Parent Country</Label>
+            <Label>{t("sheet.parentCountry")}</Label>
             <Select
               value={selectedCountryId}
               onValueChange={(v) => setValue("countryId", v, { shouldValidate: true })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select country…" />
+                <SelectValue placeholder={t("sheet.selectCountry")} />
               </SelectTrigger>
               <SelectContent>
                 {countries.map((c) => (
@@ -92,16 +93,14 @@ export function GovernorateSheet({
             {errors.countryId && <p className="text-xs text-red-500">{errors.countryId.message}</p>}
           </div>
 
-          {/* English name */}
           <div className="space-y-1.5">
-            <Label htmlFor="name_en">Name (English)</Label>
+            <Label htmlFor="name_en">{t("sheet.nameEn")}</Label>
             <Input id="name_en" placeholder="e.g. Dubai" {...register("name_en")} dir="ltr" />
             {errors.name_en && <p className="text-xs text-red-500">{errors.name_en.message}</p>}
           </div>
 
-          {/* Arabic name */}
           <div className="space-y-1.5">
-            <Label htmlFor="name_ar">Name (Arabic)</Label>
+            <Label htmlFor="name_ar">{t("sheet.nameAr")}</Label>
             <Input id="name_ar" placeholder="مثل: دبي" {...register("name_ar")} dir="rtl" />
             {errors.name_ar && <p className="text-xs text-red-500">{errors.name_ar.message}</p>}
           </div>
@@ -109,16 +108,11 @@ export function GovernorateSheet({
 
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="outline" type="button" disabled={isSubmitting}>Cancel</Button>
+            <Button variant="outline" type="button" disabled={isSubmitting}>{tCommon("cancel")}</Button>
           </SheetClose>
-          <Button
-            type="button"
-            onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
-            className="bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90"
-          >
+          <Button type="button" onClick={handleSubmit(onSubmit)} disabled={isSubmitting} className="bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90">
             {isSubmitting && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
-            {governorate ? "Save Changes" : "Add Governorate"}
+            {governorate ? tCommon("saveChanges") : t("addGovernorates")}
           </Button>
         </SheetFooter>
       </SheetContent>

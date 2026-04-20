@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Scale, Shield } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 const DOCS = {
   terms: {
@@ -216,6 +217,11 @@ export function LegalPageView() {
   const [activeDoc, setActiveDoc] = useState<DocKey>("terms");
   const doc = DOCS[activeDoc];
   const Icon = doc.icon;
+  const locale = useLocale();
+  const t = useTranslations("legal");
+
+  const docTitle = (d: (typeof DOCS)[DocKey]) =>
+    locale === "ar" ? d.title_ar : locale === "fr" ? d.title_fr : d.title_en;
 
   return (
     <div className="space-y-4">
@@ -234,7 +240,7 @@ export function LegalPageView() {
               }`}
             >
               <d.icon className="h-4 w-4" />
-              {d.title_en}
+              {docTitle(d)}
             </button>
           );
         })}
@@ -256,7 +262,7 @@ export function LegalPageView() {
             </div>
             <div>
               <h2 className="font-semibold text-slate-800 leading-tight">{doc.title_en}</h2>
-              <p className="text-xs text-slate-400">English</p>
+              <p className="text-xs text-slate-400">{t("languageEn")}</p>
             </div>
           </div>
           <div className="px-5 py-5 text-sm space-y-1 overflow-y-auto max-h-[60vh]">
@@ -272,7 +278,7 @@ export function LegalPageView() {
             </div>
             <div>
               <h2 className="font-semibold text-slate-800 leading-tight">{doc.title_fr}</h2>
-              <p className="text-xs text-slate-400">Français</p>
+              <p className="text-xs text-slate-400">{t("languageFr")}</p>
             </div>
           </div>
           <div className="px-5 py-5 text-sm space-y-1 overflow-y-auto max-h-[60vh]">
@@ -288,7 +294,7 @@ export function LegalPageView() {
             </div>
             <div>
               <h2 className="font-semibold text-slate-800 leading-tight">{doc.title_ar}</h2>
-              <p className="text-xs text-slate-400">العربية</p>
+              <p className="text-xs text-slate-400">{t("languageAr")}</p>
             </div>
           </div>
           <div className="px-5 py-5 text-sm space-y-1 overflow-y-auto max-h-[60vh]">

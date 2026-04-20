@@ -2,7 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
+import { useLocale, useTranslations } from "next-intl";
 import { FilterBar, DownloadButton } from "@/components/shared/FilterBar";
+
 import {
   Select,
   SelectContent,
@@ -28,6 +30,11 @@ const planColor: Record<string, string> = {
 };
 
 export function SubscriptionsView() {
+  const locale = useLocale();
+  const t = useTranslations("subscriptions");
+  const tCommon = useTranslations("common");
+  const isRTL = locale === "ar";
+
   const [subs] = useState<Subscription[]>(mockSubscriptions);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -50,55 +57,59 @@ export function SubscriptionsView() {
       <FilterBar
         search={search}
         onSearchChange={setSearch}
-        searchPlaceholder="Search by client or plan…"
+        searchPlaceholder={t("searchPlaceholder")}
         filters={
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="h-10 w-36">
-              <SelectValue placeholder="All statuses" />
+              <SelectValue placeholder={t("statuses.all")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="trial">Trial</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
-              <SelectItem value="expired">Expired</SelectItem>
+              {(["all", "active", "trial", "cancelled", "expired"] as const).map((s) => (
+                <SelectItem key={s} value={s}>
+                  {t(`statuses.${s}`)}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         }
-        actions={<DownloadButton onClick={() => {}}>Export</DownloadButton>}
+        actions={<DownloadButton onClick={() => {}}>{tCommon("export")}</DownloadButton>}
       />
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {[
-          { label: "Active", count: subs.filter((s) => s.status === "active").length, color: "#10b981", bg: "#ECFDF5" },
-          { label: "Trial", count: subs.filter((s) => s.status === "trial").length, color: "#6366f1", bg: "#EEF2FF" },
-          { label: "Cancelled", count: subs.filter((s) => s.status === "cancelled").length, color: "#ef4444", bg: "#FFF1F2" },
-          { label: "Expired", count: subs.filter((s) => s.status === "expired").length, color: "#94a3b8", bg: "#F8FAFC" },
-        ].map((item, i) => (
-          <motion.div
-            key={item.label}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06 }}
-            className="bg-white rounded-2xl border border-slate-100 shadow-sm px-4 py-3 flex items-center gap-3"
-          >
-            <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: item.bg }}>
-              <span className="text-lg font-bold" style={{ color: item.color }}>{item.count}</span>
-            </div>
-            <span className="text-sm text-slate-500 font-medium">{item.label}</span>
-          </motion.div>
-        ))}
+        {(["active", "trial", "cancelled", "expired"] as SubscriptionStatus[]).map((status, i) => {
+          const colorMap: Record<SubscriptionStatus, { color: string; bg: string }> = {
+            active:    { color: "#10b981", bg: "#ECFDF5" },
+            trial:     { color: "#6366f1", bg: "#EEF2FF" },
+            cancelled: { color: "#ef4444", bg: "#FFF1F2" },
+            expired:   { color: "#94a3b8", bg: "#F8FAFC" },
+          };
+          const { color, bg } = colorMap[status];
+          return (
+            <motion.div
+              key={status}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.06 }}
+              className="bg-white rounded-2xl border border-slate-100 shadow-sm px-4 py-3 flex items-center gap-3"
+            >
+              <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: bg }}>
+                <span className="text-lg font-bold" style={{ color }}>{subs.filter((s) => s.status === status).length}</span>
+              </div>
+              <span className="text-sm text-slate-500 font-medium">{t(`statuses.${status}`)}</span>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Table */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3">
           <span className="text-xs text-slate-400">
-            <strong className="text-slate-700">{filtered.length}</strong> subscriptions
+            <strong className="text-slate-700">{filtered.length}</strong> {t("countLabel")}
           </span>
           <span className="text-xs font-semibold text-[#0A3D62]">
-            Active MRR: ${totalRevenue.toLocaleString()}
+            {t("activeMRR")} ${totalRevenue.toLocaleString()}
           </span>
         </div>
 
@@ -106,9 +117,9 @@ export function SubscriptionsView() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-100">
-                {["ID", "Client", "Plan", "Amount", "Status", "Start Date", "Cancellable"].map((col) => (
+                {(["id", "client", "plan", "amount", "status", "startDate", "cancellable"] as const).map((col) => (
                   <th key={col} className="px-5 py-3.5 text-start text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap">
-                    {col}
+                    {t(`col.${col}`)}
                   </th>
                 ))}
               </tr>
@@ -116,7 +127,7 @@ export function SubscriptionsView() {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="h-32 text-center text-slate-400">No subscriptions found</td>
+                  <td colSpan={7} className="h-32 text-center text-slate-400">{t("noSubscriptions")}</td>
                 </tr>
               ) : (
                 filtered.map((sub, i) => {
@@ -142,11 +153,11 @@ export function SubscriptionsView() {
                       </td>
                       <td className="px-5 py-3.5 font-mono text-slate-700 whitespace-nowrap" dir="ltr">
                         {sub.amount.toLocaleString()} {sub.currency}
-                        <span className="text-xs text-slate-400">/yr</span>
+                        <span className="text-xs text-slate-400">{t("perYear")}</span>
                       </td>
                       <td className="px-5 py-3.5">
                         <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${statusCls[sub.status]}`}>
-                          {sub.status.charAt(0).toUpperCase() + sub.status.slice(1)}
+                          {t(`statuses.${sub.status}`)}
                         </span>
                       </td>
                       <td className="px-5 py-3.5 text-xs text-slate-400 font-mono whitespace-nowrap" dir="ltr">
@@ -155,10 +166,10 @@ export function SubscriptionsView() {
                       <td className="px-5 py-3.5">
                         {cancellable ? (
                           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 text-xs font-medium">
-                            ✓ Yes
+                            ✓ {t("cancellableYes")}
                           </span>
                         ) : (
-                          <span className="text-xs text-slate-400">No</span>
+                          <span className="text-xs text-slate-400">{t("cancellableNo")}</span>
                         )}
                       </td>
                     </motion.tr>

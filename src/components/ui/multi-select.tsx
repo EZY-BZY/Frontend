@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { Check, ChevronDown, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 export interface MultiSelectOption {
@@ -23,9 +24,11 @@ export function MultiSelect({
   options,
   value,
   onChange,
-  placeholder = "Select…",
+  placeholder,
   className,
 }: MultiSelectProps) {
+  const t = useTranslations("common");
+  const resolvedPlaceholder = placeholder ?? t("selectPlaceholder");
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
@@ -60,7 +63,7 @@ export function MultiSelect({
           )}
         >
           {selectedOptions.length === 0 ? (
-            <span className="text-slate-400">{placeholder}</span>
+            <span className="text-slate-400">{resolvedPlaceholder}</span>
           ) : (
             selectedOptions.map((o) => (
               <span
@@ -72,7 +75,7 @@ export function MultiSelect({
                 <span
                   role="button"
                   tabIndex={0}
-                  aria-label="Remove"
+                  aria-label={t("removeItem")}
                   onClick={(e) => remove(e, o.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
@@ -102,7 +105,7 @@ export function MultiSelect({
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search…"
+              placeholder={t("searchEllipsis")}
               className="w-full text-sm text-slate-700 placeholder:text-slate-400 outline-none"
             />
           </div>
@@ -110,7 +113,7 @@ export function MultiSelect({
           {/* Options */}
           <div className="max-h-56 overflow-y-auto p-1">
             {filtered.length === 0 ? (
-              <p className="px-3 py-4 text-center text-xs text-slate-400">No options</p>
+              <p className="px-3 py-4 text-center text-xs text-slate-400">{t("noOptions")}</p>
             ) : (
               filtered.map((option) => {
                 const isSelected = value.includes(option.value);

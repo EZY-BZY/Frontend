@@ -23,7 +23,22 @@
     "profile": "الملف الشخصي",
     "logout": "تسجيل الخروج",
     "settings": "الإعدادات",
-    "all": "الكل"
+    "all": "الكل",
+    "saving": "جارٍ الحفظ…",
+    "saveChanges": "حفظ التغييرات",
+    "addNew": "إضافة جديد",
+    "close": "إغلاق",
+    "yes": "نعم",
+    "no": "لا",
+    "admin": "مسؤول",
+    "adminUser": "مستخدم مسؤول",
+    "toggleSidebar": "تبديل القائمة الجانبية",
+    "notifications": "الإشعارات",
+    "breadcrumb": "مسار التصفح",
+    "selectPlaceholder": "اختر…",
+    "searchEllipsis": "بحث…",
+    "noOptions": "لا توجد خيارات",
+    "removeItem": "إزالة"
   },
   "nav": {
     "dashboard": "لوحة التحكم",
@@ -39,6 +54,8 @@
     "legal": "قانوني",
     "countries": "الدول",
     "companies": "الشركات",
+    "governorates": "المحافظات",
+    "workAccounts": "حسابات العمل",
     "privacyPolicy": "سياسة الخصوصية",
     "termsConditions": "الشروط والأحكام",
     "deliveryTerms": "شروط التوصيل",
@@ -63,7 +80,24 @@
     "totalEmployees": "إجمالي الموظفين",
     "contactRequests": "طلبات التواصل",
     "pendingRequests": "قيد الانتظار",
-    "welcomeMessage": "مرحباً بك في لوحة تحكم B-EASY"
+    "welcomeMessage": "مرحباً بك في لوحة تحكم B-EASY",
+    "activeEmployees": "الموظفون النشطون",
+    "categories": "التصنيفات",
+    "deltaThisMonth": "٢+ هذا الشهر",
+    "deltaNew": "{count} جديد",
+    "deltaTotalProducts": "{count} منتج",
+    "deltaOnLeave": "{count} في إجازة",
+    "employeesActive": "{count} موظف نشط",
+    "openRequests": "{count} طلب مفتوح",
+    "activeCategories": "{count} تصنيف نشط",
+    "revenueOverview": "نظرة عامة على الإيرادات",
+    "last7Months": "آخر ٧ أشهر",
+    "vsLastQuarter": "٣١٪+ مقارنةً بالربع الأخير",
+    "recentRequests": "الطلبات الأخيرة",
+    "viewAll": "عرض الكل",
+    "teamByPosition": "الفريق حسب الوظيفة",
+    "subscriptions": "اشتراكات",
+    "statusInProgress": "قيد التنفيذ"
   },
   "contactRequests": {
     "title": "طلبات التواصل",
@@ -105,6 +139,37 @@
     "positions": {
       "admin": "مشرف",
       "support": "دعم"
+    },
+    "col": {
+      "employee": "الموظف",
+      "email": "البريد الإلكتروني",
+      "position": "الوظيفة",
+      "phone": "الهاتف",
+      "joined": "تاريخ الانضمام"
+    },
+    "noEmployees": "لا يوجد موظفون",
+    "showing": "عرض",
+    "employeeCountLabel": "موظف",
+    "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني…",
+    "exportBtn": "تصدير",
+    "addNewTitle": "إضافة موظف جديد",
+    "addNewDesc": "أدخل التفاصيل أدناه. سيظهر الموظف في الجدول فوراً.",
+    "form": {
+      "fullName": "الاسم الكامل",
+      "emailAddress": "البريد الإلكتروني",
+      "phoneNumber": "رقم الهاتف",
+      "position": "الوظيفة",
+      "initialPassword": "كلمة المرور الأولية",
+      "namePlaceholder": "مثال: سارة أحمد",
+      "emailPlaceholder": "name@b-easy.com",
+      "phonePlaceholder": "+966 5xx xxx xxxx",
+      "passwordPlaceholder": "٨ أحرف على الأقل"
+    },
+    "validation": {
+      "nameMin": "يجب أن يكون الاسم حرفين على الأقل",
+      "emailInvalid": "أدخل بريداً إلكترونياً صحيحاً",
+      "phoneRequired": "رقم الهاتف مطلوب",
+      "passwordMin": "يجب أن تكون كلمة المرور ٨ أحرف على الأقل"
     }
   },
   "clients": {
@@ -154,11 +219,61 @@
   "categories": {
     "title": "التصنيفات",
     "subtitle": "إدارة تصنيفات المنتجات",
-    "addCategory": "إضافة تصنيف"
+    "addCategory": "إضافة تصنيف",
+    "searchPlaceholder": "البحث في التصنيفات…",
+    "categoryCountLabel": "تصنيف",
+    "noCategories": "لا توجد تصنيفات",
+    "col": {
+      "category": "التصنيف",
+      "slug": "المعرّف",
+      "created": "تاريخ الإنشاء"
+    },
+    "sheet": {
+      "editTitle": "تعديل التصنيف",
+      "addTitle": "إضافة تصنيف جديد",
+      "description": "أدخل الأسماء بالثلاث لغات حتى تتبدّل واجهة المستخدم بشكل صحيح.",
+      "iconEmoji": "أيقونة (إيموجي)",
+      "parentCategory": "التصنيف الأب",
+      "noneTopLevel": "لا يوجد (تصنيف رئيسي)",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "nameFr": "الاسم (فرنسي)",
+      "descriptionLabel": "الوصف",
+      "descriptionPlaceholder": "وصف مختصر…"
+    },
+    "validation": {
+      "nameEnRequired": "الاسم الإنجليزي مطلوب",
+      "nameArRequired": "الاسم العربي مطلوب",
+      "nameFrRequired": "الاسم الفرنسي مطلوب",
+      "descEnRequired": "الوصف الإنجليزي مطلوب"
+    }
   },
   "subscriptions": {
     "title": "سجل الاشتراكات",
-    "subtitle": "إدارة اشتراكات العملاء والفواتير"
+    "subtitle": "إدارة اشتراكات العملاء والفواتير",
+    "searchPlaceholder": "البحث بالعميل أو الخطة…",
+    "countLabel": "اشتراك",
+    "activeMRR": "الإيراد الشهري المتكرر:",
+    "perYear": "/سنة",
+    "noSubscriptions": "لا توجد اشتراكات",
+    "cancellableYes": "نعم",
+    "cancellableNo": "لا",
+    "col": {
+      "id": "الرقم",
+      "client": "العميل",
+      "plan": "الخطة",
+      "amount": "المبلغ",
+      "status": "الحالة",
+      "startDate": "تاريخ البدء",
+      "cancellable": "قابل للإلغاء"
+    },
+    "statuses": {
+      "all": "جميع الحالات",
+      "active": "نشط",
+      "trial": "تجريبي",
+      "cancelled": "ملغى",
+      "expired": "منتهي"
+    }
   },
   "bundles": {
     "title": "إدارة الباقات",
@@ -167,6 +282,7 @@
       "active": "الباقات النشطة",
       "previous": "الباقات السابقة"
     },
+    "searchPlaceholder": "البحث في الباقات…",
     "createBundle": "إنشاء باقة",
     "deactivate": "إلغاء التفعيل",
     "viewDetails": "عرض التفاصيل",
@@ -187,11 +303,197 @@
       "actions": "الإجراءات",
       "deactivatedOn": "تاريخ الإلغاء",
       "reason": "سبب الإلغاء"
+    },
+    "form": {
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "price": "السعر",
+      "currency": "العملة",
+      "durationEn": "المدة (إنجليزي)",
+      "durationAr": "المدة (عربي)",
+      "featuresEn": "المميزات (إنجليزي)",
+      "featuresAr": "المميزات (عربي)",
+      "separateWithCommas": "افصل المميزات بفاصلة",
+      "separateWithArabicComma": "افصل المميزات بفاصلة عربية ،",
+      "deactivationReasonEn": "سبب الإلغاء (إنجليزي)",
+      "deactivationReasonAr": "سبب الإلغاء (عربي)"
+    },
+    "sheet": {
+      "createTitle": "إنشاء باقة جديدة",
+      "createDesc": "أدخل تفاصيل الباقة باللغتين. ستظهر فوراً في الباقات النشطة.",
+      "deactivateTitle": "إلغاء تفعيل الباقة",
+      "deactivateWillMove": "سيتم نقل باقة \"{name}\" إلى الباقات السابقة ولن تظهر للمستخدمين.",
+      "deactivateWarning": "هذا الإجراء لا يمكن التراجع عنه. يمكنك دائماً إنشاء باقة جديدة بنسخ هذه الباقة لاحقاً.",
+      "bundleDetailsDesc": "تفاصيل الباقة (للقراءة فقط)",
+      "deactivationInfo": "معلومات الإلغاء",
+      "createdLabel": "تاريخ الإنشاء:",
+      "englishName": "الاسم الإنجليزي",
+      "arabicName": "الاسم العربي"
+    },
+    "validation": {
+      "nameEnRequired": "الاسم الإنجليزي مطلوب",
+      "nameArRequired": "الاسم العربي مطلوب",
+      "priceMin": "يجب أن يكون السعر ٠ أو أكثر",
+      "durationRequired": "المدة مطلوبة",
+      "featuresEnRequired": "أدخل ميزة إنجليزية واحدة على الأقل",
+      "featuresArRequired": "أدخل ميزة عربية واحدة على الأقل",
+      "reasonEnRequired": "السبب مطلوب (٥ أحرف على الأقل)",
+      "reasonArRequired": "السبب مطلوب (٥ أحرف على الأقل)"
+    },
+    "deactivating": "جارٍ الإلغاء…",
+    "confirmDeactivation": "تأكيد الإلغاء",
+    "deactivateBundle": "إلغاء تفعيل الباقة",
+    "activeBundlesFooter": "{shown} من أصل {total} باقة نشطة",
+    "previousBundlesFooter": "{shown} من أصل {total} باقة سابقة",
+    "closeBtn": "إغلاق"
+  },
+  "countries": {
+    "title": "الدول",
+    "subtitle": "إدارة بيانات الدول",
+    "searchPlaceholder": "البحث بالاسم أو رمز ISO أو رمز الهاتف أو العملة…",
+    "addCountry": "إضافة دولة",
+    "countryCountLabel": "دولة",
+    "noCountries": "لا توجد دول",
+    "col": {
+      "flagName": "العلم والاسم",
+      "iso": "ISO",
+      "phoneCode": "رمز الهاتف",
+      "currency": "العملة",
+      "regexField": "نمط Regex",
+      "added": "تاريخ الإضافة"
+    },
+    "details": {
+      "isoCode": "رمز ISO",
+      "phoneCode": "رمز الهاتف",
+      "currencyEn": "العملة (إنجليزي)",
+      "currencyAr": "العملة (عربي)",
+      "currencyFr": "العملة (فرنسي)",
+      "regex": "نمط Regex",
+      "id": "الرقم",
+      "added": "تاريخ الإضافة"
+    },
+    "sheet": {
+      "detailsTitle": "تفاصيل الدولة",
+      "editTitle": "تعديل الدولة",
+      "addTitle": "إضافة دولة",
+      "detailsDesc": "عرض وتعديل معلومات الدولة.",
+      "editDesc": "تحديث بيانات الدولة.",
+      "addDesc": "أدخل الحقول لإضافة دولة جديدة.",
+      "isoCode": "رمز ISO",
+      "flagEmoji": "علم (إيموجي)",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "phoneCode": "رمز الهاتف",
+      "regexField": "نمط Regex",
+      "currencySection": "العملة (٣ لغات)",
+      "currencyEn": "إنجليزي",
+      "currencyAr": "عربي",
+      "currencyFr": "فرنسي"
+    },
+    "validation": {
+      "nameEnRequired": "الاسم الإنجليزي مطلوب",
+      "nameArRequired": "الاسم العربي مطلوب",
+      "currencyEnRequired": "اسم العملة بالإنجليزية مطلوب",
+      "currencyArRequired": "اسم العملة بالعربية مطلوب",
+      "currencyFrRequired": "اسم العملة بالفرنسية مطلوب",
+      "flagRequired": "رمز العلم مطلوب",
+      "phoneCodeRequired": "رمز الهاتف مطلوب",
+      "phoneCodeFormat": "يجب أن يبدأ بـ + متبوعاً بأرقام",
+      "regexRequired": "نمط Regex مطلوب"
+    }
+  },
+  "companies": {
+    "title": "الشركات",
+    "subtitle": "إدارة الشركات",
+    "searchPlaceholder": "البحث في الشركات…",
+    "addCompany": "إضافة شركة",
+    "companyCountLabel": "شركة",
+    "noCompanies": "لا توجد شركات",
+    "col": {
+      "company": "الشركة",
+      "operatingIn": "تعمل في",
+      "added": "تاريخ الإضافة",
+      "actions": "الإجراءات"
+    },
+    "sheet": {
+      "editTitle": "تعديل الشركة",
+      "addTitle": "إضافة شركة",
+      "editDesc": "تحديث تفاصيل الشركة والدول التي تعمل فيها.",
+      "addDesc": "إضافة شركة جديدة بأسماء ثنائية اللغة.",
+      "logoEmoji": "شعار (إيموجي) - اختياري",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "operatingIn": "تعمل في",
+      "selectCountries": "اختر الدول…"
+    },
+    "validation": {
+      "nameEnRequired": "الاسم الإنجليزي مطلوب",
+      "nameArRequired": "الاسم العربي مطلوب",
+      "countriesRequired": "اختر دولة واحدة على الأقل"
+    }
+  },
+  "governorates": {
+    "title": "المحافظات",
+    "subtitle": "إدارة المحافظات والمناطق",
+    "searchPlaceholder": "البحث في المحافظات…",
+    "addGovernorates": "إضافة محافظة",
+    "allCountries": "جميع الدول",
+    "governorateCountLabel": "محافظة",
+    "noGovernorates": "لا توجد محافظات",
+    "col": {
+      "governorate": "المحافظة",
+      "country": "الدولة",
+      "added": "تاريخ الإضافة",
+      "actions": "الإجراءات"
+    },
+    "sheet": {
+      "editTitle": "تعديل المحافظة",
+      "addTitle": "إضافة محافظة",
+      "editDesc": "تحديث بيانات المحافظة.",
+      "addDesc": "إضافة منطقة أو محافظة جديدة.",
+      "parentCountry": "الدولة الأم",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "selectCountry": "اختر الدولة…"
+    },
+    "validation": {
+      "nameEnRequired": "الاسم الإنجليزي مطلوب",
+      "nameArRequired": "الاسم العربي مطلوب",
+      "countryRequired": "الدولة الأم مطلوبة"
     }
   },
   "legal": {
     "title": "قانوني",
     "terms": "شروط الخدمة",
-    "privacy": "سياسة الخصوصية"
+    "privacy": "سياسة الخصوصية",
+    "addSection": "إضافة قسم",
+    "sectionPrefix": "القسم",
+    "languageEn": "الإنجليزية",
+    "languageFr": "الفرنسية",
+    "languageAr": "العربية",
+    "noSections": "لا توجد أقسام بعد. أضف القسم الأول.",
+    "confirmDelete": "تأكيد؟",
+    "deleteSection": "حذف القسم",
+    "editSectionBtn": "تعديل القسم",
+    "sheet": {
+      "editTitle": "تعديل القسم",
+      "addTitle": "إضافة قسم",
+      "editDesc": "تحديث المحتوى بالإنجليزية والفرنسية والعربية لهذا القسم.",
+      "addDesc": "أدخل حقول الإنجليزية والفرنسية والعربية لإضافة قسم جديد.",
+      "titleEn": "العنوان (إنجليزي)",
+      "contentEn": "المحتوى (إنجليزي)",
+      "titleFr": "العنوان (فرنسي)",
+      "contentFr": "المحتوى (فرنسي)",
+      "titleAr": "العنوان (عربي)",
+      "contentAr": "المحتوى (عربي)"
+    },
+    "validation": {
+      "titleEnRequired": "العنوان الإنجليزي مطلوب",
+      "titleFrRequired": "العنوان الفرنسي مطلوب",
+      "titleArRequired": "العنوان العربي مطلوب",
+      "contentEnMin": "المحتوى الإنجليزي يجب أن يكون ١٠ أحرف على الأقل",
+      "contentFrMin": "المحتوى الفرنسي يجب أن يكون ١٠ أحرف على الأقل",
+      "contentArRequired": "المحتوى العربي مطلوب"
+    }
   }
 }

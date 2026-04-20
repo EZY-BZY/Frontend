@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,16 +21,13 @@ import { Button } from "@/components/ui/button";
 import { mockEmployees } from "../data/mock";
 import type { Employee, EmployeePosition } from "@/types";
 
-/* ─── Zod schema ─────────────────────────────────────────────────── */
-const addEmployeeSchema = z.object({
-  name_en:     z.string().min(2, "Name must be at least 2 characters"),
-  email:       z.string().email("Enter a valid email"),
-  phone:       z.string().min(5, "Phone number required"),
-  position:    z.enum(["Admin", "Support"]),
-  password:    z.string().min(8, "Password must be at least 8 characters"),
-});
-
-type AddEmployeeForm = z.infer<typeof addEmployeeSchema>;
+type AddEmployeeForm = {
+  name_en: string;
+  email: string;
+  phone: string;
+  position: "Admin" | "Support";
+  password: string;
+};
 
 /* ─── Mock server action ─────────────────────────────────────────── */
 async function createEmployee(data: AddEmployeeForm): Promise<Employee> {
@@ -54,7 +51,18 @@ async function createEmployee(data: AddEmployeeForm): Promise<Employee> {
 
 export function EmployeesView() {
   const locale = useLocale();
+  const t = useTranslations("employees");
+  const tCommon = useTranslations("common");
   const nameKey = locale === "ar" ? "name_ar" : locale === "fr" ? "name_fr" : "name_en";
+
+  /* Build Zod schema with translated error messages */
+  const addEmployeeSchema = z.object({
+    name_en:  z.string().min(2, t("validation.nameMin")),
+    email:    z.string().email(t("validation.emailInvalid")),
+    phone:    z.string().min(5, t("validation.phoneRequired")),
+    position: z.enum(["Admin", "Support"]),
+    password: z.string().min(8, t("validation.passwordMin")),
+  });
 
   const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
   const [search, setSearch] = useState("");
@@ -112,7 +120,7 @@ export function EmployeesView() {
               : "bg-white text-slate-500 border-slate-200 hover:border-[#0A3D62] hover:text-[#0A3D62]"
           }`}
         >
-          {p === "all" ? "All" : p}
+          {p === "all" ? tCommon("all") : t(`positions.${p === "Admin" ? "admin" : "support"}`)}
         </button>
       ))}
     </div>
@@ -124,12 +132,12 @@ export function EmployeesView() {
       <FilterBar
         search={search}
         onSearchChange={setSearch}
-        searchPlaceholder="Search by name or email…"
+        searchPlaceholder={t("searchPlaceholder")}
         filters={positionFilter}
         actions={
           <>
-            <DownloadButton onClick={() => {}}>Export</DownloadButton>
-            <AddButton onClick={() => setSheetOpen(true)}>Add Employee</AddButton>
+            <DownloadButton onClick={() => {}}>{t("exportBtn")}</DownloadButton>
+            <AddButton onClick={() => setSheetOpen(true)}>{t("addEmployee")}</AddButton>
           </>
         }
       />
@@ -140,9 +148,9 @@ export function EmployeesView() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
-                {["Employee", "Email", "Position", "Phone", "Joined"].map((col) => (
+                {(["employee", "email", "position", "phone", "joined"] as const).map((col) => (
                   <th key={col} className="px-5 py-3.5 text-start font-semibold text-gray-500 whitespace-nowrap text-xs uppercase tracking-wide">
-                    {col}
+                    {t(`col.${col}`)}
                   </th>
                 ))}
               </tr>
@@ -150,7 +158,7 @@ export function EmployeesView() {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="h-32 text-center text-gray-400">No employees found</td>
+                  <td colSpan={5} className="h-32 text-center text-gray-400">{t("noEmployees")}</td>
                 </tr>
               ) : (
                 filtered.map((emp, i) => (
@@ -178,12 +186,12 @@ export function EmployeesView() {
                       <td className="px-5 py-3.5 text-sm text-slate-500">{emp.email}</td>
                       <td className="px-5 py-3.5">
                         <span className="rounded-full bg-[#EBF3FB] text-[#0A3D62] px-2.5 py-0.5 text-xs font-medium">
-                          {emp.position}
+                          {t(`positions.${emp.position === "Admin" ? "admin" : "support"}`)}
                         </span>
                       </td>
                       <td className="px-5 py-3.5 text-gray-500 font-mono text-xs" dir="ltr">{emp.phone}</td>
                       <td className="px-5 py-3.5 text-gray-400 text-xs whitespace-nowrap">
-                        {new Date(emp.joinDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                        {new Date(emp.joinDate).toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", { day: "2-digit", month: "short", year: "numeric" })}
                       </td>
                     </motion.tr>
                 ))
@@ -195,8 +203,8 @@ export function EmployeesView() {
         {/* Footer */}
         <div className="flex items-center px-5 py-3 border-t border-gray-50 text-xs text-gray-400">
           <span>
-            Showing <strong className="text-gray-600">{filtered.length}</strong> of{" "}
-            <strong className="text-gray-600">{employees.length}</strong> employees
+            {t("showing")} <strong className="text-gray-600">{filtered.length}</strong> {tCommon("of")}{" "}
+            <strong className="text-gray-600">{employees.length}</strong> {t("employeeCountLabel")}
           </span>
         </div>
       </div>
@@ -205,19 +213,17 @@ export function EmployeesView() {
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetContent side="right" className="w-full max-w-md">
           <SheetHeader>
-            <SheetTitle>Add New Employee</SheetTitle>
-            <SheetDescription>
-              Fill in the details below. The employee will appear in the table immediately.
-            </SheetDescription>
+            <SheetTitle>{t("addNewTitle")}</SheetTitle>
+            <SheetDescription>{t("addNewDesc")}</SheetDescription>
           </SheetHeader>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 px-6 py-6 flex-1 overflow-y-auto">
             {/* Name */}
             <div className="space-y-1.5">
-              <Label htmlFor="name_en">Full Name</Label>
+              <Label htmlFor="name_en">{t("form.fullName")}</Label>
               <Input
                 id="name_en"
-                placeholder="e.g. Sarah Johnson"
+                placeholder={t("form.namePlaceholder")}
                 {...register("name_en")}
                 className={errors.name_en ? "border-red-400 focus-visible:ring-red-300" : ""}
               />
@@ -226,11 +232,11 @@ export function EmployeesView() {
 
             {/* Email */}
             <div className="space-y-1.5">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">{t("form.emailAddress")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="name@b-easy.com"
+                placeholder={t("form.emailPlaceholder")}
                 {...register("email")}
                 className={errors.email ? "border-red-400 focus-visible:ring-red-300" : ""}
               />
@@ -239,11 +245,11 @@ export function EmployeesView() {
 
             {/* Phone */}
             <div className="space-y-1.5">
-              <Label htmlFor="phone">Phone Number</Label>
+              <Label htmlFor="phone">{t("form.phoneNumber")}</Label>
               <Input
                 id="phone"
                 type="tel"
-                placeholder="+1 555-0101"
+                placeholder={t("form.phonePlaceholder")}
                 {...register("phone")}
                 dir="ltr"
                 className={errors.phone ? "border-red-400 focus-visible:ring-red-300" : ""}
@@ -253,12 +259,14 @@ export function EmployeesView() {
 
             {/* Position */}
             <div className="space-y-1.5">
-              <Label>Position</Label>
+              <Label>{t("form.position")}</Label>
               <div className="flex gap-3">
                 {(["Admin", "Support"] as EmployeePosition[]).map((p) => (
                   <label key={p} className="flex flex-1 cursor-pointer items-center gap-2.5 rounded-xl border border-slate-200 px-4 py-3 has-checked:border-[#28B8B1] has-checked:bg-[#E6F7F7] transition-colors">
                     <input type="radio" value={p} {...register("position")} className="accent-[#28B8B1]" />
-                    <span className="text-sm font-medium text-slate-700">{p}</span>
+                    <span className="text-sm font-medium text-slate-700">
+                      {t(`positions.${p === "Admin" ? "admin" : "support"}`)}
+                    </span>
                   </label>
                 ))}
               </div>
@@ -267,11 +275,11 @@ export function EmployeesView() {
 
             {/* Password */}
             <div className="space-y-1.5">
-              <Label htmlFor="password">Initial Password</Label>
+              <Label htmlFor="password">{t("form.initialPassword")}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Min. 8 characters"
+                placeholder={t("form.passwordPlaceholder")}
                 {...register("password")}
                 className={errors.password ? "border-red-400 focus-visible:ring-red-300" : ""}
               />
@@ -286,7 +294,7 @@ export function EmployeesView() {
               className="flex-1"
               type="button"
             >
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <Button
               onClick={handleSubmit(onSubmit)}
@@ -297,10 +305,10 @@ export function EmployeesView() {
               {saving ? (
                 <span className="flex items-center gap-2">
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  Saving…
+                  {tCommon("saving")}
                 </span>
               ) : (
-                "Add Employee"
+                t("addEmployee")
               )}
             </Button>
           </SheetFooter>

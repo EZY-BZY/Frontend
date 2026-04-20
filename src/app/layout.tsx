@@ -1,6 +1,20 @@
 import type { Metadata } from "next";
+import { Cairo, Inter } from "next/font/google";
 import { routing } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const cairo = Cairo({
+  subsets: ["arabic"],
+  variable: "--font-cairo",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "B-EASY",
@@ -41,7 +55,14 @@ export default function RootLayout({
        */
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-background text-foreground antialiased">
+      <body
+        suppressHydrationWarning
+        className={cn(
+          "min-h-screen bg-background text-foreground antialiased",
+          inter.variable,
+          cairo.variable
+        )}
+      >
         {children}
       </body>
     </html>

@@ -6,7 +6,7 @@ import {
   Clock, CheckCircle2, AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer,
@@ -39,10 +39,11 @@ const revenueData = [
 ];
 
 /* ─── Custom tooltip ─────────────────────────────────────────────── */
-function RevenueTooltip({ active, payload, label }: {
+function RevenueTooltip({ active, payload, label, subscriptionsLabel }: {
   active?: boolean;
   payload?: Array<{ value: number }>;
   label?: string;
+  subscriptionsLabel: string;
 }) {
   if (!active || !payload?.length) return null;
   return (
@@ -50,7 +51,7 @@ function RevenueTooltip({ active, payload, label }: {
       <p className="font-semibold text-slate-700 mb-1">{label}</p>
       <p className="text-[#0A3D62] font-bold">${payload[0].value.toLocaleString()}</p>
       {payload[1] && (
-        <p className="text-[#28B8B1] text-xs">{payload[1].value} subscriptions</p>
+        <p className="text-[#28B8B1] text-xs">{payload[1].value} {subscriptionsLabel}</p>
       )}
     </div>
   );
@@ -65,6 +66,9 @@ const statusBadge: Record<string, string> = {
 
 export function DashboardHome() {
   const locale = useLocale();
+  const t = useTranslations("dashboard");
+  const tContact = useTranslations("contactRequests");
+  const tEmployees = useTranslations("employees");
 
   const activeEmployees = mockEmployees.filter((e) => e.status === "active").length;
   const openRequests = mockContactRequests.filter((r) => r.status === "new" || r.status === "inProgress").length;
@@ -72,42 +76,42 @@ export function DashboardHome() {
 
   const stats: StatCard[] = [
     {
-      label: "Total Employees",
+      label: t("totalEmployees"),
       value: mockEmployees.length,
       icon: Users,
       color: "#0A3D62",
       bg: "#EBF3FB",
-      delta: "+2 this month",
+      delta: t("deltaThisMonth"),
       trend: "up",
       href: `/${locale}/employees`,
     },
     {
-      label: "Contact Requests",
+      label: t("contactRequests"),
       value: mockContactRequests.length,
       icon: MessageSquare,
       color: "#6366f1",
       bg: "#EEF2FF",
-      delta: `${mockContactRequests.filter((r) => r.status === "new").length} new`,
+      delta: t("deltaNew", { count: mockContactRequests.filter((r) => r.status === "new").length }),
       trend: "up",
       href: `/${locale}/contact-requests`,
     },
     {
-      label: "Categories",
+      label: t("categories"),
       value: mockCategories.length,
       icon: Tag,
       color: "#f59e0b",
       bg: "#FFFBEB",
-      delta: `${mockCategories.reduce((s, c) => s + c.productCount, 0)} total products`,
+      delta: t("deltaTotalProducts", { count: mockCategories.reduce((s, c) => s + c.productCount, 0) }),
       trend: "neutral",
       href: `/${locale}/categories`,
     },
     {
-      label: "Active Employees",
+      label: t("activeEmployees"),
       value: activeEmployees,
       icon: Users,
       color: "#10b981",
       bg: "#ECFDF5",
-      delta: `${mockEmployees.filter((e) => e.status === "onLeave").length} on leave`,
+      delta: t("deltaOnLeave", { count: mockEmployees.filter((e) => e.status === "onLeave").length }),
       trend: "up",
       href: `/${locale}/employees`,
     },
@@ -164,17 +168,17 @@ export function DashboardHome() {
       >
         <div className="flex items-center gap-2 rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-2.5 text-sm">
           <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
-          <span className="text-emerald-700 font-medium">{activeEmployees} employees active</span>
+          <span className="text-emerald-700 font-medium">{t("employeesActive", { count: activeEmployees })}</span>
         </div>
         {openRequests > 0 && (
           <div className="flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-100 px-4 py-2.5 text-sm">
             <Clock className="h-4 w-4 text-blue-500 shrink-0" />
-            <span className="text-blue-700 font-medium">{openRequests} open requests</span>
+            <span className="text-blue-700 font-medium">{t("openRequests", { count: openRequests })}</span>
           </div>
         )}
         <div className="flex items-center gap-2 rounded-xl bg-amber-50 border border-amber-100 px-4 py-2.5 text-sm">
           <AlertCircle className="h-4 w-4 text-amber-500 shrink-0" />
-          <span className="text-amber-700 font-medium">{mockCategories.length} active categories</span>
+          <span className="text-amber-700 font-medium">{t("activeCategories", { count: mockCategories.length })}</span>
         </div>
       </motion.div>
 
@@ -189,12 +193,12 @@ export function DashboardHome() {
         >
           <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
             <div>
-              <h2 className="font-semibold text-gray-800">Revenue Overview</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Last 7 months</p>
+              <h2 className="font-semibold text-gray-800">{t("revenueOverview")}</h2>
+              <p className="text-xs text-gray-400 mt-0.5">{t("last7Months")}</p>
             </div>
             <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 rounded-full px-2.5 py-1">
               <TrendingUp className="h-3.5 w-3.5" />
-              +31% vs last quarter
+              {t("vsLastQuarter")}
             </div>
           </div>
           <div className="px-2 pt-4 pb-2 h-64 min-w-0">
@@ -223,7 +227,7 @@ export function DashboardHome() {
                   tickLine={false}
                   tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
                 />
-                <Tooltip content={<RevenueTooltip />} />
+                <Tooltip content={<RevenueTooltip subscriptionsLabel={t("subscriptions")} />} />
                 <Area
                   type="monotone"
                   dataKey="revenue"
@@ -255,12 +259,12 @@ export function DashboardHome() {
           className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
         >
           <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
-            <h2 className="font-semibold text-gray-800">Recent Requests</h2>
+            <h2 className="font-semibold text-gray-800">{t("recentRequests")}</h2>
             <Link
               href={`/${locale}/contact-requests`}
               className="text-xs font-medium text-[#28B8B1] hover:text-[#0A3D62] transition-colors"
             >
-              View all →
+              {t("viewAll")} →
             </Link>
           </div>
           <div className="divide-y divide-gray-50">
@@ -280,7 +284,9 @@ export function DashboardHome() {
                   <p className="text-xs text-gray-400 truncate" dir="ltr">{req.countryCode} {req.phone}</p>
                 </div>
                 <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${statusBadge[req.status] ?? "bg-gray-100 text-gray-500"}`}>
-                  {req.status === "inProgress" ? "In Progress" : req.status.charAt(0).toUpperCase() + req.status.slice(1)}
+                  {req.status === "inProgress"
+                    ? t("statusInProgress")
+                    : tContact(`statuses.${req.status as "new" | "resolved" | "closed"}`)}
                 </span>
               </motion.div>
             ))}
@@ -296,17 +302,20 @@ export function DashboardHome() {
         className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
       >
         <div className="px-5 py-4 border-b border-gray-50">
-          <h2 className="font-semibold text-gray-800">Team by Position</h2>
+          <h2 className="font-semibold text-gray-800">{t("teamByPosition")}</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-5">
           {(["Admin", "Support"] as const).map((pos, i) => {
             const count = mockEmployees.filter((e) => e.position === pos).length;
             const pct = Math.round((count / mockEmployees.length) * 100);
             const color = i === 0 ? "#0A3D62" : "#28B8B1";
+            const posKey = pos === "Admin" ? "admin" : "support";
             return (
               <div key={pos}>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700">{pos}</span>
+                  <span className="text-sm font-medium text-gray-700">
+                    {tEmployees(`positions.${posKey}`)}
+                  </span>
                   <span className="text-sm font-bold text-gray-800">{count} <span className="text-xs font-normal text-gray-400">({pct}%)</span></span>
                 </div>
                 <div className="h-2 rounded-full bg-gray-100 overflow-hidden">

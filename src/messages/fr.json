@@ -23,7 +23,22 @@
     "profile": "Profil",
     "logout": "Déconnexion",
     "settings": "Paramètres",
-    "all": "Tous"
+    "all": "Tous",
+    "saving": "Enregistrement…",
+    "saveChanges": "Enregistrer les modifications",
+    "addNew": "Ajouter",
+    "close": "Fermer",
+    "yes": "Oui",
+    "no": "Non",
+    "admin": "Admin",
+    "adminUser": "Utilisateur administrateur",
+    "toggleSidebar": "Basculer la barre latérale",
+    "notifications": "Notifications",
+    "breadcrumb": "Fil d'Ariane",
+    "selectPlaceholder": "Sélectionner…",
+    "searchEllipsis": "Rechercher…",
+    "noOptions": "Aucune option",
+    "removeItem": "Retirer"
   },
   "nav": {
     "dashboard": "Tableau de bord",
@@ -39,6 +54,8 @@
     "legal": "Juridique",
     "countries": "Pays",
     "companies": "Entreprises",
+    "governorates": "Gouvernorats",
+    "workAccounts": "Comptes professionnels",
     "privacyPolicy": "Politique de confidentialité",
     "termsConditions": "Conditions générales",
     "deliveryTerms": "Conditions de livraison",
@@ -55,7 +72,7 @@
     "forgotPassword": "Mot de passe oublié ?",
     "signIn": "Se connecter",
     "signingIn": "Connexion en cours...",
-    "invalidCredentials": "Email ou mot de passe invalide"
+    "invalidCredentials": "E-mail ou mot de passe invalide"
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -63,7 +80,24 @@
     "totalEmployees": "Total des employés",
     "contactRequests": "Demandes de contact",
     "pendingRequests": "En attente",
-    "welcomeMessage": "Bienvenue sur le tableau de bord B-EASY"
+    "welcomeMessage": "Bienvenue sur le tableau de bord B-EASY",
+    "activeEmployees": "Employés actifs",
+    "categories": "Catégories",
+    "deltaThisMonth": "+2 ce mois",
+    "deltaNew": "{count} nouveau",
+    "deltaTotalProducts": "{count} produits",
+    "deltaOnLeave": "{count} en congé",
+    "employeesActive": "{count} employés actifs",
+    "openRequests": "{count} demandes ouvertes",
+    "activeCategories": "{count} catégories actives",
+    "revenueOverview": "Aperçu des revenus",
+    "last7Months": "7 derniers mois",
+    "vsLastQuarter": "+31% par rapport au dernier trimestre",
+    "recentRequests": "Demandes récentes",
+    "viewAll": "Voir tout",
+    "teamByPosition": "Équipe par poste",
+    "subscriptions": "abonnements",
+    "statusInProgress": "En cours"
   },
   "contactRequests": {
     "title": "Demandes de contact",
@@ -103,8 +137,39 @@
     "subtitle": "Gérez les membres de votre équipe",
     "addEmployee": "Ajouter un employé",
     "positions": {
-      "admin": "Admin",
+      "admin": "Administrateur",
       "support": "Support"
+    },
+    "col": {
+      "employee": "Employé",
+      "email": "E-mail",
+      "position": "Poste",
+      "phone": "Téléphone",
+      "joined": "Inscrit le"
+    },
+    "noEmployees": "Aucun employé trouvé",
+    "showing": "Affichage",
+    "employeeCountLabel": "employés",
+    "searchPlaceholder": "Rechercher par nom ou e-mail…",
+    "exportBtn": "Exporter",
+    "addNewTitle": "Ajouter un nouvel employé",
+    "addNewDesc": "Remplissez les informations ci-dessous. L'employé apparaîtra immédiatement dans le tableau.",
+    "form": {
+      "fullName": "Nom complet",
+      "emailAddress": "Adresse e-mail",
+      "phoneNumber": "Numéro de téléphone",
+      "position": "Poste",
+      "initialPassword": "Mot de passe initial",
+      "namePlaceholder": "ex. Sophie Martin",
+      "emailPlaceholder": "nom@b-easy.com",
+      "phonePlaceholder": "+33 6xx xxx xxx",
+      "passwordPlaceholder": "Min. 8 caractères"
+    },
+    "validation": {
+      "nameMin": "Le nom doit comporter au moins 2 caractères",
+      "emailInvalid": "Saisissez une adresse e-mail valide",
+      "phoneRequired": "Le numéro de téléphone est requis",
+      "passwordMin": "Le mot de passe doit comporter au moins 8 caractères"
     }
   },
   "clients": {
@@ -154,11 +219,61 @@
   "categories": {
     "title": "Catégories",
     "subtitle": "Gérez les catégories de produits",
-    "addCategory": "Ajouter une catégorie"
+    "addCategory": "Ajouter une catégorie",
+    "searchPlaceholder": "Rechercher des catégories…",
+    "categoryCountLabel": "catégories",
+    "noCategories": "Aucune catégorie trouvée",
+    "col": {
+      "category": "Catégorie",
+      "slug": "Identifiant",
+      "created": "Créé le"
+    },
+    "sheet": {
+      "editTitle": "Modifier la catégorie",
+      "addTitle": "Ajouter une catégorie",
+      "description": "Fournissez des noms trilingues pour que l'interface bascule correctement selon la langue.",
+      "iconEmoji": "Icône (emoji)",
+      "parentCategory": "Catégorie parente",
+      "noneTopLevel": "Aucune (niveau supérieur)",
+      "nameEn": "Nom (anglais)",
+      "nameAr": "Nom (arabe)",
+      "nameFr": "Nom (français)",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Description courte…"
+    },
+    "validation": {
+      "nameEnRequired": "Le nom anglais est requis",
+      "nameArRequired": "Le nom arabe est requis",
+      "nameFrRequired": "Le nom français est requis",
+      "descEnRequired": "La description anglaise est requise"
+    }
   },
   "subscriptions": {
     "title": "Registre des abonnements",
-    "subtitle": "Gérez les abonnements clients et la facturation"
+    "subtitle": "Gérez les abonnements clients et la facturation",
+    "searchPlaceholder": "Rechercher par client ou offre…",
+    "countLabel": "abonnements",
+    "activeMRR": "Revenu mensuel récurrent actif :",
+    "perYear": "/an",
+    "noSubscriptions": "Aucun abonnement trouvé",
+    "cancellableYes": "Oui",
+    "cancellableNo": "Non",
+    "col": {
+      "id": "ID",
+      "client": "Client",
+      "plan": "Offre",
+      "amount": "Montant",
+      "status": "Statut",
+      "startDate": "Date de début",
+      "cancellable": "Résiliable"
+    },
+    "statuses": {
+      "all": "Tous les statuts",
+      "active": "Actif",
+      "trial": "Essai",
+      "cancelled": "Annulé",
+      "expired": "Expiré"
+    }
   },
   "bundles": {
     "title": "Gestion des forfaits",
@@ -167,6 +282,7 @@
       "active": "Forfaits actifs",
       "previous": "Forfaits précédents"
     },
+    "searchPlaceholder": "Rechercher des forfaits…",
     "createBundle": "Créer un forfait",
     "deactivate": "Désactiver",
     "viewDetails": "Voir les détails",
@@ -187,11 +303,197 @@
       "actions": "Actions",
       "deactivatedOn": "Désactivé le",
       "reason": "Raison"
+    },
+    "form": {
+      "nameEn": "Nom (anglais)",
+      "nameAr": "Nom (arabe)",
+      "price": "Prix",
+      "currency": "Devise",
+      "durationEn": "Durée (anglais)",
+      "durationAr": "Durée (arabe)",
+      "featuresEn": "Fonctionnalités (anglais)",
+      "featuresAr": "Fonctionnalités (arabe)",
+      "separateWithCommas": "Séparer les fonctionnalités par des virgules",
+      "separateWithArabicComma": "Séparer avec la virgule arabe ،",
+      "deactivationReasonEn": "Raison de désactivation (anglais)",
+      "deactivationReasonAr": "Raison de désactivation (arabe)"
+    },
+    "sheet": {
+      "createTitle": "Créer un forfait",
+      "createDesc": "Remplissez les détails bilingues. Le forfait apparaîtra immédiatement dans les forfaits actifs.",
+      "deactivateTitle": "Désactiver le forfait",
+      "deactivateWillMove": "Le forfait \"{name}\" sera déplacé vers les forfaits précédents et masqué des utilisateurs.",
+      "deactivateWarning": "Cette action est permanente. Vous pourrez toujours dupliquer ce forfait pour en créer un nouveau.",
+      "bundleDetailsDesc": "Détails du forfait — lecture seule",
+      "deactivationInfo": "Informations de désactivation",
+      "createdLabel": "Créé le :",
+      "englishName": "Nom anglais",
+      "arabicName": "Nom arabe"
+    },
+    "validation": {
+      "nameEnRequired": "Le nom anglais est requis",
+      "nameArRequired": "Le nom arabe est requis",
+      "priceMin": "Le prix doit être ≥ 0",
+      "durationRequired": "La durée est requise",
+      "featuresEnRequired": "Au moins une fonctionnalité en anglais est requise",
+      "featuresArRequired": "Au moins une fonctionnalité en arabe est requise",
+      "reasonEnRequired": "La raison est requise (min. 5 caractères)",
+      "reasonArRequired": "La raison est requise (min. 5 caractères)"
+    },
+    "deactivating": "Désactivation…",
+    "confirmDeactivation": "Confirmer la désactivation",
+    "deactivateBundle": "Désactiver le forfait",
+    "activeBundlesFooter": "{shown} sur {total} forfaits actifs",
+    "previousBundlesFooter": "{shown} sur {total} forfaits précédents",
+    "closeBtn": "Fermer"
+  },
+  "countries": {
+    "title": "Pays",
+    "subtitle": "Gérez les métadonnées des pays",
+    "searchPlaceholder": "Rechercher par nom, ISO, indicatif ou devise…",
+    "addCountry": "Ajouter un pays",
+    "countryCountLabel": "pays",
+    "noCountries": "Aucun pays trouvé",
+    "col": {
+      "flagName": "Drapeau & Nom",
+      "iso": "ISO",
+      "phoneCode": "Indicatif",
+      "currency": "Devise",
+      "regexField": "Champ Regex",
+      "added": "Ajouté le"
+    },
+    "details": {
+      "isoCode": "Code ISO",
+      "phoneCode": "Indicatif",
+      "currencyEn": "Devise (EN)",
+      "currencyAr": "Devise (AR)",
+      "currencyFr": "Devise (FR)",
+      "regex": "Regex",
+      "id": "ID",
+      "added": "Ajouté le"
+    },
+    "sheet": {
+      "detailsTitle": "Détails du pays",
+      "editTitle": "Modifier le pays",
+      "addTitle": "Ajouter un pays",
+      "detailsDesc": "Afficher et modifier les informations du pays.",
+      "editDesc": "Mettre à jour les détails du pays.",
+      "addDesc": "Remplissez les champs pour ajouter un nouveau pays.",
+      "isoCode": "Code ISO",
+      "flagEmoji": "Drapeau (emoji)",
+      "nameEn": "Nom (anglais)",
+      "nameAr": "Nom (arabe)",
+      "phoneCode": "Indicatif téléphonique",
+      "regexField": "Champ Regex",
+      "currencySection": "Devise (3 langues)",
+      "currencyEn": "Anglais",
+      "currencyAr": "Arabe",
+      "currencyFr": "Français"
+    },
+    "validation": {
+      "nameEnRequired": "Le nom anglais est requis",
+      "nameArRequired": "Le nom arabe est requis",
+      "currencyEnRequired": "Le nom de la devise en anglais est requis",
+      "currencyArRequired": "Le nom de la devise en arabe est requis",
+      "currencyFrRequired": "Le nom de la devise en français est requis",
+      "flagRequired": "L'emoji drapeau est requis",
+      "phoneCodeRequired": "L'indicatif téléphonique est requis",
+      "phoneCodeFormat": "Doit commencer par + suivi de chiffres",
+      "regexRequired": "Le motif Regex est requis"
+    }
+  },
+  "companies": {
+    "title": "Entreprises",
+    "subtitle": "Gérez les entreprises",
+    "searchPlaceholder": "Rechercher des entreprises…",
+    "addCompany": "Ajouter une entreprise",
+    "companyCountLabel": "entreprises",
+    "noCompanies": "Aucune entreprise trouvée",
+    "col": {
+      "company": "Entreprise",
+      "operatingIn": "Opère dans",
+      "added": "Ajouté le",
+      "actions": "Actions"
+    },
+    "sheet": {
+      "editTitle": "Modifier l'entreprise",
+      "addTitle": "Ajouter une entreprise",
+      "editDesc": "Mettre à jour les détails de l'entreprise et les pays d'opération.",
+      "addDesc": "Ajouter une nouvelle entreprise avec des noms bilingues.",
+      "logoEmoji": "Logo (emoji) - facultatif",
+      "nameEn": "Nom (anglais)",
+      "nameAr": "Nom (arabe)",
+      "operatingIn": "Opère dans",
+      "selectCountries": "Sélectionner des pays…"
+    },
+    "validation": {
+      "nameEnRequired": "Le nom anglais est requis",
+      "nameArRequired": "Le nom arabe est requis",
+      "countriesRequired": "Sélectionnez au moins un pays"
+    }
+  },
+  "governorates": {
+    "title": "Gouvernorats",
+    "subtitle": "Gérez les gouvernorats et régions",
+    "searchPlaceholder": "Rechercher des gouvernorats…",
+    "addGovernorates": "Ajouter un gouvernorat",
+    "allCountries": "Tous les pays",
+    "governorateCountLabel": "gouvernorats",
+    "noGovernorates": "Aucun gouvernorat trouvé",
+    "col": {
+      "governorate": "Gouvernorat",
+      "country": "Pays",
+      "added": "Ajouté le",
+      "actions": "Actions"
+    },
+    "sheet": {
+      "editTitle": "Modifier le gouvernorat",
+      "addTitle": "Ajouter un gouvernorat",
+      "editDesc": "Mettre à jour les détails du gouvernorat.",
+      "addDesc": "Ajouter une nouvelle région ou un nouveau gouvernorat.",
+      "parentCountry": "Pays parent",
+      "nameEn": "Nom (anglais)",
+      "nameAr": "Nom (arabe)",
+      "selectCountry": "Sélectionner un pays…"
+    },
+    "validation": {
+      "nameEnRequired": "Le nom anglais est requis",
+      "nameArRequired": "Le nom arabe est requis",
+      "countryRequired": "Le pays parent est requis"
     }
   },
   "legal": {
     "title": "Juridique",
     "terms": "Conditions d'utilisation",
-    "privacy": "Politique de confidentialité"
+    "privacy": "Politique de confidentialité",
+    "addSection": "Ajouter une section",
+    "sectionPrefix": "Section",
+    "languageEn": "Anglais",
+    "languageFr": "Français",
+    "languageAr": "Arabe",
+    "noSections": "Aucune section pour l'instant. Ajoutez votre première section.",
+    "confirmDelete": "Confirmer ?",
+    "deleteSection": "Supprimer la section",
+    "editSectionBtn": "Modifier la section",
+    "sheet": {
+      "editTitle": "Modifier la section",
+      "addTitle": "Ajouter une section",
+      "editDesc": "Mettez à jour le contenu en anglais, français et arabe pour cette section.",
+      "addDesc": "Remplissez les champs en anglais, français et arabe pour ajouter une nouvelle section.",
+      "titleEn": "Titre (anglais)",
+      "contentEn": "Contenu (anglais)",
+      "titleFr": "Titre (français)",
+      "contentFr": "Contenu (français)",
+      "titleAr": "Titre (arabe)",
+      "contentAr": "Contenu (arabe)"
+    },
+    "validation": {
+      "titleEnRequired": "Le titre en anglais est requis",
+      "titleFrRequired": "Le titre en français est requis",
+      "titleArRequired": "Le titre en arabe est requis",
+      "contentEnMin": "Le contenu anglais doit comporter au moins 10 caractères",
+      "contentFrMin": "Le contenu français doit comporter au moins 10 caractères",
+      "contentArRequired": "Le contenu arabe est requis"
+    }
   }
 }

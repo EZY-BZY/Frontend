@@ -23,6 +23,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 import { mockClients, allWorkAccounts } from "@/lib/mock-clients";
 import type { PersonalClient } from "@/types";
 
@@ -111,7 +112,7 @@ function PersonalAccountSheet({
             </div>
             <span>
               {t("joinedDate")}:{" "}
-              {new Date(client.joinDate).toLocaleDateString("en-GB", {
+              {new Date(client.joinDate).toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", {
                 day: "2-digit",
                 month: "long",
                 year: "numeric",
@@ -165,7 +166,7 @@ function PersonalAccountSheet({
                     className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${waCls[wa.status]}`}
                   >
                     <span
-                      className={`me-1 h-1.5 w-1.5 rounded-full ${wa.status === "active" ? "bg-emerald-400" : "bg-slate-400"}`}
+                      className={cn("h-1.5 w-1.5 rounded-full", isRTL ? "ml-1" : "mr-1", wa.status === "active" ? "bg-emerald-400" : "bg-slate-400")}
                     />
                     {wa.status === "active" ? t("status.active") : t("status.inactive")}
                   </span>
@@ -313,7 +314,7 @@ export function ClientsListView() {
 
                         {/* Phone — always LTR */}
                         <td
-                          className="px-5 py-3.5 font-mono text-xs text-slate-500"
+                          className="px-5 py-3.5 font-mono text-xs text-slate-500 whitespace-nowrap"
                           dir="ltr"
                         >
                           {client.countryCode} {client.phone}
@@ -333,7 +334,7 @@ export function ClientsListView() {
                         {/* Join Date */}
                         <td className="px-5 py-3.5 text-xs text-slate-400 font-mono whitespace-nowrap">
                           {new Date(client.joinDate).toLocaleDateString(
-                            "en-GB",
+                            locale === "ar" ? "ar-EG" : "en-GB",
                             {
                               day: "2-digit",
                               month: "short",
@@ -460,13 +461,13 @@ export function ClientsListView() {
                         </td>
 
                         {/* Created date */}
-                        <td className="px-5 py-3.5 text-xs text-slate-400 font-mono whitespace-nowrap">
-                          {new Date(wa.createdAt).toLocaleDateString("en-GB", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </td>
+                    <td className="px-5 py-3.5 text-xs text-slate-400 font-mono whitespace-nowrap">
+                      {new Date(wa.createdAt).toLocaleDateString(useLocale() === "ar" ? "ar-EG" : "en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </td>
                       </motion.tr>
                     ))
                   )}
