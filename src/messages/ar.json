@@ -72,7 +72,8 @@
     "forgotPassword": "نسيت كلمة المرور؟",
     "signIn": "تسجيل الدخول",
     "signingIn": "جارٍ تسجيل الدخول...",
-    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+    "serverError": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى."
   },
   "dashboard": {
     "title": "لوحة التحكم",
@@ -145,7 +146,8 @@
       "email": "البريد الإلكتروني",
       "position": "الوظيفة",
       "phone": "الهاتف",
-      "joined": "تاريخ الانضمام"
+      "joined": "تاريخ الانضمام",
+      "status": "الحالة"
     },
     "noEmployees": "لا يوجد موظفون",
     "showing": "عرض",
@@ -154,12 +156,30 @@
     "exportBtn": "تصدير",
     "addNewTitle": "إضافة موظف جديد",
     "addNewDesc": "أدخل التفاصيل أدناه. سيظهر الموظف في الجدول فوراً.",
+    "viewTitle": "تفاصيل الموظف",
+    "viewDesc": "عرض وإدارة معلومات الموظف.",
+    "editTitle": "تعديل الموظف",
+    "editDesc": "تحديث بيانات الموظف.",
+    "editBtn": "تعديل",
+    "deactivateBtn": "إلغاء التفعيل",
+    "deactivateTitle": "إلغاء تفعيل هذا الموظف؟",
+    "deactivateDesc": "سيؤدي ذلك إلى تعطيل حسابه ولن يتمكن من تسجيل الدخول.",
+    "confirmDeactivate": "نعم، إلغاء التفعيل",
+    "accountTypeLabel": "نوع الحساب",
+    "accountStatusLabel": "حالة الحساب",
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "suspended": "موقوف",
+      "blocked": "محظور"
+    },
     "form": {
       "fullName": "الاسم الكامل",
       "emailAddress": "البريد الإلكتروني",
       "phoneNumber": "رقم الهاتف",
       "position": "الوظيفة",
       "initialPassword": "كلمة المرور الأولية",
+      "accountStatus": "حالة الحساب",
       "namePlaceholder": "مثال: سارة أحمد",
       "emailPlaceholder": "name@b-easy.com",
       "phonePlaceholder": "+966 5xx xxx xxxx",
@@ -174,24 +194,37 @@
   },
   "clients": {
     "title": "العملاء",
-    "subtitle": "إدارة الحسابات الشخصية وحسابات العمل المرتبطة بها",
-    "personalAccounts": "الحسابات الشخصية",
-    "workAccounts": "حسابات العمل",
-    "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني أو الهاتف…",
+    "subtitle": "إدارة الملاك والشركات المسجلة",
+    "personalAccounts": "الملاك",
+    "workAccounts": "الشركات",
+    "searchPlaceholder": "البحث بالاسم أو الهاتف…",
     "noResults": "لا يوجد عملاء",
-    "noWorkAccounts": "لا توجد حسابات عمل مرتبطة",
+    "noWorkAccounts": "لا توجد شركات مرتبطة",
     "noSubscriptions": "لا يوجد سجل اشتراكات",
     "notFound": "العميل غير موجود",
     "backToClients": "العودة إلى العملاء",
     "joinedDate": "تاريخ الانضمام",
     "subscriptionHistory": "سجل الاشتراكات",
     "off": "خصم",
-    "ofTotal": "عميل من أصل {total}",
+    "ofTotal": "من أصل {total}",
+    "viewTitle": "تفاصيل المالك",
+    "viewDesc": "عرض وإدارة حساب المالك.",
+    "changeStatus": "تغيير الحالة",
+    "selectStatus": "اختر الحالة الجديدة…",
+    "verifiedPhone": "هاتف موثق",
+    "notVerified": "غير موثق",
+    "ownerStatus": {
+      "active": "نشط",
+      "pending_verification": "قيد التحقق",
+      "suspended": "موقوف",
+      "blocked": "محظور",
+      "deleted": "محذوف"
+    },
     "col": {
-      "client": "العميل",
+      "client": "المالك",
       "email": "البريد الإلكتروني",
       "phone": "الهاتف",
-      "workAccounts": "حسابات العمل",
+      "workAccounts": "الشركات",
       "joinedDate": "تاريخ الانضمام",
       "company": "الشركة",
       "owner": "المالك",
@@ -204,7 +237,9 @@
       "bundle": "الباقة",
       "startDate": "تاريخ البدء",
       "endDate": "تاريخ الانتهاء",
-      "amount": "المبلغ"
+      "amount": "المبلغ",
+      "verified": "موثق",
+      "service": "الخدمة"
     },
     "status": {
       "active": "نشط",
@@ -217,35 +252,38 @@
     }
   },
   "categories": {
-    "title": "التصنيفات",
-    "subtitle": "إدارة تصنيفات المنتجات",
-    "addCategory": "إضافة تصنيف",
-    "searchPlaceholder": "البحث في التصنيفات…",
-    "categoryCountLabel": "تصنيف",
-    "noCategories": "لا توجد تصنيفات",
+    "title": "القطاعات",
+    "subtitle": "إدارة قطاعات الأعمال",
+    "addIndustry": "إضافة قطاع",
+    "searchPlaceholder": "البحث في القطاعات…",
+    "industryCountLabel": "قطاع",
+    "noIndustries": "لا توجد قطاعات",
+    "confirmDelete": "تأكيد؟",
     "col": {
-      "category": "التصنيف",
-      "slug": "المعرّف",
-      "created": "تاريخ الإنشاء"
+      "industry": "القطاع",
+      "nameFr": "الاسم الفرنسي",
+      "actions": "الإجراءات"
     },
     "sheet": {
-      "editTitle": "تعديل التصنيف",
-      "addTitle": "إضافة تصنيف جديد",
-      "description": "أدخل الأسماء بالثلاث لغات حتى تتبدّل واجهة المستخدم بشكل صحيح.",
-      "iconEmoji": "أيقونة (إيموجي)",
-      "parentCategory": "التصنيف الأب",
-      "noneTopLevel": "لا يوجد (تصنيف رئيسي)",
+      "detailsTitle": "تفاصيل القطاع",
+      "editTitle": "تعديل القطاع",
+      "addTitle": "إضافة قطاع",
+      "detailsDesc": "عرض وتعديل معلومات القطاع.",
+      "editDesc": "تحديث بيانات القطاع.",
+      "addDesc": "أدخل الحقول لإضافة قطاع جديد.",
+      "imageLabel": "صورة القطاع",
+      "clickToUpload": "انقر للرفع",
+      "uploadingImage": "جارٍ الرفع…",
+      "changeImage": "تغيير الصورة",
       "nameEn": "الاسم (إنجليزي)",
       "nameAr": "الاسم (عربي)",
-      "nameFr": "الاسم (فرنسي)",
-      "descriptionLabel": "الوصف",
-      "descriptionPlaceholder": "وصف مختصر…"
+      "nameFr": "الاسم (فرنسي)"
     },
     "validation": {
       "nameEnRequired": "الاسم الإنجليزي مطلوب",
       "nameArRequired": "الاسم العربي مطلوب",
       "nameFrRequired": "الاسم الفرنسي مطلوب",
-      "descEnRequired": "الوصف الإنجليزي مطلوب"
+      "imageRequired": "صورة القطاع مطلوبة"
     }
   },
   "subscriptions": {
@@ -383,19 +421,27 @@
       "flagEmoji": "علم (إيموجي)",
       "nameEn": "الاسم (إنجليزي)",
       "nameAr": "الاسم (عربي)",
+      "nameFr": "الاسم (فرنسي)",
       "phoneCode": "رمز الهاتف",
       "regexField": "نمط Regex",
       "currencySection": "العملة (٣ لغات)",
       "currencyEn": "إنجليزي",
+      "currencyShortcutEn": "الرمز (إنجليزي)",
       "currencyAr": "عربي",
-      "currencyFr": "فرنسي"
+      "currencyShortcutAr": "الرمز (عربي)",
+      "currencyFr": "فرنسي",
+      "currencyShortcutFr": "الرمز (فرنسي)"
     },
     "validation": {
       "nameEnRequired": "الاسم الإنجليزي مطلوب",
       "nameArRequired": "الاسم العربي مطلوب",
+      "nameFrRequired": "الاسم الفرنسي مطلوب",
       "currencyEnRequired": "اسم العملة بالإنجليزية مطلوب",
+      "currencyShortcutEnRequired": "رمز العملة بالإنجليزية مطلوب",
       "currencyArRequired": "اسم العملة بالعربية مطلوب",
+      "currencyShortcutArRequired": "رمز العملة بالعربية مطلوب",
       "currencyFrRequired": "اسم العملة بالفرنسية مطلوب",
+      "currencyShortcutFrRequired": "رمز العملة بالفرنسية مطلوب",
       "flagRequired": "رمز العلم مطلوب",
       "phoneCodeRequired": "رمز الهاتف مطلوب",
       "phoneCodeFormat": "يجب أن يبدأ بـ + متبوعاً بأرقام",
@@ -404,32 +450,74 @@
   },
   "companies": {
     "title": "الشركات",
-    "subtitle": "إدارة الشركات",
+    "subtitle": "جميع الشركات المسجلة على المنصة",
     "searchPlaceholder": "البحث في الشركات…",
-    "addCompany": "إضافة شركة",
     "companyCountLabel": "شركة",
     "noCompanies": "لا توجد شركات",
     "col": {
       "company": "الشركة",
-      "operatingIn": "تعمل في",
-      "added": "تاريخ الإضافة",
-      "actions": "الإجراءات"
+      "service": "الخدمة",
+      "status": "الحالة",
+      "balance": "الرصيد",
+      "added": "تاريخ الإضافة"
     },
-    "sheet": {
-      "editTitle": "تعديل الشركة",
-      "addTitle": "إضافة شركة",
-      "editDesc": "تحديث تفاصيل الشركة والدول التي تعمل فيها.",
-      "addDesc": "إضافة شركة جديدة بأسماء ثنائية اللغة.",
-      "logoEmoji": "شعار (إيموجي) - اختياري",
-      "nameEn": "الاسم (إنجليزي)",
+    "service": {
+      "services": "خدمات",
+      "products": "منتجات",
+      "products_and_services": "منتجات وخدمات"
+    },
+    "status": {
+      "active": "نشطة",
+      "inactive": "غير نشطة"
+    },
+    "viewTitle": "تفاصيل الشركة",
+    "viewDesc": "عرض ملف الشركة والبيانات ذات الصلة.",
+    "tabs": {
+      "overview": "نظرة عامة",
+      "branches": "الفروع",
+      "employees": "الموظفون"
+    },
+    "overview": {
       "nameAr": "الاسم (عربي)",
-      "operatingIn": "تعمل في",
-      "selectCountries": "اختر الدول…"
+      "nameEn": "الاسم (إنجليزي)",
+      "descAr": "الوصف (عربي)",
+      "descEn": "الوصف (إنجليزي)",
+      "service": "نوع الخدمة",
+      "balance": "الرصيد الحالي",
+      "taxNumber": "الرقم الضريبي",
+      "status": "الحالة",
+      "ownerId": "معرف المالك",
+      "showBranches": "عرض الفروع",
+      "showProducts": "عرض المنتجات",
+      "showSocial": "عرض التواصل الاجتماعي",
+      "showContact": "عرض معلومات التواصل"
     },
-    "validation": {
-      "nameEnRequired": "الاسم الإنجليزي مطلوب",
-      "nameArRequired": "الاسم العربي مطلوب",
-      "countriesRequired": "اختر دولة واحدة على الأقل"
+    "branchType": {
+      "factory": "مصنع",
+      "warehouse": "مستودع",
+      "showroom": "معرض",
+      "office": "مكتب"
+    },
+    "noBranches": "لا توجد فروع لهذه الشركة",
+    "noEmployees": "لا يوجد موظفون لهذه الشركة",
+    "branchCol": {
+      "name": "الفرع",
+      "type": "النوع",
+      "location": "الموقع",
+      "active": "نشط"
+    },
+    "employeeCol": {
+      "name": "الموظف",
+      "role": "الدور",
+      "department": "القسم",
+      "active": "نشط",
+      "permissions": "الصلاحيات"
+    },
+    "role": {
+      "admin": "مشرف",
+      "employee": "موظف",
+      "inventory_manager": "مخزون",
+      "finance": "مالية"
     }
   },
   "governorates": {
@@ -460,6 +548,86 @@
       "nameEnRequired": "الاسم الإنجليزي مطلوب",
       "nameArRequired": "الاسم العربي مطلوب",
       "countryRequired": "الدولة الأم مطلوبة"
+    }
+  },
+  "landing": {
+    "nav": {
+      "features": "المميزات",
+      "pricing": "الأسعار",
+      "login": "تسجيل الدخول",
+      "getStarted": "ابدأ الآن"
+    },
+    "hero": {
+      "badge": "منصة الأعمال الذكية",
+      "title": "أدِر أعمالك",
+      "titleAccent": "بذكاء وسرعة",
+      "subtitle": "بي-إيزي تبسّط الطلبات والمدفوعات والموظفين والمخزون — كل ذلك في منصة واحدة قوية مصممة للأعمال الحديثة.",
+      "cta": "ابدأ تجربتك المجانية",
+      "ctaSecondary": "شاهد العرض التوضيحي",
+      "card1": "طلب جديد",
+      "card1Sub": "#ORD-442 من أحمد",
+      "card2": "تم التحقق من الدفع",
+      "card2Sub": "2,450 ريال تمّ مسحه",
+      "card3": "موظف جديد",
+      "card3Sub": "سارة انضمت للفريق",
+      "card4": "باقة مفعّلة",
+      "card4Sub": "الخطة المميزة نشطة"
+    },
+    "features": {
+      "badge": "المميزات الأساسية",
+      "title": "كل ما تحتاجه للنمو",
+      "subtitle": "مجموعة أدوات متكاملة مصممة للأعمال الإقليمية",
+      "item1Title": "تتبع الطلبات الذكي",
+      "item1Desc": "تتبّع كل طلب من لحظة الإرسال حتى التسليم مع تحديثات فورية للحالة.",
+      "item2Title": "مدفوعات آمنة",
+      "item2Desc": "معالجة بمستوى المؤسسات مع تسوية فورية ودعم العملات المتعددة.",
+      "item3Title": "إدارة الفريق",
+      "item3Desc": "أدِر الموظفين والأدوار والصلاحيات من لوحة تحكم واحدة موحّدة.",
+      "item4Title": "تحليلات قوية",
+      "item4Desc": "رؤى مبنية على البيانات وتقارير مخصصة لاتخاذ قرارات أعمال أذكى.",
+      "item5Title": "متعدد العملات والتعريب",
+      "item5Desc": "دعم أصلي للعربية والإنجليزية والفرنسية مع 50+ عملة.",
+      "item6Title": "دعم أولوية 24/7",
+      "item6Desc": "فريق نجاح العملاء المخصص متاح على مدار الساعة."
+    },
+    "showcase": {
+      "badge": "كيف تعمل",
+      "title": "مصمم لكل مرحلة من مراحل النمو",
+      "step1Title": "انطلق في دقائق",
+      "step1Desc": "قم بإعداد ملف أعمالك وإضافة أعضاء الفريق وربط منتجاتك في أقل من 10 دقائق.",
+      "step2Title": "أدِر بثقة",
+      "step2Desc": "لوحة تحكم قوية تمنحك رؤية كاملة على الطلبات والمالية وأداء الفريق.",
+      "step3Title": "وسّع نطاقك بسهولة",
+      "step3Desc": "باقات مرنة ومستويات اشتراك تنمو مع أعمالك — ارقَّ في أي وقت."
+    },
+    "contact": {
+      "badge": "تواصل معنا",
+      "title": "دعنا نجد الخطة المناسبة لك",
+      "subtitle": "أخبرنا عن أعمالك وسيتواصل فريقنا معك خلال 24 ساعة.",
+      "roleLabel": "أنا",
+      "roleSeller": "بائع",
+      "roleSupplier": "مورّد",
+      "roleUser": "مستخدم",
+      "nameLabel": "الاسم الكامل",
+      "namePlaceholder": "أدخل اسمك الكامل",
+      "phoneLabel": "رقم الهاتف",
+      "phonePlaceholder": "+966 5X XXX XXXX",
+      "companyLabel": "اسم الشركة",
+      "companyPlaceholder": "اسم شركتك أو علامتك التجارية",
+      "categoryLabel": "تصنيف الأعمال",
+      "categoryPlaceholder": "اختر تصنيفًا",
+      "messageLabel": "ملاحظات إضافية",
+      "messagePlaceholder": "أخبرنا المزيد عن احتياجاتك (اختياري)",
+      "submit": "إرسال الرسالة",
+      "submitting": "جارٍ الإرسال…",
+      "successTitle": "تم إرسال الرسالة!",
+      "successDesc": "سنتواصل معك خلال 24 ساعة.",
+      "nameRequired": "الاسم الكامل مطلوب",
+      "phoneRequired": "رقم الهاتف مطلوب"
+    },
+    "footer": {
+      "tagline": "نمكّن الأعمال في جميع أنحاء المنطقة.",
+      "rights": "جميع الحقوق محفوظة."
     }
   },
   "legal": {

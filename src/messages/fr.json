@@ -72,7 +72,8 @@
     "forgotPassword": "Mot de passe oublié ?",
     "signIn": "Se connecter",
     "signingIn": "Connexion en cours...",
-    "invalidCredentials": "E-mail ou mot de passe invalide"
+    "invalidCredentials": "E-mail ou mot de passe invalide",
+    "serverError": "Une erreur inattendue s'est produite. Veuillez réessayer."
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -145,7 +146,8 @@
       "email": "E-mail",
       "position": "Poste",
       "phone": "Téléphone",
-      "joined": "Inscrit le"
+      "joined": "Inscrit le",
+      "status": "Statut"
     },
     "noEmployees": "Aucun employé trouvé",
     "showing": "Affichage",
@@ -154,12 +156,30 @@
     "exportBtn": "Exporter",
     "addNewTitle": "Ajouter un nouvel employé",
     "addNewDesc": "Remplissez les informations ci-dessous. L'employé apparaîtra immédiatement dans le tableau.",
+    "viewTitle": "Détails de l'employé",
+    "viewDesc": "Afficher et gérer les informations de l'employé.",
+    "editTitle": "Modifier l'employé",
+    "editDesc": "Mettre à jour les informations de l'employé.",
+    "editBtn": "Modifier",
+    "deactivateBtn": "Désactiver",
+    "deactivateTitle": "Désactiver cet employé ?",
+    "deactivateDesc": "Cela désactivera son compte. Il ne pourra plus se connecter.",
+    "confirmDeactivate": "Oui, désactiver",
+    "accountTypeLabel": "Type de compte",
+    "accountStatusLabel": "Statut du compte",
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif",
+      "suspended": "Suspendu",
+      "blocked": "Bloqué"
+    },
     "form": {
       "fullName": "Nom complet",
       "emailAddress": "Adresse e-mail",
       "phoneNumber": "Numéro de téléphone",
       "position": "Poste",
       "initialPassword": "Mot de passe initial",
+      "accountStatus": "Statut du compte",
       "namePlaceholder": "ex. Sophie Martin",
       "emailPlaceholder": "nom@b-easy.com",
       "phonePlaceholder": "+33 6xx xxx xxx",
@@ -174,24 +194,37 @@
   },
   "clients": {
     "title": "Clients",
-    "subtitle": "Gérez les comptes personnels et leurs comptes professionnels associés",
-    "personalAccounts": "Comptes personnels",
-    "workAccounts": "Comptes professionnels",
-    "searchPlaceholder": "Rechercher par nom, e-mail ou téléphone…",
+    "subtitle": "Gérez les propriétaires et leurs entreprises enregistrées",
+    "personalAccounts": "Propriétaires",
+    "workAccounts": "Entreprises",
+    "searchPlaceholder": "Rechercher par nom ou téléphone…",
     "noResults": "Aucun client trouvé",
-    "noWorkAccounts": "Aucun compte professionnel associé",
+    "noWorkAccounts": "Aucune entreprise associée",
     "noSubscriptions": "Aucun historique d'abonnement",
     "notFound": "Client introuvable",
     "backToClients": "Retour aux clients",
     "joinedDate": "Inscrit le",
     "subscriptionHistory": "Historique des abonnements",
     "off": "de réduction",
-    "ofTotal": "clients affichés sur {total}",
+    "ofTotal": "affichés sur {total}",
+    "viewTitle": "Détails du propriétaire",
+    "viewDesc": "Afficher et gérer le compte propriétaire.",
+    "changeStatus": "Changer le statut",
+    "selectStatus": "Sélectionner un nouveau statut…",
+    "verifiedPhone": "Téléphone vérifié",
+    "notVerified": "Non vérifié",
+    "ownerStatus": {
+      "active": "Actif",
+      "pending_verification": "En attente",
+      "suspended": "Suspendu",
+      "blocked": "Bloqué",
+      "deleted": "Supprimé"
+    },
     "col": {
-      "client": "Client",
+      "client": "Propriétaire",
       "email": "E-mail",
       "phone": "Téléphone",
-      "workAccounts": "Comptes pro",
+      "workAccounts": "Entreprises",
       "joinedDate": "Date d'inscription",
       "company": "Entreprise",
       "owner": "Propriétaire",
@@ -204,7 +237,9 @@
       "bundle": "Offre",
       "startDate": "Début",
       "endDate": "Fin",
-      "amount": "Montant"
+      "amount": "Montant",
+      "verified": "Vérifié",
+      "service": "Service"
     },
     "status": {
       "active": "Actif",
@@ -217,35 +252,38 @@
     }
   },
   "categories": {
-    "title": "Catégories",
-    "subtitle": "Gérez les catégories de produits",
-    "addCategory": "Ajouter une catégorie",
-    "searchPlaceholder": "Rechercher des catégories…",
-    "categoryCountLabel": "catégories",
-    "noCategories": "Aucune catégorie trouvée",
+    "title": "Industries",
+    "subtitle": "Gérez les industries métier",
+    "addIndustry": "Ajouter une industrie",
+    "searchPlaceholder": "Rechercher des industries…",
+    "industryCountLabel": "industries",
+    "noIndustries": "Aucune industrie trouvée",
+    "confirmDelete": "Confirmer ?",
     "col": {
-      "category": "Catégorie",
-      "slug": "Identifiant",
-      "created": "Créé le"
+      "industry": "Industrie",
+      "nameFr": "Nom français",
+      "actions": "Actions"
     },
     "sheet": {
-      "editTitle": "Modifier la catégorie",
-      "addTitle": "Ajouter une catégorie",
-      "description": "Fournissez des noms trilingues pour que l'interface bascule correctement selon la langue.",
-      "iconEmoji": "Icône (emoji)",
-      "parentCategory": "Catégorie parente",
-      "noneTopLevel": "Aucune (niveau supérieur)",
+      "detailsTitle": "Détails de l'industrie",
+      "editTitle": "Modifier l'industrie",
+      "addTitle": "Ajouter une industrie",
+      "detailsDesc": "Afficher et modifier les informations de l'industrie.",
+      "editDesc": "Mettre à jour les détails de l'industrie.",
+      "addDesc": "Remplissez les champs pour ajouter une nouvelle industrie.",
+      "imageLabel": "Image de l'industrie",
+      "clickToUpload": "Cliquer pour télécharger",
+      "uploadingImage": "Téléchargement…",
+      "changeImage": "Changer l'image",
       "nameEn": "Nom (anglais)",
       "nameAr": "Nom (arabe)",
-      "nameFr": "Nom (français)",
-      "descriptionLabel": "Description",
-      "descriptionPlaceholder": "Description courte…"
+      "nameFr": "Nom (français)"
     },
     "validation": {
       "nameEnRequired": "Le nom anglais est requis",
       "nameArRequired": "Le nom arabe est requis",
       "nameFrRequired": "Le nom français est requis",
-      "descEnRequired": "La description anglaise est requise"
+      "imageRequired": "L'image de l'industrie est requise"
     }
   },
   "subscriptions": {
@@ -383,19 +421,27 @@
       "flagEmoji": "Drapeau (emoji)",
       "nameEn": "Nom (anglais)",
       "nameAr": "Nom (arabe)",
+      "nameFr": "Nom (français)",
       "phoneCode": "Indicatif téléphonique",
       "regexField": "Champ Regex",
       "currencySection": "Devise (3 langues)",
       "currencyEn": "Anglais",
+      "currencyShortcutEn": "Raccourci (EN)",
       "currencyAr": "Arabe",
-      "currencyFr": "Français"
+      "currencyShortcutAr": "Raccourci (AR)",
+      "currencyFr": "Français",
+      "currencyShortcutFr": "Raccourci (FR)"
     },
     "validation": {
       "nameEnRequired": "Le nom anglais est requis",
       "nameArRequired": "Le nom arabe est requis",
+      "nameFrRequired": "Le nom français est requis",
       "currencyEnRequired": "Le nom de la devise en anglais est requis",
+      "currencyShortcutEnRequired": "Le raccourci de la devise en anglais est requis",
       "currencyArRequired": "Le nom de la devise en arabe est requis",
+      "currencyShortcutArRequired": "Le raccourci de la devise en arabe est requis",
       "currencyFrRequired": "Le nom de la devise en français est requis",
+      "currencyShortcutFrRequired": "Le raccourci de la devise en français est requis",
       "flagRequired": "L'emoji drapeau est requis",
       "phoneCodeRequired": "L'indicatif téléphonique est requis",
       "phoneCodeFormat": "Doit commencer par + suivi de chiffres",
@@ -404,32 +450,74 @@
   },
   "companies": {
     "title": "Entreprises",
-    "subtitle": "Gérez les entreprises",
+    "subtitle": "Toutes les entreprises enregistrées sur la plateforme",
     "searchPlaceholder": "Rechercher des entreprises…",
-    "addCompany": "Ajouter une entreprise",
     "companyCountLabel": "entreprises",
     "noCompanies": "Aucune entreprise trouvée",
     "col": {
       "company": "Entreprise",
-      "operatingIn": "Opère dans",
-      "added": "Ajouté le",
-      "actions": "Actions"
+      "service": "Service",
+      "status": "Statut",
+      "balance": "Solde",
+      "added": "Ajouté le"
     },
-    "sheet": {
-      "editTitle": "Modifier l'entreprise",
-      "addTitle": "Ajouter une entreprise",
-      "editDesc": "Mettre à jour les détails de l'entreprise et les pays d'opération.",
-      "addDesc": "Ajouter une nouvelle entreprise avec des noms bilingues.",
-      "logoEmoji": "Logo (emoji) - facultatif",
-      "nameEn": "Nom (anglais)",
+    "service": {
+      "services": "Services",
+      "products": "Produits",
+      "products_and_services": "Produits et services"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "viewTitle": "Détails de l'entreprise",
+    "viewDesc": "Voir le profil de l'entreprise et les données associées.",
+    "tabs": {
+      "overview": "Aperçu",
+      "branches": "Agences",
+      "employees": "Employés"
+    },
+    "overview": {
       "nameAr": "Nom (arabe)",
-      "operatingIn": "Opère dans",
-      "selectCountries": "Sélectionner des pays…"
+      "nameEn": "Nom (anglais)",
+      "descAr": "Description (arabe)",
+      "descEn": "Description (anglais)",
+      "service": "Type de service",
+      "balance": "Solde actuel",
+      "taxNumber": "Numéro fiscal",
+      "status": "Statut",
+      "ownerId": "ID propriétaire",
+      "showBranches": "Afficher les agences",
+      "showProducts": "Afficher les produits",
+      "showSocial": "Afficher les réseaux sociaux",
+      "showContact": "Afficher les coordonnées"
     },
-    "validation": {
-      "nameEnRequired": "Le nom anglais est requis",
-      "nameArRequired": "Le nom arabe est requis",
-      "countriesRequired": "Sélectionnez au moins un pays"
+    "branchType": {
+      "factory": "Usine",
+      "warehouse": "Entrepôt",
+      "showroom": "Salle d'exposition",
+      "office": "Bureau"
+    },
+    "noBranches": "Aucune agence pour cette entreprise",
+    "noEmployees": "Aucun employé pour cette entreprise",
+    "branchCol": {
+      "name": "Agence",
+      "type": "Type",
+      "location": "Lieu",
+      "active": "Actif"
+    },
+    "employeeCol": {
+      "name": "Employé",
+      "role": "Rôle",
+      "department": "Dépt.",
+      "active": "Actif",
+      "permissions": "Permissions"
+    },
+    "role": {
+      "admin": "Admin",
+      "employee": "Employé",
+      "inventory_manager": "Inventaire",
+      "finance": "Finance"
     }
   },
   "governorates": {
@@ -460,6 +548,86 @@
       "nameEnRequired": "Le nom anglais est requis",
       "nameArRequired": "Le nom arabe est requis",
       "countryRequired": "Le pays parent est requis"
+    }
+  },
+  "landing": {
+    "nav": {
+      "features": "Fonctionnalités",
+      "pricing": "Tarifs",
+      "login": "Connexion",
+      "getStarted": "Commencer"
+    },
+    "hero": {
+      "badge": "Plateforme Business Intelligente",
+      "title": "Gérez Votre Entreprise",
+      "titleAccent": "Plus Intelligemment",
+      "subtitle": "B-EASY simplifie les commandes, paiements, employés et stocks — tout en une seule plateforme puissante pour les entreprises modernes.",
+      "cta": "Essai Gratuit",
+      "ctaSecondary": "Voir la Démo",
+      "card1": "Commande Reçue",
+      "card1Sub": "#ORD-442 d'Ahmed",
+      "card2": "Paiement Vérifié",
+      "card2Sub": "2 450 SAR traités",
+      "card3": "Employé Intégré",
+      "card3Sub": "Sara a rejoint l'équipe",
+      "card4": "Forfait Activé",
+      "card4Sub": "Plan Premium actif"
+    },
+    "features": {
+      "badge": "Fonctionnalités Clés",
+      "title": "Tout ce qu'il vous faut pour Croître",
+      "subtitle": "Une boîte à outils complète conçue pour les entreprises régionales",
+      "item1Title": "Suivi Intelligent des Commandes",
+      "item1Desc": "Suivez chaque commande de la passation à la livraison avec des mises à jour en temps réel.",
+      "item2Title": "Paiements Sécurisés",
+      "item2Desc": "Traitement de niveau entreprise avec réconciliation instantanée et support multi-devises.",
+      "item3Title": "Gestion d'Équipe",
+      "item3Desc": "Gérez les employés, rôles et permissions depuis un tableau de bord unifié.",
+      "item4Title": "Analytique Puissante",
+      "item4Desc": "Insights basés sur les données et rapports personnalisés pour de meilleures décisions.",
+      "item5Title": "Multi-devises & Localisation",
+      "item5Desc": "Support natif arabe, anglais et français avec 50+ devises.",
+      "item6Title": "Support Prioritaire 24/7",
+      "item6Desc": "Équipe de succès client dédiée disponible en permanence."
+    },
+    "showcase": {
+      "badge": "Comment Ça Fonctionne",
+      "title": "Conçu pour Chaque Étape de Croissance",
+      "step1Title": "Intégration en Minutes",
+      "step1Desc": "Configurez votre profil d'entreprise, ajoutez des membres et connectez vos produits en moins de 10 minutes.",
+      "step2Title": "Gérez en Toute Confiance",
+      "step2Desc": "Un tableau de bord puissant vous offre une visibilité complète sur les commandes, finances et performances.",
+      "step3Title": "Évoluez Sans Effort",
+      "step3Desc": "Des forfaits flexibles et niveaux d'abonnement qui grandissent avec votre entreprise."
+    },
+    "contact": {
+      "badge": "Contactez-Nous",
+      "title": "Trouvons le Bon Plan pour Vous",
+      "subtitle": "Parlez-nous de votre entreprise et notre équipe vous répondra dans les 24 heures.",
+      "roleLabel": "Je suis",
+      "roleSeller": "Vendeur",
+      "roleSupplier": "Fournisseur",
+      "roleUser": "Utilisateur",
+      "nameLabel": "Nom Complet",
+      "namePlaceholder": "Entrez votre nom complet",
+      "phoneLabel": "Numéro de Téléphone",
+      "phonePlaceholder": "+966 5X XXX XXXX",
+      "companyLabel": "Nom de l'Entreprise",
+      "companyPlaceholder": "Votre entreprise ou marque",
+      "categoryLabel": "Catégorie d'Activité",
+      "categoryPlaceholder": "Sélectionner une catégorie",
+      "messageLabel": "Notes Supplémentaires",
+      "messagePlaceholder": "Dites-nous plus sur vos besoins (optionnel)",
+      "submit": "Envoyer le Message",
+      "submitting": "Envoi en cours…",
+      "successTitle": "Message Envoyé !",
+      "successDesc": "Nous vous répondrons dans les 24 heures.",
+      "nameRequired": "Le nom complet est requis",
+      "phoneRequired": "Le numéro de téléphone est requis"
+    },
+    "footer": {
+      "tagline": "Renforcer les entreprises à travers la région.",
+      "rights": "Tous droits réservés."
     }
   },
   "legal": {

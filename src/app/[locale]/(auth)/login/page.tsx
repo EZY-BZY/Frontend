@@ -10,6 +10,8 @@ import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { dashboardLogin } from "@/services/auth";
+import type { ApiResponse, TokenResponse } from "@/types/api";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -18,29 +20,77 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>;
 
+type ValidationDetail = { loc: string[]; msg: string; type: string }[];
+
+/** Prefer API `details` over generic `Message` (e.g. Message: "Error", details: "Invalid email or password"). */
+function apiUserFacingMessage(
+  res: ApiResponse<TokenResponse>,
+  fallback: string
+): string {
+  const detail = res.details?.trim();
+  if (detail) return detail;
+  const msg = res.Message?.trim();
+  if (msg && msg !== "Error") return msg;
+  return fallback;
+}
+
 export default function LoginPage() {
   const t = useTranslations("auth");
   const locale = useLocale();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  const [generalError, setGeneralError] = useState("");
 
   const {
     register,
     handleSubmit,
+    setError: setFieldError,
     formState: { errors, isSubmitting },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = async (data: LoginForm) => {
-    setError("");
-    await new Promise((r) => setTimeout(r, 800));
-    if (data.email === "admin@b-easy.com" && data.password === "admin123") {
-      router.push(`/${locale}`);
-    } else {
-      setError(t("invalidCredentials"));
+    setGeneralError("");
+
+    const { data: res, httpStatus } = await dashboardLogin({
+      email: data.email,
+      password: data.password,
+    });
+
+    if (httpStatus >= 200 && httpStatus < 300 && res.Data?.access_token) {
+      router.push(`/${locale}/dashboard`);
+      return;
     }
+
+    // API may use 401 or 402 for wrong credentials; body often has `details`, `Message` may be generic "Error".
+    if (httpStatus === 401 || httpStatus === 402) {
+      setGeneralError(apiUserFacingMessage(res, t("invalidCredentials")));
+      return;
+    }
+
+    if (httpStatus === 422) {
+      const raw = res as unknown as Record<string, unknown>;
+      const detail = raw.detail as ValidationDetail | undefined;
+      if (Array.isArray(detail) && detail.length > 0) {
+        let hasFieldError = false;
+        detail.forEach(({ loc, msg }) => {
+          const field = loc[loc.length - 1];
+          if (field === "email" || field === "password") {
+            setFieldError(field, { type: "server", message: msg });
+            hasFieldError = true;
+          }
+        });
+        if (!hasFieldError) {
+          setGeneralError(apiUserFacingMessage(res, t("serverError")));
+        }
+      } else {
+        setGeneralError(apiUserFacingMessage(res, t("serverError")));
+      }
+      return;
+    }
+
+    setGeneralError(apiUserFacingMessage(res, t("serverError")));
   };
 
   return (
@@ -54,7 +104,6 @@ export default function LoginPage() {
           className="object-cover"
           priority
         />
-        {/* Diagonal clip overlay so right edge is slanted */}
         <div
           className="absolute inset-0"
           style={{
@@ -126,9 +175,14 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* Error */}
-            {error && (
-              <p className="text-sm text-red-500 text-center">{error}</p>
+            {/* General error banner (401 / server errors) */}
+            {generalError && (
+              <div
+                role="alert"
+                className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 text-center transition-all"
+              >
+                {generalError}
+              </div>
             )}
 
             {/* Submit */}
@@ -147,10 +201,6 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-
-          <p className="mt-6 text-center text-xs text-gray-400">
-            Demo: admin@b-easy.com / admin123
-          </p>
         </div>
       </div>
     </div>

@@ -80,7 +80,8 @@
     "forgotPassword": "Forgot password?",
     "signIn": "Sign In",
     "signingIn": "Signing in...",
-    "invalidCredentials": "Invalid email or password"
+    "invalidCredentials": "Invalid email or password",
+    "serverError": "An unexpected error occurred. Please try again."
   },
   "dashboard": {
     "title": "Dashboard",
@@ -157,7 +158,8 @@
       "email": "Email",
       "position": "Position",
       "phone": "Phone",
-      "joined": "Joined"
+      "joined": "Joined",
+      "status": "Status"
     },
     "noEmployees": "No employees found",
     "showing": "Showing",
@@ -166,12 +168,30 @@
     "exportBtn": "Export",
     "addNewTitle": "Add New Employee",
     "addNewDesc": "Fill in the details below. The employee will appear in the table immediately.",
+    "viewTitle": "Employee Details",
+    "viewDesc": "View and manage employee information.",
+    "editTitle": "Edit Employee",
+    "editDesc": "Update the employee's information.",
+    "editBtn": "Edit",
+    "deactivateBtn": "Deactivate",
+    "deactivateTitle": "Deactivate this employee?",
+    "deactivateDesc": "This will disable their account. They will no longer be able to log in.",
+    "confirmDeactivate": "Yes, Deactivate",
+    "accountTypeLabel": "Account Type",
+    "accountStatusLabel": "Account Status",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "suspended": "Suspended",
+      "blocked": "Blocked"
+    },
     "form": {
       "fullName": "Full Name",
       "emailAddress": "Email Address",
       "phoneNumber": "Phone Number",
       "position": "Position",
       "initialPassword": "Initial Password",
+      "accountStatus": "Account Status",
       "namePlaceholder": "e.g. Sarah Johnson",
       "emailPlaceholder": "name@b-easy.com",
       "phonePlaceholder": "+1 555-0101",
@@ -186,25 +206,38 @@
   },
   "clients": {
     "title": "Clients",
-    "subtitle": "Manage personal accounts and their linked work accounts",
-    "personalAccounts": "Personal Accounts",
-    "workAccounts": "Work Accounts",
-    "searchPlaceholder": "Search by name, email or phone…",
+    "subtitle": "Manage registered owners and their companies",
+    "personalAccounts": "Owners",
+    "workAccounts": "Companies",
+    "searchPlaceholder": "Search by name or phone…",
     "noResults": "No clients found",
-    "noWorkAccounts": "No work accounts linked",
+    "noWorkAccounts": "No companies linked",
     "noSubscriptions": "No subscription history",
     "notFound": "Client not found",
     "backToClients": "Back to Clients",
     "joinedDate": "Joined",
     "subscriptionHistory": "Subscription History",
     "off": "off",
-    "ofTotal": "clients shown of {total}",
+    "ofTotal": "shown of {total}",
+    "viewTitle": "Owner Details",
+    "viewDesc": "View and manage owner account.",
+    "changeStatus": "Change Status",
+    "selectStatus": "Select new status…",
+    "verifiedPhone": "Phone Verified",
+    "notVerified": "Not Verified",
+    "ownerStatus": {
+      "active": "Active",
+      "pending_verification": "Pending",
+      "suspended": "Suspended",
+      "blocked": "Blocked",
+      "deleted": "Deleted"
+    },
     "col": {
-      "client": "Client",
+      "client": "Owner",
       "email": "Email",
       "phone": "Phone",
-      "workAccounts": "Work Accounts",
-      "joinedDate": "Joined Date",
+      "workAccounts": "Companies",
+      "joinedDate": "Joined",
       "company": "Company",
       "owner": "Owner",
       "industry": "Industry",
@@ -216,7 +249,9 @@
       "bundle": "Bundle",
       "startDate": "Start Date",
       "endDate": "End Date",
-      "amount": "Amount"
+      "amount": "Amount",
+      "verified": "Verified",
+      "service": "Service"
     },
     "status": {
       "active": "Active",
@@ -229,35 +264,38 @@
     }
   },
   "categories": {
-    "title": "Categories",
-    "subtitle": "Manage product categories",
-    "addCategory": "Add Category",
-    "searchPlaceholder": "Search categories…",
-    "categoryCountLabel": "categories",
-    "noCategories": "No categories found",
+    "title": "Industries",
+    "subtitle": "Manage business industries",
+    "addIndustry": "Add Industry",
+    "searchPlaceholder": "Search industries…",
+    "industryCountLabel": "industries",
+    "noIndustries": "No industries found",
+    "confirmDelete": "Confirm?",
     "col": {
-      "category": "Category",
-      "slug": "Slug",
-      "created": "Created"
+      "industry": "Industry",
+      "nameFr": "French Name",
+      "actions": "Actions"
     },
     "sheet": {
-      "editTitle": "Edit Category",
-      "addTitle": "Add New Category",
-      "description": "Provide bilingual names so the UI switches correctly across locales.",
-      "iconEmoji": "Icon Emoji",
-      "parentCategory": "Parent Category",
-      "noneTopLevel": "None (top-level)",
+      "detailsTitle": "Industry Details",
+      "editTitle": "Edit Industry",
+      "addTitle": "Add Industry",
+      "detailsDesc": "View and edit industry information.",
+      "editDesc": "Update the industry details.",
+      "addDesc": "Fill in the fields to add a new industry.",
+      "imageLabel": "Industry Image",
+      "clickToUpload": "Click to upload",
+      "uploadingImage": "Uploading…",
+      "changeImage": "Change Image",
       "nameEn": "Name (English)",
       "nameAr": "Name (Arabic)",
-      "nameFr": "Name (French)",
-      "descriptionLabel": "Description",
-      "descriptionPlaceholder": "Short description…"
+      "nameFr": "Name (French)"
     },
     "validation": {
       "nameEnRequired": "English name required",
       "nameArRequired": "Arabic name required",
       "nameFrRequired": "French name required",
-      "descEnRequired": "English description required"
+      "imageRequired": "Industry image required"
     }
   },
   "subscriptions": {
@@ -395,19 +433,27 @@
       "flagEmoji": "Flag Emoji",
       "nameEn": "Name (English)",
       "nameAr": "Name (Arabic)",
+      "nameFr": "Name (French)",
       "phoneCode": "Phone Code",
       "regexField": "Regex Field",
       "currencySection": "Currency (3 Languages)",
       "currencyEn": "English",
+      "currencyShortcutEn": "Shortcut (EN)",
       "currencyAr": "Arabic",
-      "currencyFr": "French"
+      "currencyShortcutAr": "Shortcut (AR)",
+      "currencyFr": "French",
+      "currencyShortcutFr": "Shortcut (FR)"
     },
     "validation": {
       "nameEnRequired": "English name required",
       "nameArRequired": "Arabic name required",
+      "nameFrRequired": "French name required",
       "currencyEnRequired": "English currency name required",
+      "currencyShortcutEnRequired": "English currency shortcut required",
       "currencyArRequired": "Arabic currency name required",
+      "currencyShortcutArRequired": "Arabic currency shortcut required",
       "currencyFrRequired": "French currency name required",
+      "currencyShortcutFrRequired": "French currency shortcut required",
       "flagRequired": "Flag emoji required",
       "phoneCodeRequired": "Phone code required",
       "phoneCodeFormat": "Must start with + followed by digits",
@@ -416,32 +462,74 @@
   },
   "companies": {
     "title": "Companies",
-    "subtitle": "Manage companies",
+    "subtitle": "All registered companies on the platform",
     "searchPlaceholder": "Search companies…",
-    "addCompany": "Add Company",
     "companyCountLabel": "companies",
     "noCompanies": "No companies found",
     "col": {
       "company": "Company",
-      "operatingIn": "Operating In",
-      "added": "Added",
-      "actions": "Actions"
+      "service": "Service",
+      "status": "Status",
+      "balance": "Balance",
+      "added": "Added"
     },
-    "sheet": {
-      "editTitle": "Edit Company",
-      "addTitle": "Add Company",
-      "editDesc": "Update company details and operating countries.",
-      "addDesc": "Add a new company with bilingual names.",
-      "logoEmoji": "Logo Emoji (optional)",
-      "nameEn": "Name (English)",
+    "service": {
+      "services": "Services",
+      "products": "Products",
+      "products_and_services": "Products & Services"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "viewTitle": "Company Details",
+    "viewDesc": "View company profile and related data.",
+    "tabs": {
+      "overview": "Overview",
+      "branches": "Branches",
+      "employees": "Employees"
+    },
+    "overview": {
       "nameAr": "Name (Arabic)",
-      "operatingIn": "Operating In",
-      "selectCountries": "Select countries…"
+      "nameEn": "Name (English)",
+      "descAr": "Description (Arabic)",
+      "descEn": "Description (English)",
+      "service": "Service Type",
+      "balance": "Current Balance",
+      "taxNumber": "Tax Number",
+      "status": "Status",
+      "ownerId": "Owner ID",
+      "showBranches": "Show Branches",
+      "showProducts": "Show Products",
+      "showSocial": "Show Social Media",
+      "showContact": "Show Contact Info"
     },
-    "validation": {
-      "nameEnRequired": "English name required",
-      "nameArRequired": "Arabic name required",
-      "countriesRequired": "Select at least one country"
+    "branchType": {
+      "factory": "Factory",
+      "warehouse": "Warehouse",
+      "showroom": "Showroom",
+      "office": "Office"
+    },
+    "noBranches": "No branches for this company",
+    "noEmployees": "No employees for this company",
+    "branchCol": {
+      "name": "Branch",
+      "type": "Type",
+      "location": "Location",
+      "active": "Active"
+    },
+    "employeeCol": {
+      "name": "Employee",
+      "role": "Role",
+      "department": "Dept.",
+      "active": "Active",
+      "permissions": "Permissions"
+    },
+    "role": {
+      "admin": "Admin",
+      "employee": "Employee",
+      "inventory_manager": "Inventory",
+      "finance": "Finance"
     }
   },
   "governorates": {
@@ -472,6 +560,86 @@
       "nameEnRequired": "English name required",
       "nameArRequired": "Arabic name required",
       "countryRequired": "Parent country required"
+    }
+  },
+  "landing": {
+    "nav": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "login": "Login",
+      "getStarted": "Get Started"
+    },
+    "hero": {
+      "badge": "Smart Business Platform",
+      "title": "Run Your Business",
+      "titleAccent": "Smarter & Faster",
+      "subtitle": "B-EASY streamlines orders, payments, employees and inventory — all in one powerful platform built for modern businesses.",
+      "cta": "Start Free Trial",
+      "ctaSecondary": "Watch Demo",
+      "card1": "Order Received",
+      "card1Sub": "#ORD-442 from Ahmed",
+      "card2": "Payment Verified",
+      "card2Sub": "SAR 2,450 cleared",
+      "card3": "Employee Onboarded",
+      "card3Sub": "Sara joined the team",
+      "card4": "Bundle Activated",
+      "card4Sub": "Premium plan is live"
+    },
+    "features": {
+      "badge": "Core Features",
+      "title": "Everything You Need to Grow",
+      "subtitle": "A complete toolkit purpose-built for regional businesses",
+      "item1Title": "Smart Order Tracking",
+      "item1Desc": "Track every order from placement to delivery with real-time status updates.",
+      "item2Title": "Secure Payments",
+      "item2Desc": "Enterprise-grade processing with instant reconciliation and multi-currency support.",
+      "item3Title": "Team Management",
+      "item3Desc": "Manage employees, roles and permissions from a single unified dashboard.",
+      "item4Title": "Powerful Analytics",
+      "item4Desc": "Data-driven insights and custom reports to make smarter business decisions.",
+      "item5Title": "Multi-Currency & i18n",
+      "item5Desc": "Native Arabic, English and French support with 50+ currencies.",
+      "item6Title": "24/7 Priority Support",
+      "item6Desc": "Dedicated customer success team available around the clock."
+    },
+    "showcase": {
+      "badge": "How It Works",
+      "title": "Built for Every Stage of Growth",
+      "step1Title": "Onboard in Minutes",
+      "step1Desc": "Set up your business profile, add team members, and connect your products in under 10 minutes.",
+      "step2Title": "Manage With Confidence",
+      "step2Desc": "A powerful dashboard gives you complete visibility into orders, finances, and team performance.",
+      "step3Title": "Scale Effortlessly",
+      "step3Desc": "Flexible bundles and subscription tiers that grow with your business — upgrade anytime."
+    },
+    "contact": {
+      "badge": "Get In Touch",
+      "title": "Let's Find the Right Plan for You",
+      "subtitle": "Tell us about your business and our team will reach out within 24 hours.",
+      "roleLabel": "I am a",
+      "roleSeller": "Seller",
+      "roleSupplier": "Supplier",
+      "roleUser": "User",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "Enter your full name",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "+966 5X XXX XXXX",
+      "companyLabel": "Company Name",
+      "companyPlaceholder": "Your company or brand name",
+      "categoryLabel": "Business Category",
+      "categoryPlaceholder": "Select a category",
+      "messageLabel": "Additional Notes",
+      "messagePlaceholder": "Tell us more about your needs (optional)",
+      "submit": "Send Message",
+      "submitting": "Sending…",
+      "successTitle": "Message Sent!",
+      "successDesc": "We'll get back to you within 24 hours.",
+      "nameRequired": "Full name is required",
+      "phoneRequired": "Phone number is required"
+    },
+    "footer": {
+      "tagline": "Empowering businesses across the region.",
+      "rights": "All rights reserved."
     }
   },
   "legal": {

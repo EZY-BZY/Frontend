@@ -27,6 +27,7 @@ import * as Collapsible from "@radix-ui/react-collapsible";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { logout } from "@/services/auth";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import {
   Sidebar,
@@ -34,6 +35,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -49,7 +51,7 @@ type NavItem = {
 };
 
 const mainItems: NavItem[] = [
-  { key: "dashboard",       href: "",                               icon: LayoutDashboard },
+  { key: "dashboard",       href: "/dashboard",                    icon: LayoutDashboard },
   { key: "employees",       href: "/employees",                    icon: Users },
   { key: "clients",         href: "/clients",                      icon: UserCircle2 },
   { key: "contactRequests", href: "/contact-requests",             icon: MessageSquare },
@@ -79,10 +81,9 @@ const legalItems: NavItem[] = [
 /* ─── isActive ───────────────────────────────────────────────────── */
 function getIsActive(href: string, locale: string, pathname: string): boolean {
   const full = `/${locale}${href}`;
-  if (href === "") return pathname === `/${locale}` || pathname === `/${locale}/dashboard`;
   return (
     pathname === full ||
-    (href !== "/subscriptions" && pathname.startsWith(full))
+    (href !== "/subscriptions" && pathname.startsWith(full + "/"))
   );
 }
 
@@ -278,6 +279,7 @@ function UserFooter() {
               <button
                 type="button"
                 title={tCommon("logout")}
+                onClick={logout}
                 className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors"
               >
                 <LogOut className="h-3.5 w-3.5" />
@@ -293,6 +295,7 @@ function UserFooter() {
 /* ─── AppSidebar ─────────────────────────────────────────────────── */
 export function AppSidebar({ onLinkClick }: { onLinkClick?: () => void } = {}) {
   const locale = useLocale();
+  const tNav = useTranslations("nav");
   const { state, setOpenMobile, isMobile } = useSidebar();
   const isRTL = locale === "ar";
 
@@ -323,6 +326,8 @@ export function AppSidebar({ onLinkClick }: { onLinkClick?: () => void } = {}) {
       <SidebarContent className="min-h-0 overflow-hidden py-2">
         <div className="flex min-h-0 flex-1 flex-col">
           <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+
+            {/* ── Management ───────────────────────────────── */}
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -330,6 +335,19 @@ export function AppSidebar({ onLinkClick }: { onLinkClick?: () => void } = {}) {
                     <NavRow key={item.key} item={item} onLinkClick={handleLinkClick} />
                   ))}
                   <NavRow item={companiesItem} onLinkClick={handleLinkClick} />
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+
+            {/* ── Financial ────────────────────────────────── */}
+            <SidebarGroup className="pt-1">
+              {state === "expanded" && (
+                <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                  {tNav("financial")}
+                </SidebarGroupLabel>
+              )}
+              <SidebarGroupContent>
+                <SidebarMenu>
                   {financialItems.map((item) => (
                     <NavRow key={item.key} item={item} onLinkClick={handleLinkClick} />
                   ))}

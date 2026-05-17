@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { logout } from "@/services/auth";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
@@ -197,7 +198,7 @@ export function TopBar() {
                   <button
                     role="menuitem"
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors"
-                    onClick={() => setProfileOpen(false)}
+                    onClick={() => { setProfileOpen(false); logout(); }}
                   >
                     <LogOut className="h-4 w-4" />
                     {tCommon("logout")}
