@@ -20,7 +20,7 @@ jobs:
           script: |
             set -e
 
-            cd /opt/projects/beasy/front
+            cd /opt/projects/beasy/Frontend
 
             echo "Pull latest code..."
             git pull origin main
