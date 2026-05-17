@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, Pencil, Globe2 } from "lucide-react";
+import { AlertCircle, Loader2, Pencil, Globe2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
@@ -13,26 +13,29 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { saveCountry } from "@/features/countries/data/mock";
-import type { Country } from "@/types";
+import { createCountry, updateCountry } from "@/services/countries";
+import type { CountryRead } from "@/types/api";
 
 type FormData = {
-  iso: string;
+  flag_emoji: string;
   name_en: string;
   name_ar: string;
-  currencyEn: string;
-  currencyAr: string;
-  currencyFr: string;
-  flag: string;
-  phoneCode: string;
-  regex: string;
+  name_fr: string;
+  phone_code: string;
+  phone_regex: string;
+  currency_en: string;
+  currency_ar: string;
+  currency_fr: string;
+  currency_shortcut_en: string;
+  currency_shortcut_ar: string;
+  currency_shortcut_fr: string;
 };
 
 interface CountrySheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  country?: Country;
-  onSaved: (country: Country) => void;
+  country?: CountryRead;
+  onSaved: (country: CountryRead) => void;
 }
 
 export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySheetProps) {
@@ -41,17 +44,21 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
   const locale = useLocale();
 
   const [mode, setMode] = useState<"preview" | "edit">(country ? "preview" : "edit");
+  const [serverError, setServerError] = useState("");
 
   const schema = z.object({
-    iso:        z.string().min(2).max(3).toUpperCase(),
-    name_en:    z.string().min(2, t("validation.nameEnRequired")),
-    name_ar:    z.string().min(2, t("validation.nameArRequired")),
-    currencyEn: z.string().min(2, t("validation.currencyEnRequired")),
-    currencyAr: z.string().min(2, t("validation.currencyArRequired")),
-    currencyFr: z.string().min(2, t("validation.currencyFrRequired")),
-    flag:       z.string().min(1, t("validation.flagRequired")),
-    phoneCode:  z.string().min(2, t("validation.phoneCodeRequired")).regex(/^\+\d+$/, t("validation.phoneCodeFormat")),
-    regex:      z.string().min(1, t("validation.regexRequired")),
+    flag_emoji:  z.string().min(1, t("validation.flagRequired")),
+    name_en:     z.string().min(2, t("validation.nameEnRequired")),
+    name_ar:     z.string().min(2, t("validation.nameArRequired")),
+    name_fr:     z.string().min(2, t("validation.nameFrRequired")),
+    phone_code:  z.string().min(2, t("validation.phoneCodeRequired")).regex(/^\+\d+$/, t("validation.phoneCodeFormat")),
+    phone_regex: z.string().min(1, t("validation.regexRequired")),
+    currency_en: z.string().min(2, t("validation.currencyEnRequired")),
+    currency_ar: z.string().min(2, t("validation.currencyArRequired")),
+    currency_fr: z.string().min(2, t("validation.currencyFrRequired")),
+    currency_shortcut_en: z.string().min(1, t("validation.currencyShortcutEnRequired")),
+    currency_shortcut_ar: z.string().min(1, t("validation.currencyShortcutArRequired")),
+    currency_shortcut_fr: z.string().min(1, t("validation.currencyShortcutFrRequired")),
   });
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } =
@@ -60,27 +67,59 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
   useEffect(() => {
     if (open) {
       setMode(country ? "preview" : "edit");
+      setServerError("");
       reset(country
         ? {
-            iso: country.iso,
-            name_en: country.name_en,
-            name_ar: country.name_ar,
-            currencyEn: country.currencyEn,
-            currencyAr: country.currencyAr,
-            currencyFr: country.currencyFr,
-            flag: country.flag,
-            phoneCode: country.phoneCode,
-            regex: country.regex,
+            flag_emoji:  country.flag_emoji,
+            name_en:     country.name_en,
+            name_ar:     country.name_ar,
+            name_fr:     country.name_fr,
+            phone_code:  country.phone_code,
+            phone_regex: country.phone_regex,
+            currency_en: country.currency_name_en,
+            currency_ar: country.currency_name_ar,
+            currency_fr: country.currency_name_fr,
+            currency_shortcut_en: country.currency_shortcut_en,
+            currency_shortcut_ar: country.currency_shortcut_ar,
+            currency_shortcut_fr: country.currency_shortcut_fr,
           }
-        : { iso: "", name_en: "", name_ar: "", currencyEn: "", currencyAr: "", currencyFr: "", flag: "", phoneCode: "+", regex: "" }
+        : {
+            flag_emoji: "", name_en: "", name_ar: "", name_fr: "",
+            phone_code: "+", phone_regex: "",
+            currency_en: "", currency_ar: "", currency_fr: "",
+            currency_shortcut_en: "", currency_shortcut_ar: "", currency_shortcut_fr: "",
+          }
       );
     }
   }, [open, country, reset]);
 
   const onSubmit = async (data: FormData) => {
-    const saved = await saveCountry(data, country?.id);
-    onSaved(saved);
-    onOpenChange(false);
+    setServerError("");
+    const payload = {
+      flag_emoji:           data.flag_emoji,
+      name_en:              data.name_en,
+      name_ar:              data.name_ar,
+      name_fr:              data.name_fr,
+      phone_code:           data.phone_code,
+      phone_regex:          data.phone_regex,
+      currency_name_en:     data.currency_en,
+      currency_name_ar:     data.currency_ar,
+      currency_name_fr:     data.currency_fr,
+      currency_shortcut_en: data.currency_shortcut_en,
+      currency_shortcut_ar: data.currency_shortcut_ar,
+      currency_shortcut_fr: data.currency_shortcut_fr,
+    };
+
+    const res = country
+      ? await updateCountry(country.id, payload)
+      : await createCountry(payload);
+
+    if (res.Data) {
+      onSaved(res.Data);
+      onOpenChange(false);
+    } else {
+      setServerError(res.details || res.Message || tCommon("noResults"));
+    }
   };
 
   /* ─── Preview card ──────────────────────────────────────────────── */
@@ -95,23 +134,35 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
 
           <div className="flex flex-col gap-5 px-6 py-6">
             <div className="flex items-center gap-4 rounded-2xl bg-[#EBF3FB] px-5 py-5">
-              <span className="text-5xl">{country.flag}</span>
+              <span className="text-5xl">{country.flag_emoji}</span>
               <div>
                 <p className="text-xl font-bold text-[#0A3D62]">{country.name_en}</p>
-                <p className="text-sm text-slate-500" dir="rtl" style={{ fontFamily: "var(--font-arabic)" }}>{country.name_ar}</p>
+                <p
+                  className="text-sm text-slate-500"
+                  dir="rtl"
+                  style={{ fontFamily: "var(--font-arabic)" }}
+                >
+                  {country.name_ar}
+                </p>
+                <p className="text-xs text-slate-400 mt-0.5">{country.name_fr}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               {([
-                { labelKey: "details.isoCode",    value: country.iso },
-                { labelKey: "details.phoneCode",  value: country.phoneCode },
-                { labelKey: "details.currencyEn", value: country.currencyEn },
-                { labelKey: "details.currencyAr", value: country.currencyAr },
-                { labelKey: "details.currencyFr", value: country.currencyFr },
-                { labelKey: "details.regex",      value: country.regex },
+                { labelKey: "details.phoneCode",  value: country.phone_code },
+                { labelKey: "details.currencyEn", value: country.currency_name_en },
+                { labelKey: "details.currencyAr", value: country.currency_name_ar },
+                { labelKey: "details.currencyFr", value: country.currency_name_fr },
+                { labelKey: "details.regex",      value: country.phone_regex },
                 { labelKey: "details.id",         value: country.id },
-                { labelKey: "details.added",      value: new Date(country.createdAt).toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", { day: "2-digit", month: "short", year: "numeric" }) },
+                {
+                  labelKey: "details.added",
+                  value: new Date(country.created_at).toLocaleDateString(
+                    locale === "ar" ? "ar-EG" : "en-GB",
+                    { day: "2-digit", month: "short", year: "numeric" }
+                  ),
+                },
               ] as const).map(({ labelKey, value }) => (
                 <div key={labelKey} className="rounded-xl border border-slate-100 bg-white px-4 py-3">
                   <p className="text-xs font-medium text-slate-400">{t(labelKey)}</p>
@@ -125,7 +176,10 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
             <SheetClose asChild>
               <Button variant="outline">{tCommon("close")}</Button>
             </SheetClose>
-            <Button onClick={() => setMode("edit")} className="gap-2 bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90">
+            <Button
+              onClick={() => setMode("edit")}
+              className="gap-2 bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90"
+            >
               <Pencil className="h-4 w-4" /> {tCommon("edit")}
             </Button>
           </SheetFooter>
@@ -134,7 +188,7 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
     );
   }
 
-  /* ─── Edit form ─────────────────────────────────────────────────── */
+  /* ─── Edit / Add form ───────────────────────────────────────────── */
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="overflow-y-auto">
@@ -149,17 +203,17 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
         </SheetHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 px-6 py-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="iso">{t("sheet.isoCode")}</Label>
-              <Input id="iso" placeholder="AE" {...register("iso")} className="uppercase" />
-              {errors.iso && <p className="text-xs text-red-500">{errors.iso.message}</p>}
+          {serverError && (
+            <div className="flex items-center gap-2 rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-sm text-red-600">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              {serverError}
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="flag">{t("sheet.flagEmoji")}</Label>
-              <Input id="flag" placeholder="🇦🇪" {...register("flag")} />
-              {errors.flag && <p className="text-xs text-red-500">{errors.flag.message}</p>}
-            </div>
+          )}
+
+          <div className="space-y-1.5">
+            <Label htmlFor="flag_emoji">{t("sheet.flagEmoji")}</Label>
+            <Input id="flag_emoji" placeholder="🇦🇪" {...register("flag_emoji")} />
+            {errors.flag_emoji && <p className="text-xs text-red-500">{errors.flag_emoji.message}</p>}
           </div>
 
           <div className="space-y-1.5">
@@ -174,36 +228,73 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
             {errors.name_ar && <p className="text-xs text-red-500">{errors.name_ar.message}</p>}
           </div>
 
+          <div className="space-y-1.5">
+            <Label htmlFor="name_fr">{t("sheet.nameFr")}</Label>
+            <Input id="name_fr" placeholder="Émirats arabes unis" {...register("name_fr")} dir="ltr" />
+            {errors.name_fr && <p className="text-xs text-red-500">{errors.name_fr.message}</p>}
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label htmlFor="phoneCode">{t("sheet.phoneCode")}</Label>
-              <Input id="phoneCode" placeholder="+971" {...register("phoneCode")} dir="ltr" />
-              {errors.phoneCode && <p className="text-xs text-red-500">{errors.phoneCode.message}</p>}
+              <Label htmlFor="phone_code">{t("sheet.phoneCode")}</Label>
+              <Input id="phone_code" placeholder="+971" {...register("phone_code")} dir="ltr" />
+              {errors.phone_code && <p className="text-xs text-red-500">{errors.phone_code.message}</p>}
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="regex">{t("sheet.regexField")}</Label>
-              <Input id="regex" placeholder="^5[024568]\d{7}$" {...register("regex")} dir="ltr" className="font-mono text-xs" />
-              {errors.regex && <p className="text-xs text-red-500">{errors.regex.message}</p>}
+              <Label htmlFor="phone_regex">{t("sheet.regexField")}</Label>
+              <Input
+                id="phone_regex"
+                placeholder="^5[024568]\d{7}$"
+                {...register("phone_regex")}
+                dir="ltr"
+                className="font-mono text-xs"
+              />
+              {errors.phone_regex && <p className="text-xs text-red-500">{errors.phone_regex.message}</p>}
             </div>
           </div>
 
           <div className="space-y-1 rounded-xl border border-slate-100 bg-slate-50 p-4">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">{t("sheet.currencySection")}</p>
-            <div className="space-y-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="currencyEn">{t("sheet.currencyEn")}</Label>
-                <Input id="currencyEn" placeholder="UAE Dirham" {...register("currencyEn")} dir="ltr" />
-                {errors.currencyEn && <p className="text-xs text-red-500">{errors.currencyEn.message}</p>}
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              {t("sheet.currencySection")}
+            </p>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="currency_en">{t("sheet.currencyEn")}</Label>
+                  <Input id="currency_en" placeholder="UAE Dirham" {...register("currency_en")} dir="ltr" />
+                  {errors.currency_en && <p className="text-xs text-red-500">{errors.currency_en.message}</p>}
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="currency_shortcut_en">{t("sheet.currencyShortcutEn")}</Label>
+                  <Input id="currency_shortcut_en" placeholder="AED" {...register("currency_shortcut_en")} dir="ltr" />
+                  {errors.currency_shortcut_en && <p className="text-xs text-red-500">{errors.currency_shortcut_en.message}</p>}
+                </div>
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="currencyAr">{t("sheet.currencyAr")}</Label>
-                <Input id="currencyAr" placeholder="درهم إماراتي" {...register("currencyAr")} dir="rtl" />
-                {errors.currencyAr && <p className="text-xs text-red-500">{errors.currencyAr.message}</p>}
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="currency_ar">{t("sheet.currencyAr")}</Label>
+                  <Input id="currency_ar" placeholder="درهم إماراتي" {...register("currency_ar")} dir="rtl" />
+                  {errors.currency_ar && <p className="text-xs text-red-500">{errors.currency_ar.message}</p>}
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="currency_shortcut_ar">{t("sheet.currencyShortcutAr")}</Label>
+                  <Input id="currency_shortcut_ar" placeholder="د.إ" {...register("currency_shortcut_ar")} dir="rtl" />
+                  {errors.currency_shortcut_ar && <p className="text-xs text-red-500">{errors.currency_shortcut_ar.message}</p>}
+                </div>
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="currencyFr">{t("sheet.currencyFr")}</Label>
-                <Input id="currencyFr" placeholder="Dirham des Émirats arabes unis" {...register("currencyFr")} dir="ltr" />
-                {errors.currencyFr && <p className="text-xs text-red-500">{errors.currencyFr.message}</p>}
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="currency_fr">{t("sheet.currencyFr")}</Label>
+                  <Input id="currency_fr" placeholder="Dirham des Émirats arabes unis" {...register("currency_fr")} dir="ltr" />
+                  {errors.currency_fr && <p className="text-xs text-red-500">{errors.currency_fr.message}</p>}
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="currency_shortcut_fr">{t("sheet.currencyShortcutFr")}</Label>
+                  <Input id="currency_shortcut_fr" placeholder="AED" {...register("currency_shortcut_fr")} dir="ltr" />
+                  {errors.currency_shortcut_fr && <p className="text-xs text-red-500">{errors.currency_shortcut_fr.message}</p>}
+                </div>
               </div>
             </div>
           </div>
@@ -211,13 +302,20 @@ export function CountrySheet({ open, onOpenChange, country, onSaved }: CountrySh
 
         <SheetFooter>
           {country ? (
-            <Button variant="outline" type="button" onClick={() => setMode("preview")}>{tCommon("cancel")}</Button>
+            <Button variant="outline" type="button" onClick={() => setMode("preview")}>
+              {tCommon("cancel")}
+            </Button>
           ) : (
             <SheetClose asChild>
               <Button variant="outline" type="button">{tCommon("cancel")}</Button>
             </SheetClose>
           )}
-          <Button type="button" onClick={handleSubmit(onSubmit)} disabled={isSubmitting} className="bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90">
+          <Button
+            type="button"
+            onClick={handleSubmit(onSubmit)}
+            disabled={isSubmitting}
+            className="bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90"
+          >
             {isSubmitting && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
             {country ? tCommon("saveChanges") : t("addCountry")}
           </Button>

@@ -1,20 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Pencil, Trash2, FileText } from "lucide-react";
+import { Plus, Pencil, Trash2, FileText, AlertCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { LegalSectionSheet, type LegalSectionFormData } from "./legal-section-sheet";
-import {
-  mockLegalData,
-  saveLegalSection,
-  deleteLegalSection,
-  type LegalDocType,
-  type LegalSection,
-} from "@/features/legal/data/mock-legal";
+import { LegalSectionSheet } from "./legal-section-sheet";
+import { listTermsByType, deleteTerm } from "@/services/terms";
+import type { TermRead, TermType } from "@/types/api";
 
-/* ─── Doc metadata ───────────────────────────────────────────────── */
+/* ─── Doc type mapping ───────────────────────────────────────────── */
+type LegalDocType =
+  | "privacy-policy"
+  | "terms-conditions"
+  | "delivery-terms"
+  | "refund-terms";
+
+const TERM_TYPE_MAP: Record<LegalDocType, TermType> = {
+  "privacy-policy": "privacy_policy",
+  "terms-conditions": "terms_of_use",
+  "delivery-terms": "delivery_terms",
+  "refund-terms": "refund_terms",
+};
+
 const DOC_META: Record<LegalDocType, { titleEn: string; titleFr: string; titleAr: string }> = {
   "privacy-policy": {
     titleEn: "Privacy Policy",
@@ -45,12 +53,43 @@ const cardAnim = (i: number) => ({
   transition: { delay: i * 0.07, duration: 0.28 },
 });
 
-/* ─── Delete confirmation mini-state ────────────────────────────── */
-function DeleteButton({
-  onConfirm,
-}: {
-  onConfirm: () => void;
-}) {
+/* ─── Loading skeleton ───────────────────────────────────────────── */
+function SectionSkeleton() {
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3].map((i) => (
+        <div
+          key={i}
+          className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden animate-pulse"
+        >
+          <div className="flex items-center justify-between border-b border-slate-50 px-5 py-3">
+            <div className="h-3 w-16 rounded bg-slate-100" />
+            <div className="flex gap-1">
+              <div className="h-8 w-8 rounded-lg bg-slate-100" />
+              <div className="h-8 w-8 rounded-lg bg-slate-100" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-50">
+            {[1, 2, 3].map((j) => (
+              <div key={j} className="px-5 py-5 space-y-3">
+                <div className="h-3 w-8 rounded-full bg-slate-100" />
+                <div className="h-4 w-40 rounded bg-slate-100" />
+                <div className="space-y-1.5">
+                  <div className="h-3 w-full rounded bg-slate-100" />
+                  <div className="h-3 w-4/5 rounded bg-slate-100" />
+                  <div className="h-3 w-3/5 rounded bg-slate-100" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Delete confirmation ────────────────────────────────────────── */
+function DeleteButton({ onConfirm }: { onConfirm: () => void }) {
   const [confirming, setConfirming] = useState(false);
   const t = useTranslations("legal");
   const tCommon = useTranslations("common");
@@ -96,42 +135,55 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
   const tCommon = useTranslations("common");
   const locale = useLocale();
   const meta = DOC_META[docType];
+  const termType = TERM_TYPE_MAP[docType];
 
-  /* Clone initial mock data into local state so edits are reactive */
-  const [sections, setSections] = useState<LegalSection[]>(() =>
-    [...mockLegalData[docType]]
-  );
-
+  const [terms, setTerms] = useState<TermRead[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [editingSection, setEditingSection] = useState<LegalSection | undefined>(undefined);
+  const [editingTerm, setEditingTerm] = useState<TermRead | undefined>(undefined);
 
-  /* Open sheet for Add */
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    const res = await listTermsByType(termType);
+    if (res.Data) {
+      setTerms(res.Data);
+    } else {
+      setError(res.Message || tCommon("noResults"));
+    }
+    setLoading(false);
+  }, [termType, tCommon]);
+
+  useEffect(() => { load(); }, [load]);
+
   const handleAdd = () => {
-    setEditingSection(undefined);
+    setEditingTerm(undefined);
     setSheetOpen(true);
   };
 
-  /* Open sheet for Edit */
-  const handleEdit = (section: LegalSection) => {
-    setEditingSection(section);
+  const handleEdit = (term: TermRead) => {
+    setEditingTerm(term);
     setSheetOpen(true);
   };
 
-  /* Save (add or edit) */
-  const handleSave = async (data: LegalSectionFormData) => {
-    const saved = await saveLegalSection(docType, data, editingSection?.id);
-    setSections((prev) => {
-      if (editingSection) {
-        return prev.map((s) => (s.id === saved.id ? saved : s));
+  const handleSaved = (saved: TermRead) => {
+    setTerms((prev) => {
+      const idx = prev.findIndex((t) => t.id === saved.id);
+      if (idx !== -1) {
+        const next = [...prev];
+        next[idx] = saved;
+        return next;
       }
       return [...prev, saved];
     });
   };
 
-  /* Delete */
-  const handleDelete = async (sectionId: string) => {
-    await deleteLegalSection(docType, sectionId);
-    setSections((prev) => prev.filter((s) => s.id !== sectionId));
+  const handleDelete = async (termId: string) => {
+    const res = await deleteTerm(termId);
+    if (res.status_code >= 200 && res.status_code < 300) {
+      setTerms((prev) => prev.filter((t) => t.id !== termId));
+    }
   };
 
   return (
@@ -166,8 +218,15 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
         </Button>
       </motion.div>
 
-      {/* ── Section list ─────────────────────────────────────────── */}
-      {sections.length === 0 ? (
+      {/* ── Body ─────────────────────────────────────────────────── */}
+      {loading ? (
+        <SectionSkeleton />
+      ) : error ? (
+        <div className="rounded-2xl border border-red-100 bg-red-50 px-5 py-4 flex items-center gap-3 text-red-600">
+          <AlertCircle className="h-5 w-5 shrink-0" />
+          <span className="text-sm">{error}</span>
+        </div>
+      ) : terms.length === 0 ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -181,29 +240,28 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
       ) : (
         <AnimatePresence initial={false}>
           <div className="space-y-4">
-            {sections.map((section, i) => (
+            {terms.map((term, i) => (
               <motion.div
-                key={section.id}
+                key={term.id}
                 {...cardAnim(i)}
                 layout
                 exit={{ opacity: 0, y: -8, transition: { duration: 0.18 } }}
               >
-                {/* Section card */}
                 <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
-                  {/* Card header: section number + actions */}
+                  {/* Card header: order + actions */}
                   <div className="flex items-center justify-between border-b border-slate-50 px-5 py-3">
                     <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                      {t("sectionPrefix")} {section.order}
+                      {t("sectionPrefix")} {term.order}
                     </span>
                     <div className="flex items-center gap-1">
                       <button
-                        onClick={() => handleEdit(section)}
+                        onClick={() => handleEdit(term)}
                         className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-[#EBF3FB] hover:text-[#0A3D62] transition-colors"
                         title={t("editSectionBtn")}
                       >
                         <Pencil className="h-4 w-4" />
                       </button>
-                      <DeleteButton onConfirm={() => handleDelete(section.id)} />
+                      <DeleteButton onConfirm={() => handleDelete(term.id)} />
                     </div>
                   </div>
 
@@ -217,9 +275,9 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
                         </span>
                       </div>
                       <h3 className="font-semibold text-slate-800 leading-snug mb-2">
-                        {section.titleEn}
+                        {term.name_en}
                       </h3>
-                      <p className="text-sm text-slate-500 leading-relaxed">{section.contentEn}</p>
+                      <p className="text-sm text-slate-500 leading-relaxed">{term.description_en}</p>
                     </div>
 
                     {/* French */}
@@ -230,9 +288,9 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
                         </span>
                       </div>
                       <h3 className="font-semibold text-slate-800 leading-snug mb-2">
-                        {section.titleFr}
+                        {term.name_fr}
                       </h3>
-                      <p className="text-sm text-slate-500 leading-relaxed">{section.contentFr}</p>
+                      <p className="text-sm text-slate-500 leading-relaxed">{term.description_fr}</p>
                     </div>
 
                     {/* Arabic */}
@@ -247,9 +305,9 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
                         </span>
                       </div>
                       <h3 className="font-semibold text-slate-800 leading-snug mb-2">
-                        {section.titleAr}
+                        {term.name_ar}
                       </h3>
-                      <p className="text-sm text-slate-500 leading-relaxed">{section.contentAr}</p>
+                      <p className="text-sm text-slate-500 leading-relaxed">{term.description_ar}</p>
                     </div>
                   </div>
                 </div>
@@ -263,8 +321,9 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
       <LegalSectionSheet
         open={sheetOpen}
         onOpenChange={setSheetOpen}
-        section={editingSection}
-        onSave={handleSave}
+        term={editingTerm}
+        termType={termType}
+        onSaved={handleSaved}
       />
     </div>
   );

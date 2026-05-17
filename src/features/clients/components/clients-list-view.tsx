@@ -1,20 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import {
   Building2,
-  ExternalLink,
   Users,
-  Mail,
-  Phone,
-  Calendar,
-  Package,
+  AlertCircle,
+  Loader2,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { FilterBar } from "@/components/shared/FilterBar";
 import {
   Sheet,
@@ -22,207 +21,207 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
+  SheetFooter,
 } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { mockClients, allWorkAccounts } from "@/lib/mock-clients";
-import type { PersonalClient } from "@/types";
+import { listOwners, changeOwnerStatus } from "@/services/owners";
+import { listCompanies } from "@/services/companies";
+import type {
+  CompanyOwnerAdminRead,
+  CompanyRead,
+  OwnerAccountStatus,
+  CompanyServiceType,
+  CompanyStatus,
+} from "@/types/api";
 
-/* ─── Row animation helper ───────────────────────────────────────── */
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const AVATAR_COLORS = [
+  "#0A3D62", "#28B8B1", "#6366f1", "#f59e0b",
+  "#10b981", "#ef4444", "#8b5cf6", "#ec4899",
+];
+
+function avatarColor(id: string): string {
+  return AVATAR_COLORS[id.charCodeAt(id.length - 1) % AVATAR_COLORS.length];
+}
+
+function avatarInitials(name: string): string {
+  return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+}
+
+function ownerStatusColor(status: OwnerAccountStatus): string {
+  switch (status) {
+    case "active":               return "bg-emerald-50 text-emerald-700";
+    case "pending_verification": return "bg-amber-50 text-amber-700";
+    case "suspended":            return "bg-orange-50 text-orange-700";
+    case "blocked":              return "bg-red-50 text-red-600";
+    case "deleted":              return "bg-slate-100 text-slate-400";
+  }
+}
+
+function serviceColor(service: CompanyServiceType): string {
+  switch (service) {
+    case "services":              return "bg-blue-50 text-blue-700";
+    case "products":              return "bg-violet-50 text-violet-700";
+    case "products_and_services": return "bg-teal-50 text-teal-700";
+  }
+}
+
+function companyStatusColor(status: CompanyStatus): string {
+  return status === "active"
+    ? "bg-emerald-50 text-emerald-700"
+    : "bg-slate-100 text-slate-500";
+}
+
 const rowAnim = (i: number) => ({
   initial: { opacity: 0, y: 10 },
   animate: { opacity: 1, y: 0 },
   transition: { delay: i * 0.04, duration: 0.22 },
 });
 
-/* ─── Status badge config ─────────────────────────────────────────── */
-const waCls = {
-  active: "bg-emerald-50 text-emerald-700 border-emerald-100",
-  inactive: "bg-slate-100 text-slate-500 border-slate-200",
-};
+const OWNER_STATUSES: OwnerAccountStatus[] = [
+  "active",
+  "pending_verification",
+  "suspended",
+  "blocked",
+  "deleted",
+];
 
-/* ─── Personal Account Sheet ─────────────────────────────────────── */
-function PersonalAccountSheet({
-  client,
-  open,
-  onClose,
-}: {
-  client: PersonalClient | null;
-  open: boolean;
-  onClose: () => void;
-}) {
-  const t = useTranslations("clients");
-  const locale = useLocale();
-  const isRTL = locale === "ar";
+// ─── Component ────────────────────────────────────────────────────────────────
 
-  if (!client) return null;
-
-  return (
-    <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side={isRTL ? "left" : "right"} className="w-full max-w-md overflow-y-auto">
-        {/* Header */}
-        <SheetHeader className="pb-5">
-          <div className="flex items-center gap-4 pe-8">
-            <span
-              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-white text-lg font-bold select-none shadow-md"
-              style={{ backgroundColor: client.avatarColor }}
-            >
-              {client.avatarInitials}
-            </span>
-            <div>
-              <SheetTitle className="text-lg font-bold text-slate-900 leading-tight">
-                {client.name}
-              </SheetTitle>
-              <SheetDescription className="text-xs font-mono text-slate-400 mt-0.5">
-                {client.id}
-              </SheetDescription>
-            </div>
-          </div>
-        </SheetHeader>
-
-        {/* Gradient accent bar */}
-        <div className="h-1 w-full bg-linear-to-r from-[#0A3D62] to-[#28B8B1] -mt-1 mb-5" />
-
-        {/* Contact Info */}
-        <div className="px-6 space-y-3 mb-6">
-          <a
-            href={`mailto:${client.email}`}
-            className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm text-slate-600 hover:border-[#28B8B1] hover:text-[#0A3D62] transition-colors"
-          >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#EBF3FB]">
-              <Mail className="h-4 w-4 text-[#0A3D62]" />
-            </div>
-            <span className="truncate">{client.email}</span>
-          </a>
-
-          <div
-            className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm text-slate-600"
-            dir="ltr"
-          >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#EBF3FB]">
-              <Phone className="h-4 w-4 text-[#0A3D62]" />
-            </div>
-            <span className="font-mono">
-              {client.countryCode} {client.phone}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#EBF3FB]">
-              <Calendar className="h-4 w-4 text-[#0A3D62]" />
-            </div>
-            <span>
-              {t("joinedDate")}:{" "}
-              {new Date(client.joinDate).toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-              })}
-            </span>
-          </div>
-        </div>
-
-        {/* Work Accounts */}
-        <div className="px-6">
-          <div className="flex items-center gap-2 mb-3">
-            <Building2 className="h-4 w-4 text-[#0A3D62]" />
-            <p className="text-sm font-semibold text-slate-700">
-              {t("workAccounts")}
-            </p>
-            <Badge
-              variant="secondary"
-              className="ms-1 bg-[#EBF3FB] text-[#0A3D62] border-0 font-bold tabular-nums"
-            >
-              {client.workAccounts.length}
-            </Badge>
-          </div>
-
-          {client.workAccounts.length === 0 ? (
-            <p className="text-sm text-slate-400 py-4 text-center">
-              {t("noWorkAccounts")}
-            </p>
-          ) : (
-            <div className="space-y-2">
-              {client.workAccounts.map((wa) => (
-                <div
-                  key={wa.id}
-                  className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white px-4 py-3 hover:bg-[#EBF3FB]/40 transition-colors"
-                >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#EBF3FB]">
-                    <Building2 className="h-4.5 w-4.5 text-[#0A3D62]" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-800 leading-tight truncate">
-                      {wa.name}
-                    </p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs font-mono text-slate-400">{wa.id}</span>
-                      <span className="text-slate-300">·</span>
-                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">
-                        {wa.industry}
-                      </span>
-                    </div>
-                  </div>
-                  <span
-                    className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${waCls[wa.status]}`}
-                  >
-                    <span
-                      className={cn("h-1.5 w-1.5 rounded-full", isRTL ? "ml-1" : "mr-1", wa.status === "active" ? "bg-emerald-400" : "bg-slate-400")}
-                    />
-                    {wa.status === "active" ? t("status.active") : t("status.inactive")}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </SheetContent>
-    </Sheet>
-  );
-}
-
-/* ─── Main List View ─────────────────────────────────────────────── */
 export function ClientsListView() {
   const locale = useLocale();
-  const router = useRouter();
   const t = useTranslations("clients");
+  const tCommon = useTranslations("common");
+  const tCompanies = useTranslations("companies");
 
   const [search, setSearch] = useState("");
-  const [selectedClient, setSelectedClient] = useState<PersonalClient | null>(null);
+
+  // ── Owners state ────────────────────────────────────────────────────────────
+  const [owners, setOwners] = useState<CompanyOwnerAdminRead[]>([]);
+  const [ownersLoading, setOwnersLoading] = useState(true);
+  const [ownersError, setOwnersError] = useState<string | null>(null);
+
+  // ── Companies state ─────────────────────────────────────────────────────────
+  const [companies, setCompanies] = useState<CompanyRead[]>([]);
+  const [companiesLoading, setCompaniesLoading] = useState(true);
+  const [companiesError, setCompaniesError] = useState<string | null>(null);
+
+  // ── Owner sheet state ────────────────────────────────────────────────────────
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [selectedOwner, setSelectedOwner] = useState<CompanyOwnerAdminRead | null>(null);
+  const [newStatus, setNewStatus] = useState<OwnerAccountStatus>("active");
+  const [statusSaving, setStatusSaving] = useState(false);
+  const [statusError, setStatusError] = useState("");
 
-  /* ── Personal Accounts (filtered) ─────────────────────────────── */
-  const filteredPersonal = useMemo(() => {
+  // ── Fetch data in parallel ───────────────────────────────────────────────────
+  useEffect(() => {
+    setOwnersLoading(true);
+    listOwners()
+      .then((res) => {
+        if (res.Data) setOwners(res.Data);
+        else setOwnersError(res.Message || "Failed to load owners");
+      })
+      .catch(() => setOwnersError("Network error — could not load owners."))
+      .finally(() => setOwnersLoading(false));
+
+    setCompaniesLoading(true);
+    listCompanies()
+      .then((res) => {
+        if (res.Data) setCompanies(res.Data);
+        else setCompaniesError(res.Message || "Failed to load companies");
+      })
+      .catch(() => setCompaniesError("Network error — could not load companies."))
+      .finally(() => setCompaniesLoading(false));
+  }, []);
+
+  // ── Filtered data ────────────────────────────────────────────────────────────
+  const filteredOwners = useMemo(() => {
     const q = search.toLowerCase();
-    if (!q) return mockClients;
-    return mockClients.filter(
+    if (!q) return owners;
+    return owners.filter(
+      (o) =>
+        o.name.toLowerCase().includes(q) ||
+        o.phone.includes(q) ||
+        o.email?.toLowerCase().includes(q)
+    );
+  }, [search, owners]);
+
+  const filteredCompanies = useMemo(() => {
+    const q = search.toLowerCase();
+    if (!q) return companies;
+    return companies.filter(
       (c) =>
-        c.name.toLowerCase().includes(q) ||
-        c.email.toLowerCase().includes(q) ||
-        c.phone.includes(q)
+        c.company_name_en?.toLowerCase().includes(q) ||
+        c.company_name_ar?.toLowerCase().includes(q)
     );
-  }, [search]);
+  }, [search, companies]);
 
-  /* ── Work Accounts (filtered) ──────────────────────────────────── */
-  const filteredWork = useMemo(() => {
-    const q = search.toLowerCase();
-    if (!q) return allWorkAccounts;
-    return allWorkAccounts.filter(
-      (wa) =>
-        wa.name.toLowerCase().includes(q) ||
-        wa.ownerName.toLowerCase().includes(q)
-    );
-  }, [search]);
-
-  const openPersonalSheet = (client: PersonalClient) => {
-    setSelectedClient(client);
+  // ── Open owner sheet ──────────────────────────────────────────────────────────
+  function openOwnerSheet(owner: CompanyOwnerAdminRead) {
+    setSelectedOwner(owner);
+    setNewStatus(owner.account_status);
+    setStatusError("");
     setSheetOpen(true);
-  };
+  }
 
-  const navigateToWorkAccount = (waId: string) =>
-    router.push(`/${locale}/clients/work-account/${waId}`);
+  // ── Change owner status ───────────────────────────────────────────────────────
+  async function handleChangeStatus() {
+    if (!selectedOwner) return;
+    setStatusSaving(true);
+    setStatusError("");
+    try {
+      const res = await changeOwnerStatus(selectedOwner.id, {
+        account_status: newStatus,
+      });
+      if (res.Data) {
+        setOwners((prev) =>
+          prev.map((o) => (o.id === res.Data!.id ? res.Data! : o))
+        );
+        setSelectedOwner(res.Data);
+      } else {
+        setStatusError(res.Message || "Failed to update status");
+      }
+    } catch {
+      setStatusError("Network error — please try again.");
+    } finally {
+      setStatusSaving(false);
+    }
+  }
 
-  const navigateToClient = (clientId: string) =>
-    router.push(`/${locale}/clients/${clientId}`);
+  const dateFormatter = (iso: string) =>
+    new Date(iso).toLocaleDateString(
+      locale === "ar" ? "ar-EG" : "en-GB",
+      { day: "2-digit", month: "short", year: "numeric" }
+    );
+
+  // ── Skeleton rows ─────────────────────────────────────────────────────────────
+  const SkeletonOwnerRows = () => (
+    <>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <tr key={i} className="border-b border-slate-50">
+          {[160, 110, 70, 90, 80].map((w, j) => (
+            <td key={j} className="px-5 py-3.5">
+              <div className="h-4 animate-pulse rounded bg-slate-100" style={{ width: w }} />
+            </td>
+          ))}
+        </tr>
+      ))}
+    </>
+  );
+
+  const SkeletonCompanyRows = () => (
+    <>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <tr key={i} className="border-b border-slate-50">
+          {[180, 100, 70, 90, 80].map((w, j) => (
+            <td key={j} className="px-5 py-3.5">
+              <div className="h-4 animate-pulse rounded bg-slate-100" style={{ width: w }} />
+            </td>
+          ))}
+        </tr>
+      ))}
+    </>
+  );
 
   return (
     <div className="space-y-4">
@@ -234,26 +233,32 @@ export function ClientsListView() {
       />
 
       {/* ── Tabs ──────────────────────────────────────────────────── */}
-      <Tabs defaultValue="personal">
+      <Tabs defaultValue="owners">
         <TabsList>
-          <TabsTrigger value="personal">
+          <TabsTrigger value="owners">
             <Users className="h-4 w-4" />
             {t("personalAccounts")}
             <span className="ms-1 rounded-full bg-[#0A3D62]/10 px-2 py-0.5 text-[11px] font-bold text-[#0A3D62] tabular-nums">
-              {filteredPersonal.length}
+              {filteredOwners.length}
             </span>
           </TabsTrigger>
-          <TabsTrigger value="work">
+          <TabsTrigger value="companies">
             <Building2 className="h-4 w-4" />
             {t("workAccounts")}
             <span className="ms-1 rounded-full bg-[#0A3D62]/10 px-2 py-0.5 text-[11px] font-bold text-[#0A3D62] tabular-nums">
-              {filteredWork.length}
+              {filteredCompanies.length}
             </span>
           </TabsTrigger>
         </TabsList>
 
-        {/* ── Tab 1: Personal Accounts ─────────────────────────── */}
-        <TabsContent value="personal">
+        {/* ── Tab 1: Owners ────────────────────────────────────── */}
+        <TabsContent value="owners">
+          {ownersError && (
+            <div className="mb-3 flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              {ownersError}
+            </div>
+          )}
           <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -262,8 +267,9 @@ export function ClientsListView() {
                     {[
                       t("col.client"),
                       t("col.phone"),
-                      t("col.workAccounts"),
+                      t("col.verified"),
                       t("col.joinedDate"),
+                      t("col.status"),
                     ].map((h) => (
                       <th
                         key={h}
@@ -275,72 +281,72 @@ export function ClientsListView() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredPersonal.length === 0 ? (
+                  {ownersLoading ? (
+                    <SkeletonOwnerRows />
+                  ) : filteredOwners.length === 0 ? (
                     <tr>
-                      <td
-                        colSpan={4}
-                        className="h-32 text-center text-slate-400 text-sm"
-                      >
+                      <td colSpan={5} className="h-32 text-center text-slate-400 text-sm">
                         {t("noResults")}
                       </td>
                     </tr>
                   ) : (
-                    filteredPersonal.map((client, i) => (
+                    filteredOwners.map((owner, i) => (
                       <motion.tr
-                        key={client.id}
+                        key={owner.id}
                         {...rowAnim(i)}
-                        onClick={() => openPersonalSheet(client)}
+                        onClick={() => openOwnerSheet(owner)}
                         className="border-b border-slate-50 last:border-0 hover:bg-[#EBF3FB]/40 cursor-pointer transition-colors group"
                       >
-                        {/* Avatar + Name */}
+                        {/* Name + avatar */}
                         <td className="px-5 py-3.5">
                           <div className="flex items-center gap-3">
                             <span
                               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white text-xs font-bold select-none"
-                              style={{ backgroundColor: client.avatarColor }}
+                              style={{ backgroundColor: avatarColor(owner.id) }}
                             >
-                              {client.avatarInitials}
+                              {avatarInitials(owner.name)}
                             </span>
                             <div>
                               <p className="font-semibold text-slate-800 group-hover:text-[#0A3D62] transition-colors leading-tight">
-                                {client.name}
+                                {owner.name}
                               </p>
-                              <p className="text-xs text-slate-400 font-mono">
-                                {client.id}
-                              </p>
+                              {owner.email && (
+                                <p className="text-xs text-slate-400 truncate max-w-36">
+                                  {owner.email}
+                                </p>
+                              )}
                             </div>
                           </div>
                         </td>
-
-                        {/* Phone — always LTR */}
-                        <td
-                          className="px-5 py-3.5 font-mono text-xs text-slate-500 whitespace-nowrap"
-                          dir="ltr"
-                        >
-                          {client.countryCode} {client.phone}
+                        {/* Phone */}
+                        <td className="px-5 py-3.5 font-mono text-xs text-slate-500 whitespace-nowrap" dir="ltr">
+                          {owner.phone}
                         </td>
-
-                        {/* Work Accounts count badge */}
+                        {/* Verified */}
                         <td className="px-5 py-3.5">
-                          <Badge
-                            variant="secondary"
-                            className="bg-[#EBF3FB] text-[#0A3D62] border-0 font-semibold tabular-nums"
-                          >
-                            <Building2 className="me-1 h-3 w-3" />
-                            {client.workAccounts.length}
-                          </Badge>
-                        </td>
-
-                        {/* Join Date */}
-                        <td className="px-5 py-3.5 text-xs text-slate-400 font-mono whitespace-nowrap">
-                          {new Date(client.joinDate).toLocaleDateString(
-                            locale === "ar" ? "ar-EG" : "en-GB",
-                            {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            }
+                          {owner.is_verified_phone ? (
+                            <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
+                              <CheckCircle2 className="h-3.5 w-3.5" />
+                              {t("verifiedPhone")}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-400">
+                              <XCircle className="h-3.5 w-3.5" />
+                              {t("notVerified")}
+                            </span>
                           )}
+                        </td>
+                        {/* Join date */}
+                        <td className="px-5 py-3.5 text-xs text-slate-400 whitespace-nowrap">
+                          {dateFormatter(owner.join_date)}
+                        </td>
+                        {/* Status */}
+                        <td className="px-5 py-3.5">
+                          <span
+                            className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${ownerStatusColor(owner.account_status)}`}
+                          >
+                            {t(`ownerStatus.${owner.account_status}`)}
+                          </span>
                         </td>
                       </motion.tr>
                     ))
@@ -348,17 +354,23 @@ export function ClientsListView() {
                 </tbody>
               </table>
             </div>
-
-            {/* Footer */}
             <div className="border-t border-slate-50 px-5 py-2.5 text-xs text-slate-400">
-              {filteredPersonal.length}{" "}
-              {t("ofTotal", { total: mockClients.length })}
+              {filteredOwners.length}{" "}
+              {tCommon("of")}{" "}
+              {owners.length}{" "}
+              {t("personalAccounts").toLowerCase()}
             </div>
           </div>
         </TabsContent>
 
-        {/* ── Tab 2: Work Accounts ─────────────────────────────── */}
-        <TabsContent value="work">
+        {/* ── Tab 2: Companies ──────────────────────────────────── */}
+        <TabsContent value="companies">
+          {companiesError && (
+            <div className="mb-3 flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              {companiesError}
+            </div>
+          )}
           <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -366,10 +378,9 @@ export function ClientsListView() {
                   <tr className="border-b border-slate-100">
                     {[
                       t("col.company"),
-                      t("col.owner"),
-                      t("col.employeesCount"),
-                      t("col.productsCount"),
+                      t("col.service"),
                       t("col.status"),
+                      tCompanies("col.balance"),
                       t("col.createdDate"),
                     ].map((h) => (
                       <th
@@ -382,114 +393,212 @@ export function ClientsListView() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredWork.length === 0 ? (
+                  {companiesLoading ? (
+                    <SkeletonCompanyRows />
+                  ) : filteredCompanies.length === 0 ? (
                     <tr>
-                      <td
-                        colSpan={6}
-                        className="h-32 text-center text-slate-400 text-sm"
-                      >
+                      <td colSpan={5} className="h-32 text-center text-slate-400 text-sm">
                         {t("noResults")}
                       </td>
                     </tr>
                   ) : (
-                    filteredWork.map((wa, i) => (
+                    filteredCompanies.map((company, i) => (
                       <motion.tr
-                        key={wa.id}
+                        key={company.id}
                         {...rowAnim(i)}
-                        onClick={() => navigateToWorkAccount(wa.id)}
-                        className="border-b border-slate-50 last:border-0 hover:bg-[#EBF3FB]/40 cursor-pointer transition-colors group"
+                        className="border-b border-slate-50 last:border-0 hover:bg-[#EBF3FB]/40 transition-colors"
                       >
                         {/* Company name */}
                         <td className="px-5 py-3.5">
                           <div className="flex items-center gap-2.5">
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#EBF3FB]">
-                              <Building2 className="h-4 w-4 text-[#0A3D62]" />
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#EBF3FB] text-lg select-none">
+                              🏢
                             </div>
                             <div>
-                              <p className="font-semibold text-slate-800 group-hover:text-[#0A3D62] transition-colors leading-tight">
-                                {wa.name}
+                              <p className="font-semibold text-slate-800 leading-tight">
+                                {company.company_name_en ?? company.company_name_ar}
                               </p>
-                              <p className="text-xs text-slate-400 font-mono">
-                                {wa.id}
+                              <p className="text-xs text-slate-400" dir="rtl">
+                                {company.company_name_ar}
                               </p>
                             </div>
                           </div>
                         </td>
-
-                        {/* Owner — stops row navigation, links to personal sheet via client page */}
+                        {/* Service */}
                         <td className="px-5 py-3.5">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigateToClient(wa.ownerId);
-                            }}
-                            className="inline-flex items-center gap-1.5 text-sm font-medium text-[#28B8B1] hover:text-[#0A3D62] transition-colors group/link"
+                          <span
+                            className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${serviceColor(company.service)}`}
                           >
-                            {wa.ownerName}
-                            <ExternalLink className="h-3.5 w-3.5 opacity-0 group-hover/link:opacity-100 transition-opacity" />
-                          </button>
-                        </td>
-
-                        {/* Employees Count */}
-                        <td className="px-5 py-3.5">
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF3FB] px-2.5 py-0.5 text-xs font-semibold text-[#0A3D62] tabular-nums">
-                            <Users className="h-3 w-3" />
-                            {wa.employeesCount}
+                            {tCompanies(`service.${company.service}`)}
                           </span>
                         </td>
-
-                        {/* Products Count */}
-                        <td className="px-5 py-3.5">
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E6F7F7] px-2.5 py-0.5 text-xs font-semibold text-[#28B8B1] tabular-nums">
-                            <Package className="h-3 w-3" />
-                            {wa.productsCount}
-                          </span>
-                        </td>
-
                         {/* Status */}
                         <td className="px-5 py-3.5">
                           <span
-                            className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${waCls[wa.status]}`}
+                            className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${companyStatusColor(company.status)}`}
                           >
-                            <span
-                              className={`me-1.5 h-1.5 w-1.5 rounded-full ${wa.status === "active" ? "bg-emerald-400" : "bg-slate-400"}`}
-                            />
-                            {wa.status === "active"
-                              ? t("status.active")
-                              : t("status.inactive")}
+                            {tCompanies(`status.${company.status}`)}
                           </span>
                         </td>
-
-                        {/* Created date */}
-                    <td className="px-5 py-3.5 text-xs text-slate-400 font-mono whitespace-nowrap">
-                      {new Date(wa.createdAt).toLocaleDateString(useLocale() === "ar" ? "ar-EG" : "en-GB", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </td>
+                        {/* Balance */}
+                        <td className="px-5 py-3.5 font-mono text-xs text-slate-600">
+                          {company.current_balance.toLocaleString()}
+                        </td>
+                        {/* Created */}
+                        <td className="px-5 py-3.5 text-xs text-slate-400 whitespace-nowrap">
+                          {dateFormatter(company.created_at)}
+                        </td>
                       </motion.tr>
                     ))
                   )}
                 </tbody>
               </table>
             </div>
-
-            {/* Footer */}
             <div className="border-t border-slate-50 px-5 py-2.5 text-xs text-slate-400">
-              {filteredWork.length}{" "}
-              {t("ofTotal", { total: allWorkAccounts.length })}
+              {filteredCompanies.length}{" "}
+              {tCommon("of")}{" "}
+              {companies.length}{" "}
+              {t("workAccounts").toLowerCase()}
             </div>
           </div>
         </TabsContent>
       </Tabs>
 
-      {/* ── Personal Account Sheet ─────────────────────────────── */}
-      <PersonalAccountSheet
-        client={selectedClient}
+      {/* ── Owner Detail Sheet ────────────────────────────────────── */}
+      <Sheet
         open={sheetOpen}
-        onClose={() => setSheetOpen(false)}
-      />
+        onOpenChange={(v) => {
+          if (!v) { setSheetOpen(false); setStatusError(""); }
+        }}
+      >
+        <SheetContent side="right" className="w-full max-w-md flex flex-col">
+          {selectedOwner && (
+            <>
+              <SheetHeader>
+                <div className="flex items-center gap-3 pe-8">
+                  <span
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white text-base font-bold select-none"
+                    style={{ backgroundColor: avatarColor(selectedOwner.id) }}
+                  >
+                    {avatarInitials(selectedOwner.name)}
+                  </span>
+                  <div>
+                    <SheetTitle>{selectedOwner.name}</SheetTitle>
+                    <SheetDescription>{t("viewDesc")}</SheetDescription>
+                  </div>
+                </div>
+              </SheetHeader>
+
+              <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+                {/* Details grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  <OwnerField label={t("col.phone")} value={selectedOwner.phone} mono dir="ltr" />
+                  {selectedOwner.email && (
+                    <OwnerField label={t("col.email")} value={selectedOwner.email} mono />
+                  )}
+                  <OwnerField label={t("col.joinedDate")} value={dateFormatter(selectedOwner.join_date)} />
+                  <OwnerField
+                    label={t("col.verified")}
+                    value={
+                      selectedOwner.is_verified_phone ? (
+                        <span className="inline-flex items-center gap-1 text-xs text-emerald-600 font-medium">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          {t("verifiedPhone")}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-xs text-slate-400 font-medium">
+                          <XCircle className="h-3.5 w-3.5" />
+                          {t("notVerified")}
+                        </span>
+                      )
+                    }
+                  />
+                  <OwnerField
+                    label={t("col.status")}
+                    value={
+                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${ownerStatusColor(selectedOwner.account_status)}`}>
+                        {t(`ownerStatus.${selectedOwner.account_status}`)}
+                      </span>
+                    }
+                  />
+                </div>
+
+                {/* Change status */}
+                <div className="rounded-xl border border-slate-100 bg-slate-50 p-4 space-y-3">
+                  <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                    {t("changeStatus")}
+                  </p>
+                  <select
+                    value={newStatus}
+                    onChange={(e) => setNewStatus(e.target.value as OwnerAccountStatus)}
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  >
+                    {OWNER_STATUSES.map((s) => (
+                      <option key={s} value={s}>
+                        {t(`ownerStatus.${s}`)}
+                      </option>
+                    ))}
+                  </select>
+
+                  {statusError && (
+                    <div className="flex items-center gap-2 rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-xs text-red-600">
+                      <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                      {statusError}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <SheetFooter className="px-6 py-4 border-t border-slate-100">
+                <Button
+                  variant="outline"
+                  onClick={() => setSheetOpen(false)}
+                  className="flex-1"
+                >
+                  {tCommon("cancel")}
+                </Button>
+                <Button
+                  onClick={handleChangeStatus}
+                  disabled={statusSaving || newStatus === selectedOwner.account_status}
+                  className="flex-1 bg-[#0A3D62] hover:bg-[#0A3D62]/90 text-white"
+                >
+                  {statusSaving ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      {tCommon("saving")}
+                    </span>
+                  ) : (
+                    tCommon("saveChanges")
+                  )}
+                </Button>
+              </SheetFooter>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+}
+
+// ─── OwnerField ───────────────────────────────────────────────────────────────
+
+function OwnerField({
+  label,
+  value,
+  mono = false,
+  dir,
+}: {
+  label: string;
+  value: React.ReactNode;
+  mono?: boolean;
+  dir?: "ltr" | "rtl";
+}) {
+  return (
+    <div className="space-y-0.5">
+      <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">{label}</p>
+      <p className={`text-sm text-slate-700 ${mono ? "font-mono" : "font-medium"}`} dir={dir}>
+        {value}
+      </p>
     </div>
   );
 }

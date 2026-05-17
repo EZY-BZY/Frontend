@@ -1,187 +1,275 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { AlertCircle, ImageIcon, Loader2, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
-  SheetDescription, SheetFooter,
+  SheetDescription, SheetFooter, SheetClose,
 } from "@/components/ui/sheet";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import type { Category } from "@/types";
+import { createIndustry, updateIndustry } from "@/services/industries";
+import { uploadImage } from "@/services/media";
+import type { IndustryPublicRead } from "@/types/api";
+
+function resolveImage(url: string): string {
+  if (!url) return "";
+  if (url.startsWith("http")) return url;
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}${url}`;
+}
 
 type FormData = {
   name_en: string;
   name_ar: string;
   name_fr: string;
-  description_en: string;
-  iconEmoji?: string;
-  parentId?: string;
 };
 
-async function saveCategory(data: FormData, existingId?: string): Promise<Category> {
-  await new Promise((r) => setTimeout(r, 600));
-  const slug = data.name_en.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
-  return {
-    id: existingId ?? `CAT-${String(Date.now()).slice(-4)}`,
-    name_en: data.name_en,
-    name_ar: data.name_ar,
-    name_fr: data.name_fr,
-    slug,
-    description_en: data.description_en,
-    description_ar: data.description_en,
-    description_fr: data.description_en,
-    iconEmoji: data.iconEmoji || undefined,
-    parentId: data.parentId || undefined,
-    productCount: 0,
-    createdAt: new Date().toISOString().slice(0, 10),
-  };
-}
-
-interface CategorySheetProps {
+interface IndustrySheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  category?: Category;
-  allCategories?: Category[];
-  onSaved: (cat: Category) => void;
+  industry?: IndustryPublicRead;
+  onSaved: (industry: IndustryPublicRead) => void;
 }
 
-export function CategorySheet({ open, onOpenChange, category, allCategories = [], onSaved }: CategorySheetProps) {
+export function IndustrySheet({ open, onOpenChange, industry, onSaved }: IndustrySheetProps) {
   const t = useTranslations("categories");
   const tCommon = useTranslations("common");
 
+  const [mode, setMode] = useState<"preview" | "edit">(industry ? "preview" : "edit");
+  const [serverError, setServerError] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageUploading, setImageUploading] = useState(false);
+  const [imageError, setImageError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const schema = z.object({
-    name_en:        z.string().min(2, t("validation.nameEnRequired")),
-    name_ar:        z.string().min(2, t("validation.nameArRequired")),
-    name_fr:        z.string().min(2, t("validation.nameFrRequired")),
-    description_en: z.string().min(4, t("validation.descEnRequired")),
-    iconEmoji:      z.string().optional(),
-    parentId:       z.string().optional(),
+    name_en: z.string().min(2, t("validation.nameEnRequired")),
+    name_ar: z.string().min(2, t("validation.nameArRequired")),
+    name_fr: z.string().min(2, t("validation.nameFrRequired")),
   });
 
-  const {
-    register, handleSubmit, reset, setValue, watch,
-    formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
-
-  const selectedParentId = watch("parentId");
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } =
+    useForm<FormData>({ resolver: zodResolver(schema) });
 
   useEffect(() => {
     if (open) {
-      reset(category
-        ? {
-            name_en: category.name_en, name_ar: category.name_ar, name_fr: category.name_fr,
-            description_en: category.description_en,
-            iconEmoji: category.iconEmoji ?? "",
-            parentId: category.parentId ?? "",
-          }
-        : { name_en: "", name_ar: "", name_fr: "", description_en: "", iconEmoji: "", parentId: "" }
+      setMode(industry ? "preview" : "edit");
+      setServerError("");
+      setImageError("");
+      setImageUrl(industry?.image ?? "");
+      reset(industry
+        ? { name_en: industry.name_en, name_ar: industry.name_ar, name_fr: industry.name_fr }
+        : { name_en: "", name_ar: "", name_fr: "" }
       );
     }
-  }, [open, category, reset]);
+  }, [open, industry, reset]);
 
-  const onSubmit = async (data: FormData) => {
-    const saved = await saveCategory(data, category?.id);
-    onSaved(saved);
-    onOpenChange(false);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageUploading(true);
+    setImageError("");
+    const res = await uploadImage(file);
+    if (res.Data?.file_url) {
+      setImageUrl(res.Data.file_url);
+    } else {
+      setImageError(res.Message || tCommon("noResults"));
+    }
+    setImageUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const parentOptions = allCategories.filter((c) => c.id !== category?.id);
+  const onSubmit = async (data: FormData) => {
+    if (!imageUrl) {
+      setImageError(t("validation.imageRequired"));
+      return;
+    }
+    setServerError("");
+    const payload = {
+      name_en: data.name_en,
+      name_ar: data.name_ar,
+      name_fr: data.name_fr,
+      image: imageUrl,
+    };
 
+    const res = industry
+      ? await updateIndustry(industry.id, payload)
+      : await createIndustry(payload);
+
+    if (res.Data) {
+      onSaved(res.Data);
+      onOpenChange(false);
+    } else {
+      setServerError(res.Message || tCommon("noResults"));
+    }
+  };
+
+  /* ─── Preview card ──────────────────────────────────────────────── */
+  if (mode === "preview" && industry) {
+    return (
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>{t("sheet.detailsTitle")}</SheetTitle>
+            <SheetDescription>{t("sheet.detailsDesc")}</SheetDescription>
+          </SheetHeader>
+
+          <div className="flex flex-col gap-5 px-6 py-6">
+            {industry.image && (
+              <div className="overflow-hidden rounded-2xl bg-[#EBF3FB]">
+                <img
+                  src={resolveImage(industry.image)}
+                  alt={industry.name_en}
+                  className="h-48 w-full object-cover"
+                />
+              </div>
+            )}
+
+            <div className="flex flex-col gap-3">
+              {([
+                { label: industry.name_en, badge: "EN", rtl: false },
+                { label: industry.name_ar, badge: "AR", rtl: true },
+                { label: industry.name_fr, badge: "FR", rtl: false },
+              ] as const).map(({ label, badge, rtl }) => (
+                <div
+                  key={badge}
+                  className="flex items-center justify-between gap-2 rounded-xl border border-slate-100 bg-white px-4 py-3"
+                >
+                  <p
+                    className="font-semibold text-slate-800"
+                    dir={rtl ? "rtl" : undefined}
+                    style={rtl ? { fontFamily: "var(--font-arabic)" } : undefined}
+                  >
+                    {label}
+                  </p>
+                  <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-mono font-semibold text-slate-500">
+                    {badge}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button variant="outline">{tCommon("close")}</Button>
+            </SheetClose>
+            <Button
+              onClick={() => setMode("edit")}
+              className="gap-2 bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90"
+            >
+              <Pencil className="h-4 w-4" /> {tCommon("edit")}
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  /* ─── Edit / Add form ───────────────────────────────────────────── */
   return (
-    <Sheet open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) reset(); }}>
+    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>{category ? t("sheet.editTitle") : t("sheet.addTitle")}</SheetTitle>
-          <SheetDescription>{t("sheet.description")}</SheetDescription>
+          <SheetTitle>
+            {industry ? t("sheet.editTitle") : t("sheet.addTitle")}
+          </SheetTitle>
+          <SheetDescription>
+            {industry ? t("sheet.editDesc") : t("sheet.addDesc")}
+          </SheetDescription>
         </SheetHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 px-6 py-6">
-          {/* Icon emoji + parent */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="iconEmoji">{t("sheet.iconEmoji")}</Label>
-              <Input id="iconEmoji" placeholder="⚙️" {...register("iconEmoji")} />
+          {serverError && (
+            <div className="flex items-center gap-2 rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-sm text-red-600">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              {serverError}
             </div>
+          )}
 
-            <div className="space-y-1.5">
-              <Label>{t("sheet.parentCategory")}</Label>
-              <Select
-                value={selectedParentId ?? ""}
-                onValueChange={(v) => setValue("parentId", v === "none" ? "" : v)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("sheet.noneTopLevel")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">{t("sheet.noneTopLevel")}</SelectItem>
-                  {parentOptions.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.iconEmoji ? `${c.iconEmoji} ` : ""}{c.name_en}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <div className="space-y-1.5">
+            <Label>{t("sheet.imageLabel")}</Label>
+            <div
+              role="button"
+              tabIndex={0}
+              className="relative flex h-36 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 transition hover:border-[#0A3D62]/40 hover:bg-[#EBF3FB]/30"
+              onClick={() => fileInputRef.current?.click()}
+              onKeyDown={(e) => e.key === "Enter" && fileInputRef.current?.click()}
+            >
+              {imageUploading ? (
+                <Loader2 className="h-6 w-6 animate-spin text-[#0A3D62]" />
+              ) : imageUrl ? (
+                <>
+                  <img
+                    src={resolveImage(imageUrl)}
+                    alt="Industry"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/40 opacity-0 transition-opacity hover:opacity-100">
+                    <span className="text-xs font-semibold text-white">{t("sheet.changeImage")}</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <ImageIcon className="h-8 w-8 text-slate-300" />
+                  <span className="mt-2 text-xs text-slate-400">{t("sheet.clickToUpload")}</span>
+                </>
+              )}
             </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            {imageError && <p className="text-xs text-red-500">{imageError}</p>}
           </div>
 
-          {/* English name */}
           <div className="space-y-1.5">
             <Label htmlFor="name_en">{t("sheet.nameEn")}</Label>
-            <Input id="name_en" placeholder="e.g. Industrial Equipment" {...register("name_en")} />
+            <Input id="name_en" placeholder="e.g. Construction" {...register("name_en")} dir="ltr" />
             {errors.name_en && <p className="text-xs text-red-500">{errors.name_en.message}</p>}
           </div>
 
-          {/* Arabic name */}
           <div className="space-y-1.5">
             <Label htmlFor="name_ar">{t("sheet.nameAr")}</Label>
-            <Input id="name_ar" placeholder="مثل: المعدات الصناعية" dir="rtl" {...register("name_ar")} />
+            <Input id="name_ar" placeholder="مثل: البناء" {...register("name_ar")} dir="rtl" />
             {errors.name_ar && <p className="text-xs text-red-500">{errors.name_ar.message}</p>}
           </div>
 
-          {/* French name */}
           <div className="space-y-1.5">
             <Label htmlFor="name_fr">{t("sheet.nameFr")}</Label>
-            <Input id="name_fr" placeholder="ex. Équipements industriels" {...register("name_fr")} />
+            <Input id="name_fr" placeholder="ex. Construction" {...register("name_fr")} dir="ltr" />
             {errors.name_fr && <p className="text-xs text-red-500">{errors.name_fr.message}</p>}
-          </div>
-
-          {/* Description */}
-          <div className="space-y-1.5">
-            <Label htmlFor="description_en">{t("sheet.descriptionLabel")}</Label>
-            <Input id="description_en" placeholder={t("sheet.descriptionPlaceholder")} {...register("description_en")} />
-            {errors.description_en && <p className="text-xs text-red-500">{errors.description_en.message}</p>}
           </div>
         </form>
 
         <SheetFooter>
+          {industry ? (
+            <Button variant="outline" type="button" onClick={() => setMode("preview")}>
+              {tCommon("cancel")}
+            </Button>
+          ) : (
+            <SheetClose asChild>
+              <Button variant="outline" type="button">{tCommon("cancel")}</Button>
+            </SheetClose>
+          )}
           <Button
             type="button"
-            variant="outline"
-            className="flex-1"
-            onClick={() => { onOpenChange(false); reset(); }}
-          >
-            {tCommon("cancel")}
-          </Button>
-          <Button
-            type="button"
-            className="flex-1 bg-[#0A3D62] hover:bg-[#0A3D62]/90 text-white"
-            disabled={isSubmitting}
             onClick={handleSubmit(onSubmit)}
+            disabled={isSubmitting || imageUploading}
+            className="bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90"
           >
-            {isSubmitting ? (
-              <span className="flex items-center gap-2">
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                {tCommon("saving")}
-              </span>
-            ) : category ? tCommon("saveChanges") : t("addCategory")}
+            {(isSubmitting || imageUploading) && (
+              <Loader2 className="me-2 h-4 w-4 animate-spin" />
+            )}
+            {industry ? tCommon("saveChanges") : t("addIndustry")}
           </Button>
         </SheetFooter>
       </SheetContent>
