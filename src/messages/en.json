@@ -34,6 +34,7 @@
     "adminUser": "Admin User",
     "toggleSidebar": "Toggle sidebar",
     "notifications": "Notifications",
+    "changeLanguage": "Change language",
     "breadcrumb": "Breadcrumb",
     "selectPlaceholder": "Select…",
     "searchEllipsis": "Search…",
@@ -61,13 +62,15 @@
     "metadata": "Metadata",
     "legal": "Legal",
     "countries": "Countries",
+    "industries": "Industries",
     "companies": "Companies",
     "governorates": "Governorates",
     "workAccounts": "Work Accounts",
     "privacyPolicy": "Privacy Policy",
     "termsConditions": "Terms & Conditions",
     "deliveryTerms": "Delivery Terms",
-    "refundTerms": "Refund Terms"
+    "refundTerms": "Refund Terms",
+    "appPermissions": "App Permissions"
   },
   "auth": {
     "welcome": "Welcome Back",
@@ -106,7 +109,11 @@
     "viewAll": "View all",
     "teamByPosition": "Team by Position",
     "subscriptions": "subscriptions",
-    "statusInProgress": "In Progress"
+    "statusInProgress": "In Progress",
+    "totalCompanies": "Total Companies",
+    "totalUsers": "Total Users",
+    "deltaCompanies": "{count} registered",
+    "deltaUsers": "{count} active"
   },
   "contactRequests": {
     "title": "Contact Requests",
@@ -151,6 +158,7 @@
     "addEmployee": "Add Employee",
     "positions": {
       "admin": "Admin",
+      "itAdmin": "IT Admin",
       "support": "Support"
     },
     "col": {
@@ -468,7 +476,7 @@
     "noCompanies": "No companies found",
     "col": {
       "company": "Company",
-      "service": "Service",
+      "service": "Type",
       "status": "Status",
       "balance": "Balance",
       "added": "Added"
@@ -640,6 +648,90 @@
     "footer": {
       "tagline": "Empowering businesses across the region.",
       "rights": "All rights reserved."
+    }
+  },
+  "userCategories": {
+    "title": "Categories",
+    "tabsByUsers": "By Users",
+    "tabsByAdmins": "By Admins",
+    "categoryCountLabel": "categories",
+    "noCategoriesByUsers": "No user-created categories found",
+    "noCategoriesByAdmins": "No admin-created categories found",
+    "searchPlaceholder": "Search categories…",
+    "col": {
+      "category": "Category",
+      "description": "Description",
+      "products": "Products",
+      "createdAt": "Created"
+    }
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "subtitle": "Manage application permission keys and access controls",
+    "addPermission": "Add Permission",
+    "searchPlaceholder": "Search by tag, label, or key…",
+    "permissionCountLabel": "permissions",
+    "noPermissions": "No app permissions found",
+    "col": {
+      "tag": "Permission Tag",
+      "label": "Permission Label",
+      "key": "Permission Key",
+      "description": "Description",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "addTitle": "Add Permission",
+    "addDesc": "Fill in the fields to create a new app permission.",
+    "viewTitle": "Permission Details",
+    "viewDesc": "View app permission information.",
+    "editTitle": "Edit Permission",
+    "editDesc": "Update the permission details.",
+    "historyTitle": "Permission History",
+    "historyDesc": "View the change history for this permission.",
+    "deleteTitle": "Delete this permission?",
+    "deleteDesc": "This action is permanent. The permission will be removed.",
+    "confirmDelete": "Yes, Delete",
+    "deleteBtn": "Delete",
+    "historyBtn": "History",
+    "editBtn": "Edit",
+    "noHistory": "No history records found.",
+    "createdAt": "Created",
+    "historyAction": {
+      "created": "Created",
+      "updated": "Updated",
+      "deleted": "Deleted"
+    },
+    "form": {
+      "permissionTag": "Permission Tag",
+      "permissionLabel": "Permission Label",
+      "permissionKey": "Permission Key",
+      "description": "Description",
+      "isActive": "Is Active",
+      "tagPlaceholder": "e.g. read:orders",
+      "labelPlaceholder": "e.g. Read Orders",
+      "keyPlaceholder": "e.g. orders.read",
+      "descriptionPlaceholder": "Optional description…"
+    },
+    "validation": {
+      "tagRequired": "Permission tag is required",
+      "tagMax": "Max 128 characters",
+      "labelRequired": "Permission label is required",
+      "labelMax": "Max 64 characters",
+      "keyRequired": "Permission key is required",
+      "keyMax": "Max 256 characters",
+      "descriptionMax": "Max 4096 characters"
+    },
+    "toast": {
+      "createSuccess": "Permission created successfully",
+      "updateSuccess": "Permission updated successfully",
+      "deleteSuccess": "Permission deleted successfully",
+      "createError": "Failed to create permission",
+      "updateError": "Failed to update permission",
+      "deleteError": "Failed to delete permission"
     }
   },
   "legal": {

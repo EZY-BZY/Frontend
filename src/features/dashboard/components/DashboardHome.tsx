@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 import {
-  Users, MessageSquare, Tag, TrendingUp, TrendingDown,
-  Clock, CheckCircle2, AlertCircle,
+  Users, TrendingUp, TrendingDown, Briefcase, UserCircle2,
+  CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
@@ -12,8 +12,6 @@ import {
   Tooltip, ResponsiveContainer,
 } from "recharts";
 import { mockEmployees } from "@/features/employees/data/mock";
-import { mockContactRequests } from "@/features/contact-requests/data/mock";
-import { mockCategories } from "@/features/categories/data/mock";
 
 /* ─── Types ──────────────────────────────────────────────────────── */
 interface StatCard {
@@ -57,22 +55,11 @@ function RevenueTooltip({ active, payload, label, subscriptionsLabel }: {
   );
 }
 
-const statusBadge: Record<string, string> = {
-  new: "bg-blue-50 text-blue-700",
-  inProgress: "bg-amber-50 text-amber-700",
-  resolved: "bg-emerald-50 text-emerald-700",
-  closed: "bg-red-50 text-red-600",
-};
-
 export function DashboardHome() {
   const locale = useLocale();
   const t = useTranslations("dashboard");
-  const tContact = useTranslations("contactRequests");
-  const tEmployees = useTranslations("employees");
 
   const activeEmployees = mockEmployees.filter((e) => e.status === "active").length;
-  const openRequests = mockContactRequests.filter((r) => r.status === "new" || r.status === "inProgress").length;
-  const recentRequests = mockContactRequests.slice(0, 5);
 
   const stats: StatCard[] = [
     {
@@ -86,41 +73,31 @@ export function DashboardHome() {
       href: `/${locale}/employees`,
     },
     {
-      label: t("contactRequests"),
-      value: mockContactRequests.length,
-      icon: MessageSquare,
+      label: t("totalCompanies"),
+      value: 24,
+      icon: Briefcase,
+      color: "#28B8B1",
+      bg: "#E6F7F7",
+      delta: t("deltaCompanies", { count: 24 }),
+      trend: "up",
+      href: `/${locale}/companies`,
+    },
+    {
+      label: t("totalUsers"),
+      value: 1248,
+      icon: UserCircle2,
       color: "#6366f1",
       bg: "#EEF2FF",
-      delta: t("deltaNew", { count: mockContactRequests.filter((r) => r.status === "new").length }),
+      delta: t("deltaUsers", { count: 1248 }),
       trend: "up",
-      href: `/${locale}/contact-requests`,
-    },
-    {
-      label: t("categories"),
-      value: mockCategories.length,
-      icon: Tag,
-      color: "#f59e0b",
-      bg: "#FFFBEB",
-      delta: t("deltaTotalProducts", { count: mockCategories.reduce((s, c) => s + c.productCount, 0) }),
-      trend: "neutral",
-      href: `/${locale}/categories`,
-    },
-    {
-      label: t("activeEmployees"),
-      value: activeEmployees,
-      icon: Users,
-      color: "#10b981",
-      bg: "#ECFDF5",
-      delta: t("deltaOnLeave", { count: mockEmployees.filter((e) => e.status === "onLeave").length }),
-      trend: "up",
-      href: `/${locale}/employees`,
+      href: `/${locale}/clients`,
     },
   ];
 
   return (
     <div className="space-y-6">
       {/* ── Stat cards ──────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {stats.map((stat, i) => (
           <motion.div
             key={stat.label}
@@ -163,173 +140,79 @@ export function DashboardHome() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.38 }}
+        transition={{ delay: 0.32 }}
         className="flex flex-wrap gap-3"
       >
         <div className="flex items-center gap-2 rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-2.5 text-sm">
           <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
           <span className="text-emerald-700 font-medium">{t("employeesActive", { count: activeEmployees })}</span>
         </div>
-        {openRequests > 0 && (
-          <div className="flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-100 px-4 py-2.5 text-sm">
-            <Clock className="h-4 w-4 text-blue-500 shrink-0" />
-            <span className="text-blue-700 font-medium">{t("openRequests", { count: openRequests })}</span>
-          </div>
-        )}
-        <div className="flex items-center gap-2 rounded-xl bg-amber-50 border border-amber-100 px-4 py-2.5 text-sm">
-          <AlertCircle className="h-4 w-4 text-amber-500 shrink-0" />
-          <span className="text-amber-700 font-medium">{t("activeCategories", { count: mockCategories.length })}</span>
-        </div>
       </motion.div>
 
-      {/* ── Chart + Recent requests ──────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Revenue chart */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.42 }}
-          className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
-        >
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
-            <div>
-              <h2 className="font-semibold text-gray-800">{t("revenueOverview")}</h2>
-              <p className="text-xs text-gray-400 mt-0.5">{t("last7Months")}</p>
-            </div>
-            <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 rounded-full px-2.5 py-1">
-              <TrendingUp className="h-3.5 w-3.5" />
-              {t("vsLastQuarter")}
-            </div>
-          </div>
-          <div className="px-2 pt-4 pb-2 h-64 min-w-0">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-              <AreaChart data={revenueData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0A3D62" stopOpacity={0.15} />
-                    <stop offset="95%" stopColor="#0A3D62" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="subGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#28B8B1" stopOpacity={0.15} />
-                    <stop offset="95%" stopColor="#28B8B1" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  tick={{ fontSize: 11, fill: "#94a3b8" }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: 11, fill: "#94a3b8" }}
-                  axisLine={false}
-                  tickLine={false}
-                  tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
-                />
-                <Tooltip content={<RevenueTooltip subscriptionsLabel={t("subscriptions")} />} />
-                <Area
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="#0A3D62"
-                  strokeWidth={2.5}
-                  fill="url(#revGrad)"
-                  dot={false}
-                  activeDot={{ r: 5, fill: "#0A3D62", strokeWidth: 0 }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="subscriptions"
-                  stroke="#28B8B1"
-                  strokeWidth={2}
-                  fill="url(#subGrad)"
-                  dot={false}
-                  activeDot={{ r: 4, fill: "#28B8B1", strokeWidth: 0 }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </motion.div>
-
-        {/* Recent contact requests */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
-        >
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
-            <h2 className="font-semibold text-gray-800">{t("recentRequests")}</h2>
-            <Link
-              href={`/${locale}/contact-requests`}
-              className="text-xs font-medium text-[#28B8B1] hover:text-[#0A3D62] transition-colors"
-            >
-              {t("viewAll")} →
-            </Link>
-          </div>
-          <div className="divide-y divide-gray-50">
-            {recentRequests.map((req, i) => (
-              <motion.div
-                key={req.id}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.52 + i * 0.05 }}
-                className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50/60 transition-colors"
-              >
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EBF3FB] text-[#0A3D62] text-[10px] font-bold">
-                  {req.clientName.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-800 truncate">{req.clientName}</p>
-                  <p className="text-xs text-gray-400 truncate" dir="ltr">{req.countryCode} {req.phone}</p>
-                </div>
-                <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${statusBadge[req.status] ?? "bg-gray-100 text-gray-500"}`}>
-                  {req.status === "inProgress"
-                    ? t("statusInProgress")
-                    : tContact(`statuses.${req.status as "new" | "resolved" | "closed"}`)}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-
-      {/* ── Department breakdown ─────────────────────────────────────── */}
+      {/* ── Revenue chart ─────────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.58 }}
+        transition={{ delay: 0.42 }}
         className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
       >
-        <div className="px-5 py-4 border-b border-gray-50">
-          <h2 className="font-semibold text-gray-800">{t("teamByPosition")}</h2>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
+          <div>
+            <h2 className="font-semibold text-gray-800">{t("revenueOverview")}</h2>
+            <p className="text-xs text-gray-400 mt-0.5">{t("last7Months")}</p>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 rounded-full px-2.5 py-1">
+            <TrendingUp className="h-3.5 w-3.5" />
+            {t("vsLastQuarter")}
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-5">
-          {(["Admin", "Support"] as const).map((pos, i) => {
-            const count = mockEmployees.filter((e) => e.position === pos).length;
-            const pct = Math.round((count / mockEmployees.length) * 100);
-            const color = i === 0 ? "#0A3D62" : "#28B8B1";
-            const posKey = pos === "Admin" ? "admin" : "support";
-            return (
-              <div key={pos}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700">
-                    {tEmployees(`positions.${posKey}`)}
-                  </span>
-                  <span className="text-sm font-bold text-gray-800">{count} <span className="text-xs font-normal text-gray-400">({pct}%)</span></span>
-                </div>
-                <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${pct}%` }}
-                    transition={{ delay: 0.65 + i * 0.1, duration: 0.7, ease: "easeOut" }}
-                    className="h-full rounded-full"
-                    style={{ backgroundColor: color }}
-                  />
-                </div>
-              </div>
-            );
-          })}
+        <div className="px-2 pt-4 pb-2 h-64 min-w-0">
+          <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+            <AreaChart data={revenueData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#0A3D62" stopOpacity={0.15} />
+                  <stop offset="95%" stopColor="#0A3D62" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="subGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#28B8B1" stopOpacity={0.15} />
+                  <stop offset="95%" stopColor="#28B8B1" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+              <XAxis
+                dataKey="month"
+                tick={{ fontSize: 11, fill: "#94a3b8" }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis
+                tick={{ fontSize: 11, fill: "#94a3b8" }}
+                axisLine={false}
+                tickLine={false}
+                tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
+              />
+              <Tooltip content={<RevenueTooltip subscriptionsLabel={t("subscriptions")} />} />
+              <Area
+                type="monotone"
+                dataKey="revenue"
+                stroke="#0A3D62"
+                strokeWidth={2.5}
+                fill="url(#revGrad)"
+                dot={false}
+                activeDot={{ r: 5, fill: "#0A3D62", strokeWidth: 0 }}
+              />
+              <Area
+                type="monotone"
+                dataKey="subscriptions"
+                stroke="#28B8B1"
+                strokeWidth={2}
+                fill="url(#subGrad)"
+                dot={false}
+                activeDot={{ r: 4, fill: "#28B8B1", strokeWidth: 0 }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </motion.div>
     </div>

@@ -76,7 +76,7 @@ const SheetContent = React.forwardRef<
       <DialogPrimitive.Close
         className={cn(
           "absolute top-4 flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 ring-offset-white transition-colors hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#28B8B1] focus:ring-offset-2",
-          side === "right" ? "left-4" : "right-4"
+          side === "left" ? "start-4" : "end-4"
         )}
       >
         <X className="h-4 w-4" />
@@ -91,7 +91,7 @@ SheetContent.displayName = "SheetContent";
 function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("flex flex-col gap-1.5 border-b border-slate-100 px-6 py-5", className)}
+      className={cn("flex flex-col gap-1.5 border-b border-slate-100 px-6 pe-14 py-5", className)}
       {...props}
     />
   );

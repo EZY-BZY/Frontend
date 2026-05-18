@@ -9,6 +9,7 @@ import {
   Users,
   MessageSquare,
   Tag,
+  Layers,
   BookOpen,
   Scale,
   Shield,
@@ -22,6 +23,7 @@ import {
   LogOut,
   Settings,
   Database,
+  KeyRound,
 } from "lucide-react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { motion, AnimatePresence } from "framer-motion";
@@ -51,11 +53,10 @@ type NavItem = {
 };
 
 const mainItems: NavItem[] = [
-  { key: "dashboard",       href: "/dashboard",                    icon: LayoutDashboard },
-  { key: "employees",       href: "/employees",                    icon: Users },
-  { key: "clients",         href: "/clients",                      icon: UserCircle2 },
-  { key: "contactRequests", href: "/contact-requests",             icon: MessageSquare },
-  { key: "categories",      href: "/categories",                   icon: Tag },
+  { key: "dashboard",       href: "/dashboard",        icon: LayoutDashboard },
+  { key: "employees",       href: "/employees",         icon: Users },
+  { key: "clients",         href: "/clients",           icon: UserCircle2 },
+  { key: "contactRequests", href: "/contact-requests",  icon: MessageSquare },
 ];
 
 const companiesItem: NavItem = {
@@ -68,7 +69,10 @@ const financialItems: NavItem[] = [
 ];
 
 const metadataItems: NavItem[] = [
-  { key: "countries", href: "/countries", icon: Globe2 },
+  { key: "countries",      href: "/countries",       icon: Globe2 },
+  { key: "industries",     href: "/industries",      icon: Tag },
+  { key: "categories",     href: "/categories",      icon: Layers },
+  { key: "appPermissions", href: "/app-permissions", icon: KeyRound },
 ];
 
 const legalItems: NavItem[] = [
@@ -168,11 +172,11 @@ function CollapsibleNavGroup({
   const { state } = useSidebar();
   const locale = useLocale();
   const pathname = usePathname();
-  const [open, setOpen] = useState(defaultOpen);
-
   const hasActiveChild = items.some((item) =>
     getIsActive(item.href, locale, pathname)
   );
+
+  const [open, setOpen] = useState(defaultOpen || hasActiveChild);
 
   if (state === "collapsed") {
     return (
