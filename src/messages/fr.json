@@ -34,6 +34,7 @@
     "adminUser": "Utilisateur administrateur",
     "toggleSidebar": "Basculer la barre latérale",
     "notifications": "Notifications",
+    "changeLanguage": "Changer de langue",
     "breadcrumb": "Fil d'Ariane",
     "selectPlaceholder": "Sélectionner…",
     "searchEllipsis": "Rechercher…",
@@ -53,13 +54,15 @@
     "metadata": "Métadonnées",
     "legal": "Juridique",
     "countries": "Pays",
+    "industries": "Industries",
     "companies": "Entreprises",
     "governorates": "Gouvernorats",
     "workAccounts": "Comptes professionnels",
     "privacyPolicy": "Politique de confidentialité",
     "termsConditions": "Conditions générales",
     "deliveryTerms": "Conditions de livraison",
-    "refundTerms": "Conditions de remboursement"
+    "refundTerms": "Conditions de remboursement",
+    "appPermissions": "Autorisations de l'application"
   },
   "auth": {
     "welcome": "Bon retour",
@@ -98,7 +101,11 @@
     "viewAll": "Voir tout",
     "teamByPosition": "Équipe par poste",
     "subscriptions": "abonnements",
-    "statusInProgress": "En cours"
+    "statusInProgress": "En cours",
+    "totalCompanies": "Total entreprises",
+    "totalUsers": "Total utilisateurs",
+    "deltaCompanies": "{count} enregistrées",
+    "deltaUsers": "{count} actifs"
   },
   "contactRequests": {
     "title": "Demandes de contact",
@@ -139,6 +146,7 @@
     "addEmployee": "Ajouter un employé",
     "positions": {
       "admin": "Administrateur",
+      "itAdmin": "IT Admin",
       "support": "Support"
     },
     "col": {
@@ -456,7 +464,7 @@
     "noCompanies": "Aucune entreprise trouvée",
     "col": {
       "company": "Entreprise",
-      "service": "Service",
+      "service": "Type",
       "status": "Statut",
       "balance": "Solde",
       "added": "Ajouté le"
@@ -628,6 +636,90 @@
     "footer": {
       "tagline": "Renforcer les entreprises à travers la région.",
       "rights": "Tous droits réservés."
+    }
+  },
+  "userCategories": {
+    "title": "Catégories",
+    "tabsByUsers": "Par utilisateurs",
+    "tabsByAdmins": "Par admins",
+    "categoryCountLabel": "catégories",
+    "noCategoriesByUsers": "Aucune catégorie créée par des utilisateurs",
+    "noCategoriesByAdmins": "Aucune catégorie créée par des admins",
+    "searchPlaceholder": "Rechercher des catégories…",
+    "col": {
+      "category": "Catégorie",
+      "description": "Description",
+      "products": "Produits",
+      "createdAt": "Créé le"
+    }
+  },
+  "appPermissions": {
+    "title": "Autorisations de l'application",
+    "subtitle": "Gérer les clés d'autorisation et les contrôles d'accès",
+    "addPermission": "Ajouter une autorisation",
+    "searchPlaceholder": "Rechercher par étiquette, nom ou clé…",
+    "permissionCountLabel": "autorisations",
+    "noPermissions": "Aucune autorisation trouvée",
+    "col": {
+      "tag": "Étiquette",
+      "label": "Libellé",
+      "key": "Clé",
+      "description": "Description",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif"
+    },
+    "addTitle": "Ajouter une autorisation",
+    "addDesc": "Remplissez les champs pour créer une nouvelle autorisation.",
+    "viewTitle": "Détails de l'autorisation",
+    "viewDesc": "Voir les informations de l'autorisation.",
+    "editTitle": "Modifier l'autorisation",
+    "editDesc": "Mettre à jour les détails de l'autorisation.",
+    "historyTitle": "Historique de l'autorisation",
+    "historyDesc": "Voir l'historique des modifications.",
+    "deleteTitle": "Supprimer cette autorisation ?",
+    "deleteDesc": "Cette action est permanente. L'autorisation sera définitivement supprimée.",
+    "confirmDelete": "Oui, supprimer",
+    "deleteBtn": "Supprimer",
+    "historyBtn": "Historique",
+    "editBtn": "Modifier",
+    "noHistory": "Aucun enregistrement d'historique.",
+    "createdAt": "Créé le",
+    "historyAction": {
+      "created": "Créé",
+      "updated": "Mis à jour",
+      "deleted": "Supprimé"
+    },
+    "form": {
+      "permissionTag": "Étiquette de permission",
+      "permissionLabel": "Libellé de permission",
+      "permissionKey": "Clé de permission",
+      "description": "Description",
+      "isActive": "Actif",
+      "tagPlaceholder": "ex. read:orders",
+      "labelPlaceholder": "ex. Lire les commandes",
+      "keyPlaceholder": "ex. orders.read",
+      "descriptionPlaceholder": "Description facultative…"
+    },
+    "validation": {
+      "tagRequired": "L'étiquette est requise",
+      "tagMax": "Max 128 caractères",
+      "labelRequired": "Le libellé est requis",
+      "labelMax": "Max 64 caractères",
+      "keyRequired": "La clé est requise",
+      "keyMax": "Max 256 caractères",
+      "descriptionMax": "Max 4096 caractères"
+    },
+    "toast": {
+      "createSuccess": "Autorisation créée avec succès",
+      "updateSuccess": "Autorisation mise à jour avec succès",
+      "deleteSuccess": "Autorisation supprimée avec succès",
+      "createError": "Échec de la création",
+      "updateError": "Échec de la mise à jour",
+      "deleteError": "Échec de la suppression"
     }
   },
   "legal": {

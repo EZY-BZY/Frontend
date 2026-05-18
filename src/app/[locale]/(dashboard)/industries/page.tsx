@@ -1,15 +1,15 @@
 import { getTranslations } from "next-intl/server";
-import { CategoriesTabsView } from "@/features/categories/components/categories-tabs-view";
+import { CategoriesView } from "@/features/categories/components/categories-view";
 import { PageTransition } from "@/components/shared/PageTransition";
 
-export default async function CategoriesPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function IndustriesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "userCategories" });
+  const t = await getTranslations({ locale, namespace: "categories" });
 
   return (
     <PageTransition>
       <h1 className="text-2xl font-bold text-gray-800 mb-6">{t("title")}</h1>
-      <CategoriesTabsView />
+      <CategoriesView />
     </PageTransition>
   );
 }

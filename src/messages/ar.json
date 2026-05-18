@@ -34,6 +34,7 @@
     "adminUser": "مستخدم مسؤول",
     "toggleSidebar": "تبديل القائمة الجانبية",
     "notifications": "الإشعارات",
+    "changeLanguage": "تغيير اللغة",
     "breadcrumb": "مسار التصفح",
     "selectPlaceholder": "اختر…",
     "searchEllipsis": "بحث…",
@@ -53,13 +54,15 @@
     "metadata": "البيانات الوصفية",
     "legal": "قانوني",
     "countries": "الدول",
+    "industries": "القطاعات",
     "companies": "الشركات",
     "governorates": "المحافظات",
     "workAccounts": "حسابات العمل",
     "privacyPolicy": "سياسة الخصوصية",
     "termsConditions": "الشروط والأحكام",
     "deliveryTerms": "شروط التوصيل",
-    "refundTerms": "شروط الاسترداد"
+    "refundTerms": "شروط الاسترداد",
+    "appPermissions": "صلاحيات التطبيق"
   },
   "auth": {
     "welcome": "مرحباً بعودتك",
@@ -98,7 +101,11 @@
     "viewAll": "عرض الكل",
     "teamByPosition": "الفريق حسب الوظيفة",
     "subscriptions": "اشتراكات",
-    "statusInProgress": "قيد التنفيذ"
+    "statusInProgress": "قيد التنفيذ",
+    "totalCompanies": "إجمالي الشركات",
+    "totalUsers": "إجمالي المستخدمين",
+    "deltaCompanies": "{count} مسجلة",
+    "deltaUsers": "{count} نشط"
   },
   "contactRequests": {
     "title": "طلبات التواصل",
@@ -139,6 +146,7 @@
     "addEmployee": "إضافة موظف",
     "positions": {
       "admin": "مشرف",
+      "itAdmin": "IT Admin",
       "support": "دعم"
     },
     "col": {
@@ -456,7 +464,7 @@
     "noCompanies": "لا توجد شركات",
     "col": {
       "company": "الشركة",
-      "service": "الخدمة",
+      "service": "النوع",
       "status": "الحالة",
       "balance": "الرصيد",
       "added": "تاريخ الإضافة"
@@ -628,6 +636,90 @@
     "footer": {
       "tagline": "نمكّن الأعمال في جميع أنحاء المنطقة.",
       "rights": "جميع الحقوق محفوظة."
+    }
+  },
+  "userCategories": {
+    "title": "التصنيفات",
+    "tabsByUsers": "من المستخدمين",
+    "tabsByAdmins": "من الإدارة",
+    "categoryCountLabel": "تصنيفات",
+    "noCategoriesByUsers": "لا توجد تصنيفات من المستخدمين",
+    "noCategoriesByAdmins": "لا توجد تصنيفات من الإدارة",
+    "searchPlaceholder": "البحث في التصنيفات…",
+    "col": {
+      "category": "التصنيف",
+      "description": "الوصف",
+      "products": "المنتجات",
+      "createdAt": "تاريخ الإنشاء"
+    }
+  },
+  "appPermissions": {
+    "title": "صلاحيات التطبيق",
+    "subtitle": "إدارة مفاتيح صلاحيات التطبيق وضوابط الوصول",
+    "addPermission": "إضافة صلاحية",
+    "searchPlaceholder": "البحث بالعلامة أو الاسم أو المفتاح…",
+    "permissionCountLabel": "صلاحيات",
+    "noPermissions": "لا توجد صلاحيات تطبيق",
+    "col": {
+      "tag": "علامة الصلاحية",
+      "label": "اسم الصلاحية",
+      "key": "مفتاح الصلاحية",
+      "description": "الوصف",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "addTitle": "إضافة صلاحية",
+    "addDesc": "أدخل البيانات لإنشاء صلاحية جديدة.",
+    "viewTitle": "تفاصيل الصلاحية",
+    "viewDesc": "عرض معلومات صلاحية التطبيق.",
+    "editTitle": "تعديل الصلاحية",
+    "editDesc": "تحديث تفاصيل الصلاحية.",
+    "historyTitle": "سجل الصلاحية",
+    "historyDesc": "عرض سجل التغييرات لهذه الصلاحية.",
+    "deleteTitle": "حذف هذه الصلاحية؟",
+    "deleteDesc": "هذا الإجراء دائم. سيتم حذف الصلاحية نهائياً.",
+    "confirmDelete": "نعم، احذف",
+    "deleteBtn": "حذف",
+    "historyBtn": "السجل",
+    "editBtn": "تعديل",
+    "noHistory": "لا توجد سجلات تغييرات.",
+    "createdAt": "تاريخ الإنشاء",
+    "historyAction": {
+      "created": "تم الإنشاء",
+      "updated": "تم التحديث",
+      "deleted": "تم الحذف"
+    },
+    "form": {
+      "permissionTag": "علامة الصلاحية",
+      "permissionLabel": "اسم الصلاحية",
+      "permissionKey": "مفتاح الصلاحية",
+      "description": "الوصف",
+      "isActive": "نشط",
+      "tagPlaceholder": "مثال: read:orders",
+      "labelPlaceholder": "مثال: قراءة الطلبات",
+      "keyPlaceholder": "مثال: orders.read",
+      "descriptionPlaceholder": "وصف اختياري…"
+    },
+    "validation": {
+      "tagRequired": "علامة الصلاحية مطلوبة",
+      "tagMax": "الحد الأقصى 128 حرفاً",
+      "labelRequired": "اسم الصلاحية مطلوب",
+      "labelMax": "الحد الأقصى 64 حرفاً",
+      "keyRequired": "مفتاح الصلاحية مطلوب",
+      "keyMax": "الحد الأقصى 256 حرفاً",
+      "descriptionMax": "الحد الأقصى 4096 حرفاً"
+    },
+    "toast": {
+      "createSuccess": "تم إنشاء الصلاحية بنجاح",
+      "updateSuccess": "تم تحديث الصلاحية بنجاح",
+      "deleteSuccess": "تم حذف الصلاحية بنجاح",
+      "createError": "فشل إنشاء الصلاحية",
+      "updateError": "فشل تحديث الصلاحية",
+      "deleteError": "فشل حذف الصلاحية"
     }
   },
   "legal": {

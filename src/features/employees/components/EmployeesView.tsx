@@ -46,14 +46,24 @@ function avatarInitials(name: string): string {
   return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 }
 
-type DisplayPosition = "Admin" | "Support";
+type DisplayPosition = "Admin" | "IT Admin" | "Support";
 
 function toDisplayPosition(accountType: string): DisplayPosition {
-  return accountType === "admin" || accountType === "super_user" ? "Admin" : "Support";
+  if (accountType === "super_user") return "IT Admin";
+  if (accountType === "admin") return "Admin";
+  return "Support";
 }
 
 function toApiAccountType(pos: DisplayPosition): AccountType {
-  return pos === "Admin" ? "admin" : "member";
+  if (pos === "Admin") return "admin";
+  if (pos === "IT Admin") return "super_user";
+  return "member";
+}
+
+function positionKey(p: DisplayPosition): "admin" | "itAdmin" | "support" {
+  if (p === "Admin") return "admin";
+  if (p === "IT Admin") return "itAdmin";
+  return "support";
 }
 
 function statusColor(status: string): string {
@@ -100,7 +110,7 @@ export function EmployeesView() {
     name:     z.string().min(2, t("validation.nameMin")),
     email:    z.string().email(t("validation.emailInvalid")),
     phone:    z.string().min(5, t("validation.phoneRequired")),
-    position: z.enum(["Admin", "Support"]),
+    position: z.enum(["Admin", "IT Admin", "Support"]),
     password: z.string().min(8, t("validation.passwordMin")),
   });
 
@@ -108,7 +118,7 @@ export function EmployeesView() {
     name:           z.string().min(2, t("validation.nameMin")),
     email:          z.string().email(t("validation.emailInvalid")),
     phone:          z.string().min(1),
-    position:       z.enum(["Admin", "Support"]),
+    position:       z.enum(["Admin", "IT Admin", "Support"]),
     account_status: z.enum(["active", "inactive", "suspended", "blocked"]),
   });
 
@@ -323,7 +333,7 @@ export function EmployeesView() {
   // ── Position chips ───────────────────────────────────────────────────────────
   const positionFilter = (
     <div className="flex gap-1.5">
-      {(["all", "Admin", "Support"] as const).map((p) => (
+      {(["all", "Admin", "IT Admin", "Support"] as const).map((p) => (
         <button
           key={p}
           onClick={() => setPosition(p)}
@@ -335,7 +345,7 @@ export function EmployeesView() {
         >
           {p === "all"
             ? tCommon("all")
-            : t(`positions.${p === "Admin" ? "admin" : "support"}`)}
+            : t(`positions.${positionKey(p as DisplayPosition)}`)}
         </button>
       ))}
     </div>
@@ -453,7 +463,7 @@ export function EmployeesView() {
                       <td className="px-5 py-3.5 text-sm text-slate-500">{emp.email}</td>
                       <td className="px-5 py-3.5">
                         <span className="rounded-full bg-[#EBF3FB] text-[#0A3D62] px-2.5 py-0.5 text-xs font-medium">
-                          {t(`positions.${pos === "Admin" ? "admin" : "support"}`)}
+                          {t(`positions.${positionKey(pos)}`)}
                         </span>
                       </td>
                       <td className="px-5 py-3.5 text-gray-500 font-mono text-xs" dir="ltr">
@@ -546,7 +556,7 @@ export function EmployeesView() {
                     label={t("accountTypeLabel")}
                     value={
                       <span className="rounded-full bg-[#EBF3FB] text-[#0A3D62] px-2.5 py-0.5 text-xs font-medium">
-                        {t(`positions.${toDisplayPosition(selectedEmployee.account_type) === "Admin" ? "admin" : "support"}`)}
+                        {t(`positions.${positionKey(toDisplayPosition(selectedEmployee.account_type))}`)}
                       </span>
                     }
                   />
@@ -650,11 +660,11 @@ export function EmployeesView() {
 
                 <div className="space-y-1.5">
                   <Label>{t("form.position")}</Label>
-                  <div className="flex gap-3">
-                    {(["Admin", "Support"] as DisplayPosition[]).map((p) => (
+                  <div className="flex flex-wrap gap-2">
+                    {(["Admin", "IT Admin", "Support"] as DisplayPosition[]).map((p) => (
                       <label
                         key={p}
-                        className="flex flex-1 cursor-pointer items-center gap-2.5 rounded-xl border border-slate-200 px-4 py-3 has-checked:border-[#28B8B1] has-checked:bg-[#E6F7F7] transition-colors"
+                        className="flex flex-1 min-w-32 cursor-pointer items-center gap-2.5 rounded-xl border border-slate-200 px-4 py-3 has-checked:border-[#28B8B1] has-checked:bg-[#E6F7F7] transition-colors"
                       >
                         <input
                           type="radio"
@@ -663,7 +673,7 @@ export function EmployeesView() {
                           className="accent-[#28B8B1]"
                         />
                         <span className="text-sm font-medium text-slate-700">
-                          {t(`positions.${p === "Admin" ? "admin" : "support"}`)}
+                          {t(`positions.${positionKey(p)}`)}
                         </span>
                       </label>
                     ))}
@@ -727,11 +737,11 @@ export function EmployeesView() {
 
                 <div className="space-y-1.5">
                   <Label>{t("form.position")}</Label>
-                  <div className="flex gap-3">
-                    {(["Admin", "Support"] as DisplayPosition[]).map((p) => (
+                  <div className="flex flex-wrap gap-2">
+                    {(["Admin", "IT Admin", "Support"] as DisplayPosition[]).map((p) => (
                       <label
                         key={p}
-                        className="flex flex-1 cursor-pointer items-center gap-2.5 rounded-xl border border-slate-200 px-4 py-3 has-checked:border-[#28B8B1] has-checked:bg-[#E6F7F7] transition-colors"
+                        className="flex flex-1 min-w-32 cursor-pointer items-center gap-2.5 rounded-xl border border-slate-200 px-4 py-3 has-checked:border-[#28B8B1] has-checked:bg-[#E6F7F7] transition-colors"
                       >
                         <input
                           type="radio"
@@ -740,7 +750,7 @@ export function EmployeesView() {
                           className="accent-[#28B8B1]"
                         />
                         <span className="text-sm font-medium text-slate-700">
-                          {t(`positions.${p === "Admin" ? "admin" : "support"}`)}
+                          {t(`positions.${positionKey(p)}`)}
                         </span>
                       </label>
                     ))}
