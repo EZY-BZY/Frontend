@@ -17,6 +17,7 @@
     "next": "Next",
     "previous": "Previous",
     "noResults": "No results found",
+    "error": "Something went wrong. Please try again.",
     "rowsPerPage": "Rows per page",
     "of": "of",
     "page": "Page",
@@ -658,11 +659,52 @@
     "noCategoriesByUsers": "No user-created categories found",
     "noCategoriesByAdmins": "No admin-created categories found",
     "searchPlaceholder": "Search categories…",
+    "addCategory": "Add Category",
+    "active": "Active",
+    "inactive": "Inactive",
     "col": {
       "category": "Category",
       "description": "Description",
       "products": "Products",
-      "createdAt": "Created"
+      "createdAt": "Created",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "toast": {
+      "createSuccess": "Category created successfully",
+      "createError": "Failed to create category",
+      "updateSuccess": "Category updated successfully",
+      "updateError": "Failed to update category",
+      "deleteSuccess": "Category deactivated successfully",
+      "deleteError": "Failed to deactivate category"
+    },
+    "confirmDelete": {
+      "title": "Deactivate Category?",
+      "desc": "This will deactivate the category:",
+      "confirm": "Deactivate",
+      "cancel": "Cancel"
+    },
+    "sheet": {
+      "addTitle": "Add Category",
+      "addDesc": "Fill in the fields to create a new category.",
+      "editTitle": "Edit Category",
+      "editDesc": "Update the category details.",
+      "detailsTitle": "Category Details",
+      "detailsDesc": "View and manage category information.",
+      "imageLabel": "Category Image",
+      "clickToUpload": "Click to upload",
+      "changeImage": "Change Image",
+      "nameEn": "Name (English)",
+      "nameAr": "Name (Arabic)",
+      "nameFr": "Name (French)",
+      "descEn": "Description (English)",
+      "descAr": "Description (Arabic)",
+      "descFr": "Description (French)"
+    },
+    "validation": {
+      "nameEnRequired": "English name is required",
+      "nameArRequired": "Arabic name is required",
+      "imageUploadFailed": "Failed to upload image"
     }
   },
   "appPermissions": {
