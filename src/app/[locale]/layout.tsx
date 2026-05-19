@@ -4,6 +4,7 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { LocaleSync } from "@/components/shared/LocaleSync";
+import { QueryProvider } from "@/components/shared/QueryProvider";
 
 export const metadata: Metadata = {
   title: { default: "B-EASY", template: "%s | B-EASY" },
@@ -31,14 +32,16 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
-      {/*
-        LocaleSync runs client-side on every locale change.
-        It imperatively updates document.documentElement.dir + .lang
-        so RTL↔LTR flips happen instantly during soft navigation,
-        without waiting for a full server-side re-render.
-      */}
-      <LocaleSync />
-      {children}
+      <QueryProvider>
+        {/*
+          LocaleSync runs client-side on every locale change.
+          It imperatively updates document.documentElement.dir + .lang
+          so RTL↔LTR flips happen instantly during soft navigation,
+          without waiting for a full server-side re-render.
+        */}
+        <LocaleSync />
+        {children}
+      </QueryProvider>
     </NextIntlClientProvider>
   );
 }

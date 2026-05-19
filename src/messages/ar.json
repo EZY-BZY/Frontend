@@ -646,11 +646,52 @@
     "noCategoriesByUsers": "لا توجد تصنيفات من المستخدمين",
     "noCategoriesByAdmins": "لا توجد تصنيفات من الإدارة",
     "searchPlaceholder": "البحث في التصنيفات…",
+    "addCategory": "إضافة تصنيف",
+    "active": "نشط",
+    "inactive": "غير نشط",
     "col": {
       "category": "التصنيف",
       "description": "الوصف",
       "products": "المنتجات",
-      "createdAt": "تاريخ الإنشاء"
+      "createdAt": "تاريخ الإنشاء",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "toast": {
+      "createSuccess": "تم إنشاء التصنيف بنجاح",
+      "createError": "فشل إنشاء التصنيف",
+      "updateSuccess": "تم تحديث التصنيف بنجاح",
+      "updateError": "فشل تحديث التصنيف",
+      "deleteSuccess": "تم تعطيل التصنيف بنجاح",
+      "deleteError": "فشل تعطيل التصنيف"
+    },
+    "confirmDelete": {
+      "title": "تعطيل التصنيف؟",
+      "desc": "سيؤدي هذا إلى تعطيل التصنيف:",
+      "confirm": "تعطيل",
+      "cancel": "إلغاء"
+    },
+    "sheet": {
+      "addTitle": "إضافة تصنيف",
+      "addDesc": "أدخل البيانات لإنشاء تصنيف جديد.",
+      "editTitle": "تعديل التصنيف",
+      "editDesc": "تحديث تفاصيل التصنيف.",
+      "detailsTitle": "تفاصيل التصنيف",
+      "detailsDesc": "عرض وإدارة معلومات التصنيف.",
+      "imageLabel": "صورة التصنيف",
+      "clickToUpload": "انقر للرفع",
+      "changeImage": "تغيير الصورة",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "nameFr": "الاسم (فرنسي)",
+      "descEn": "الوصف (إنجليزي)",
+      "descAr": "الوصف (عربي)",
+      "descFr": "الوصف (فرنسي)"
+    },
+    "validation": {
+      "nameEnRequired": "الاسم بالإنجليزية مطلوب",
+      "nameArRequired": "الاسم بالعربية مطلوب",
+      "imageUploadFailed": "فشل رفع الصورة"
     }
   },
   "appPermissions": {

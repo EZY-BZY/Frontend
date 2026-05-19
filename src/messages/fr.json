@@ -646,11 +646,52 @@
     "noCategoriesByUsers": "Aucune catégorie créée par des utilisateurs",
     "noCategoriesByAdmins": "Aucune catégorie créée par des admins",
     "searchPlaceholder": "Rechercher des catégories…",
+    "addCategory": "Ajouter une catégorie",
+    "active": "Actif",
+    "inactive": "Inactif",
     "col": {
       "category": "Catégorie",
       "description": "Description",
       "products": "Produits",
-      "createdAt": "Créé le"
+      "createdAt": "Créé le",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "toast": {
+      "createSuccess": "Catégorie créée avec succès",
+      "createError": "Échec de la création de la catégorie",
+      "updateSuccess": "Catégorie mise à jour avec succès",
+      "updateError": "Échec de la mise à jour de la catégorie",
+      "deleteSuccess": "Catégorie désactivée avec succès",
+      "deleteError": "Échec de la désactivation de la catégorie"
+    },
+    "confirmDelete": {
+      "title": "Désactiver la catégorie ?",
+      "desc": "Cela désactivera la catégorie :",
+      "confirm": "Désactiver",
+      "cancel": "Annuler"
+    },
+    "sheet": {
+      "addTitle": "Ajouter une catégorie",
+      "addDesc": "Remplissez les champs pour créer une nouvelle catégorie.",
+      "editTitle": "Modifier la catégorie",
+      "editDesc": "Mettez à jour les détails de la catégorie.",
+      "detailsTitle": "Détails de la catégorie",
+      "detailsDesc": "Consultez et gérez les informations de la catégorie.",
+      "imageLabel": "Image de la catégorie",
+      "clickToUpload": "Cliquez pour télécharger",
+      "changeImage": "Changer l'image",
+      "nameEn": "Nom (anglais)",
+      "nameAr": "Nom (arabe)",
+      "nameFr": "Nom (français)",
+      "descEn": "Description (anglais)",
+      "descAr": "Description (arabe)",
+      "descFr": "Description (français)"
+    },
+    "validation": {
+      "nameEnRequired": "Le nom en anglais est obligatoire",
+      "nameArRequired": "Le nom en arabe est obligatoire",
+      "imageUploadFailed": "Échec du téléchargement de l'image"
     }
   },
   "appPermissions": {

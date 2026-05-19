@@ -567,3 +567,52 @@ export interface ListCompanyEmployeesParams {
   department?: string | null;
   is_active?: boolean | null;
 }
+
+// ─── Categories ───────────────────────────────────────────────────────────────
+
+export interface CategoryPublicRead {
+  id: string;
+  name_en: string;
+  name_ar: string;
+  name_fr: string;
+  description_en: string | null;
+  description_ar: string | null;
+  description_fr: string | null;
+  image: string | null;
+  is_active: boolean;
+  is_global: boolean;
+  company_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CategoryCreate {
+  name_en: string;
+  name_ar: string;
+  name_fr?: string;
+  description_en?: string;
+  description_ar?: string;
+  description_fr?: string;
+  company_id?: string;
+  image?: File;
+}
+
+export interface CategoryUpdate {
+  name_en?: string | null;
+  name_ar?: string | null;
+  name_fr?: string | null;
+  description_en?: string | null;
+  description_ar?: string | null;
+  description_fr?: string | null;
+  image?: string | null;
+  is_active?: boolean | null;
+}
+
+export interface ListCategoriesParams {
+  company_id?: string | null;
+  is_active?: boolean | null;
+  is_global?: boolean | null;
+  search?: string | null;
+  page?: number;
+  page_size?: number;
+}
