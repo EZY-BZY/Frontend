@@ -5,7 +5,17 @@ import type {
   CountryRead,
   CountryUpdate,
   MessageResponse,
+  PaginatedResponse,
 } from "@/types/api";
+
+export function listCountries(params?: {
+  page?: number;
+  page_size?: number;
+}): Promise<ApiResponse<PaginatedResponse<CountryRead>>> {
+  return apiClient.get("/api/v1/public/countries", {
+    params: params as Record<string, string | number | boolean | null | undefined>,
+  });
+}
 
 export function createCountry(
   payload: CountryCreate

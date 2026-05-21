@@ -130,15 +130,30 @@
     "filterByDate": "تصفية حسب التاريخ",
     "from": "من",
     "to": "إلى",
+    "noRequests": "لا توجد طلبات تواصل",
+    "totalRequests": "إجمالي الطلبات",
     "statuses": {
       "all": "جميع الحالات",
       "new": "جديد",
+      "seen": "مُشاهَد",
+      "solved": "تم الحل",
       "inProgress": "قيد التنفيذ",
-      "resolved": "تم الحل",
+      "resolved": "محلول",
       "closed": "مغلق"
     },
-    "noRequests": "لا توجد طلبات تواصل",
-    "totalRequests": "إجمالي الطلبات"
+    "requestType": "نوع الطلب",
+    "requestedAt": "تاريخ الطلب",
+    "viewRequest": "عرض الطلب",
+    "markAsSolved": "تحديد كمحلول",
+    "solving": "جارٍ الحل…",
+    "detailSheet": {
+      "title": "تفاصيل الطلب",
+      "desc": "التفاصيل الكاملة لطلب التواصل."
+    },
+    "toast": {
+      "solveSuccess": "تم تحديد الطلب كمحلول",
+      "solveError": "فشل في تحديد الطلب كمحلول"
+    }
   },
   "employees": {
     "title": "الموظفون",
@@ -343,52 +358,71 @@
     "col": {
       "bundleName": "اسم الباقة",
       "price": "السعر",
+      "type": "النوع",
       "duration": "المدة",
       "features": "المميزات",
+      "abilities": "القدرات",
+      "countries": "الدول",
       "status": "الحالة",
       "actions": "الإجراءات",
       "deactivatedOn": "تاريخ الإلغاء",
-      "reason": "سبب الإلغاء"
+      "reason": "السبب"
     },
     "form": {
       "nameEn": "الاسم (إنجليزي)",
       "nameAr": "الاسم (عربي)",
+      "nameOtherLang": "الاسم (لغة أخرى)",
       "price": "السعر",
       "currency": "العملة",
-      "durationEn": "المدة (إنجليزي)",
-      "durationAr": "المدة (عربي)",
-      "featuresEn": "المميزات (إنجليزي)",
-      "featuresAr": "المميزات (عربي)",
-      "separateWithCommas": "افصل المميزات بفاصلة",
-      "separateWithArabicComma": "افصل المميزات بفاصلة عربية ،",
-      "deactivationReasonEn": "سبب الإلغاء (إنجليزي)",
-      "deactivationReasonAr": "سبب الإلغاء (عربي)"
+      "currencyId": "العملة",
+      "selectCurrency": "اختر العملة…",
+      "bundleType": "نوع الباقة",
+      "typeMonthly": "شهري",
+      "typeYearly": "سنوي",
+      "countryIds": "الدول المتاحة",
+      "selectCountries": "اختر الدول…",
+      "abilities": "حدود الباقة",
+      "numberOfProducts": "المنتجات",
+      "numberOfBranches": "الفروع",
+      "numberOfEmployees": "الموظفون",
+      "numberOfFinancialAccounts": "الحسابات المالية"
+    },
+    "abilities": {
+      "products": "{count} منتج",
+      "branches": "{count} فرع",
+      "employees": "{count} موظف",
+      "financialAccounts": "{count} حساب مالي"
     },
     "sheet": {
       "createTitle": "إنشاء باقة جديدة",
-      "createDesc": "أدخل تفاصيل الباقة باللغتين. ستظهر فوراً في الباقات النشطة.",
-      "deactivateTitle": "إلغاء تفعيل الباقة",
-      "deactivateWillMove": "سيتم نقل باقة \"{name}\" إلى الباقات السابقة ولن تظهر للمستخدمين.",
-      "deactivateWarning": "هذا الإجراء لا يمكن التراجع عنه. يمكنك دائماً إنشاء باقة جديدة بنسخ هذه الباقة لاحقاً.",
+      "createDesc": "أدخل تفاصيل الباقة. ستظهر فوراً في الباقات النشطة.",
+      "deactivateTitle": "نقل إلى السجل",
+      "deactivateWillMove": "سيتم نقل باقة \"{name}\" إلى السجل ولن تظهر للمستخدمين.",
+      "deactivateWarning": "هذا الإجراء لا يمكن التراجع عنه. يمكنك مراجعة الباقة في تبويب السجل.",
       "bundleDetailsDesc": "تفاصيل الباقة (للقراءة فقط)",
-      "deactivationInfo": "معلومات الإلغاء",
+      "deactivationInfo": "معلومات السجل",
       "createdLabel": "تاريخ الإنشاء:",
-      "englishName": "الاسم الإنجليزي",
+      "otherLangName": "الاسم (لغة أخرى)",
       "arabicName": "الاسم العربي"
     },
     "validation": {
-      "nameEnRequired": "الاسم الإنجليزي مطلوب",
+      "nameEnRequired": "الاسم مطلوب",
       "nameArRequired": "الاسم العربي مطلوب",
       "priceMin": "يجب أن يكون السعر ٠ أو أكثر",
-      "durationRequired": "المدة مطلوبة",
-      "featuresEnRequired": "أدخل ميزة إنجليزية واحدة على الأقل",
-      "featuresArRequired": "أدخل ميزة عربية واحدة على الأقل",
-      "reasonEnRequired": "السبب مطلوب (٥ أحرف على الأقل)",
-      "reasonArRequired": "السبب مطلوب (٥ أحرف على الأقل)"
+      "typeRequired": "نوع الباقة مطلوب",
+      "currencyRequired": "العملة مطلوبة",
+      "countryRequired": "اختر دولة واحدة على الأقل",
+      "abilityMin": "يجب أن تكون القيمة ٠ أو أكثر"
     },
-    "deactivating": "جارٍ الإلغاء…",
-    "confirmDeactivation": "تأكيد الإلغاء",
-    "deactivateBundle": "إلغاء تفعيل الباقة",
+    "toast": {
+      "createSuccess": "تم إنشاء الباقة بنجاح",
+      "createError": "فشل في إنشاء الباقة",
+      "deactivateSuccess": "تم نقل الباقة إلى السجل",
+      "deactivateError": "فشل في نقل الباقة إلى السجل"
+    },
+    "deactivating": "جارٍ النقل…",
+    "confirmDeactivation": "تأكيد النقل",
+    "deactivateBundle": "نقل إلى السجل",
     "activeBundlesFooter": "{shown} من أصل {total} باقة نشطة",
     "previousBundlesFooter": "{shown} من أصل {total} باقة سابقة",
     "closeBtn": "إغلاق"
@@ -612,10 +646,11 @@
       "badge": "تواصل معنا",
       "title": "دعنا نجد الخطة المناسبة لك",
       "subtitle": "أخبرنا عن أعمالك وسيتواصل فريقنا معك خلال 24 ساعة.",
-      "roleLabel": "أنا",
-      "roleSeller": "بائع",
-      "roleSupplier": "مورّد",
-      "roleUser": "مستخدم",
+      "requestTypeLabel": "نوع الطلب",
+      "requestTypeContactRequest": "استفسار عام",
+      "requestTypeReportIssue": "الإبلاغ عن مشكلة",
+      "requestTypeSuggestion": "اقتراح",
+      "requestTypeOther": "أخرى",
       "nameLabel": "الاسم الكامل",
       "namePlaceholder": "أدخل اسمك الكامل",
       "phoneLabel": "رقم الهاتف",
@@ -624,14 +659,33 @@
       "companyPlaceholder": "اسم شركتك أو علامتك التجارية",
       "categoryLabel": "تصنيف الأعمال",
       "categoryPlaceholder": "اختر تصنيفًا",
+      "categories": {
+        "retail": "التجزئة",
+        "wholesale": "الجملة",
+        "ecommerce": "التجارة الإلكترونية",
+        "foodBeverage": "الأطعمة والمشروبات",
+        "manufacturing": "التصنيع",
+        "distribution": "التوزيع",
+        "logistics": "اللوجستيات",
+        "rawMaterials": "المواد الخام",
+        "personalUse": "استخدام شخصي",
+        "smallTeam": "فريق صغير",
+        "enterprise": "مؤسسات"
+      },
       "messageLabel": "ملاحظات إضافية",
       "messagePlaceholder": "أخبرنا المزيد عن احتياجاتك (اختياري)",
       "submit": "إرسال الرسالة",
       "submitting": "جارٍ الإرسال…",
       "successTitle": "تم إرسال الرسالة!",
       "successDesc": "سنتواصل معك خلال 24 ساعة.",
+      "emailLabel": "البريد الإلكتروني",
+      "emailPlaceholder": "بريدك@company.com",
       "nameRequired": "الاسم الكامل مطلوب",
-      "phoneRequired": "رقم الهاتف مطلوب"
+      "phoneRequired": "رقم الهاتف مطلوب",
+      "contactRequired": "يرجى تقديم بريد إلكتروني أو رقم هاتف على الأقل",
+      "sendAnother": "إرسال طلب آخر",
+      "errorTitle": "حدث خطأ ما",
+      "errorDesc": "يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة."
     },
     "footer": {
       "tagline": "نمكّن الأعمال في جميع أنحاء المنطقة.",
@@ -776,6 +830,31 @@
     "confirmDelete": "تأكيد؟",
     "deleteSection": "حذف القسم",
     "editSectionBtn": "تعديل القسم",
+    "historyBtn": "السجل",
+    "historyTitle": "سجل التغييرات",
+    "historyDesc": "جميع التغييرات المسجلة في أقسام هذه الوثيقة.",
+    "noHistory": "لا توجد سجلات تغييرات.",
+    "historyAction": {
+      "created": "تم الإنشاء",
+      "updated": "تم التحديث",
+      "deleted": "تم الحذف"
+    },
+    "changedSection": "القسم المُعدَّل",
+    "performedBy": "بواسطة",
+    "publicTitle": {
+      "privacy_policy": "سياسة الخصوصية",
+      "terms_of_use": "الشروط والأحكام",
+      "refund_terms": "شروط الاسترداد",
+      "delivery_terms": "شروط التوصيل"
+    },
+    "publicSubtitle": {
+      "privacy_policy": "كيفية جمع معلوماتك واستخدامها وحمايتها.",
+      "terms_of_use": "القواعد والإرشادات لاستخدام منصتنا.",
+      "refund_terms": "سياستنا في ما يخص الاسترداد والإرجاع.",
+      "delivery_terms": "كيفية التعامل مع الشحن والتوصيل."
+    },
+    "publicNoContent": "لا يوجد محتوى متاح حتى الآن.",
+    "publicLastUpdated": "آخر تحديث",
     "sheet": {
       "editTitle": "تعديل القسم",
       "addTitle": "إضافة قسم",

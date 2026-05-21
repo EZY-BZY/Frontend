@@ -17,25 +17,18 @@ const ITEMS = [
     key: "item1",
     icon: Package,
     color: "#0A3D62",
-    bg: "from-[#0A3D62]/20 to-[#0A3D62]/5",
     wide: true,
   },
-  { key: "item2", icon: CreditCard, color: "#28B8B1", bg: "from-[#28B8B1]/20 to-[#28B8B1]/5" },
-  { key: "item3", icon: Users, color: "#6366f1", bg: "from-[#6366f1]/20 to-[#6366f1]/5" },
-  { key: "item4", icon: BarChart3, color: "#f59e0b", bg: "from-[#f59e0b]/20 to-[#f59e0b]/5" },
-  { key: "item5", icon: Globe2, color: "#10b981", bg: "from-[#10b981]/20 to-[#10b981]/5" },
-  {
-    key: "item6",
-    icon: HeadphonesIcon,
-    color: "#ec4899",
-    bg: "from-[#ec4899]/20 to-[#ec4899]/5",
-  },
+  { key: "item2", icon: CreditCard, color: "#28B8B1" },
+  { key: "item3", icon: Users, color: "#6366f1" },
+  { key: "item4", icon: BarChart3, color: "#f59e0b" },
+  { key: "item5", icon: Globe2, color: "#10b981" },
+  { key: "item6", icon: HeadphonesIcon, color: "#ec4899" },
 ] as const;
 
 function BentoCard({
   icon: Icon,
   color,
-  bg,
   title,
   desc,
   wide,
@@ -43,7 +36,6 @@ function BentoCard({
 }: {
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   color: string;
-  bg: string;
   title: string;
   desc: string;
   wide?: boolean;
@@ -55,28 +47,27 @@ function BentoCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      whileHover={{ y: -6, transition: { duration: 0.22, ease: "easeOut" } }}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-white/8 bg-linear-to-br p-6 backdrop-blur-sm",
-        bg,
+        "group relative overflow-hidden rounded-2xl bg-white p-6 shadow-[0_4px_20px_rgb(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgb(0,0,0,0.10)] transition-shadow duration-300",
         wide ? "lg:col-span-2" : ""
       )}
     >
-      {/* Corner glow */}
+      {/* Corner glow — very subtle on white */}
       <div
-        className="pointer-events-none absolute -top-10 -inset-s-10 h-32 w-32 rounded-full blur-2xl opacity-40 transition-opacity duration-300 group-hover:opacity-70"
+        className="pointer-events-none absolute -top-10 -inset-s-10 h-40 w-40 rounded-full blur-2xl opacity-[0.08] transition-opacity duration-300 group-hover:opacity-[0.18]"
         style={{ backgroundColor: color }}
       />
 
       <div
         className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl"
-        style={{ backgroundColor: `${color}25` }}
+        style={{ backgroundColor: `${color}18` }}
       >
         <Icon className="h-5 w-5" style={{ color }} />
       </div>
 
-      <h3 className="mb-2 text-base font-semibold text-white">{title}</h3>
-      <p className="text-sm leading-relaxed text-white/50">{desc}</p>
+      <h3 className="mb-2 text-base font-semibold text-gray-900">{title}</h3>
+      <p className="text-sm leading-relaxed text-gray-500">{desc}</p>
     </motion.div>
   );
 }
@@ -85,7 +76,7 @@ export function BentoFeatures() {
   const t = useTranslations("landing.features");
 
   return (
-    <section id="features" className="py-24">
+    <section id="features" className="py-24 bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -95,13 +86,13 @@ export function BentoFeatures() {
           transition={{ duration: 0.6 }}
           className="mb-14 text-center"
         >
-          <span className="mb-4 inline-block rounded-full border border-[#28B8B1]/30 bg-[#28B8B1]/10 px-3.5 py-1 text-xs font-semibold text-[#28B8B1]">
+          <span className="mb-4 inline-block rounded-full border border-teal-200 bg-teal-50 px-3.5 py-1 text-xs font-semibold text-[#28B8B1]">
             {t("badge")}
           </span>
-          <h2 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
+          <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             {t("title")}
           </h2>
-          <p className="mx-auto max-w-xl text-base text-white/50">{t("subtitle")}</p>
+          <p className="mx-auto max-w-xl text-base text-gray-500">{t("subtitle")}</p>
         </motion.div>
 
         {/* Bento grid */}
@@ -111,7 +102,6 @@ export function BentoFeatures() {
               key={item.key}
               icon={item.icon}
               color={item.color}
-              bg={item.bg}
               title={t(`${item.key}Title` as "item1Title")}
               desc={t(`${item.key}Desc` as "item1Desc")}
               wide={"wide" in item ? item.wide : false}

@@ -127,12 +127,14 @@ function CategoryTabTable({
   isGlobal,
   emptyKey,
   onAdd,
+  onView,
   onEdit,
   onDelete,
 }: {
   isGlobal: boolean;
   emptyKey: "noCategoriesByUsers" | "noCategoriesByAdmins";
   onAdd?: () => void;
+  onView: (cat: CategoryPublicRead) => void;
   onEdit: (cat: CategoryPublicRead) => void;
   onDelete: (cat: CategoryPublicRead) => void;
 }) {
@@ -251,7 +253,16 @@ function CategoryTabTable({
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.03, duration: 0.2 }}
-                    className="border-b border-slate-50 last:border-0 hover:bg-[#EBF3FB]/40 transition-colors"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => onView(cat)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        onView(cat);
+                      }
+                    }}
+                    className="border-b border-slate-50 last:border-0 hover:bg-[#EBF3FB]/60 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28B8B1]/40 focus-visible:ring-inset"
                   >
                     {/* Name + image */}
                     <td className="px-5 py-3.5">
@@ -309,8 +320,13 @@ function CategoryTabTable({
 
                     {/* Actions */}
                     <td className="px-5 py-3.5">
-                      <div className="flex items-center gap-2 justify-end">
+                      <div
+                        className="flex items-center gap-2 justify-end"
+                        onClick={(e) => e.stopPropagation()}
+                        onKeyDown={(e) => e.stopPropagation()}
+                      >
                         <button
+                          type="button"
                           onClick={() => onEdit(cat)}
                           className="rounded-lg px-3 py-1.5 text-xs font-medium border border-slate-200 text-slate-500 hover:border-[#28B8B1] hover:text-[#0A3D62] transition-colors inline-flex items-center gap-1"
                         >
@@ -318,6 +334,7 @@ function CategoryTabTable({
                           {tCommon("edit")}
                         </button>
                         <button
+                          type="button"
                           onClick={() => onDelete(cat)}
                           className="rounded-lg px-3 py-1.5 text-xs font-medium border border-slate-200 text-slate-500 hover:border-red-300 hover:text-red-600 transition-colors inline-flex items-center gap-1"
                         >
@@ -415,11 +432,13 @@ export function CategoriesTabsView() {
     setSheetOpen(true);
   };
 
-  const openEdit = (cat: CategoryPublicRead) => {
+  const openView = (cat: CategoryPublicRead) => {
     setSheetCategory(cat);
     setSheetIsGlobal(cat.is_global);
     setSheetOpen(true);
   };
+
+  const openEdit = openView;
 
   return (
     <>
@@ -438,6 +457,7 @@ export function CategoriesTabsView() {
             isGlobal={true}
             emptyKey="noCategoriesByAdmins"
             onAdd={() => openCreate(true)}
+            onView={openView}
             onEdit={openEdit}
             onDelete={setDeleteTarget}
           />
@@ -447,6 +467,7 @@ export function CategoriesTabsView() {
           <CategoryTabTable
             isGlobal={false}
             emptyKey="noCategoriesByUsers"
+            onView={openView}
             onEdit={openEdit}
             onDelete={setDeleteTarget}
           />

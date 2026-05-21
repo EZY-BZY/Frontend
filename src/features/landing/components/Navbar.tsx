@@ -33,10 +33,10 @@ export function Navbar() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={cn(
-          "w-full max-w-2xl flex items-center gap-3 rounded-full border px-4 py-2.5 transition-all duration-300",
+          "w-full max-w-2xl flex items-center gap-3 rounded-full px-4 py-2.5 transition-all duration-300",
           scrolled
-            ? "border-white/15 bg-[#050E1A]/92 shadow-[0_8px_40px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
-            : "border-white/10 bg-[#0A1628]/60 backdrop-blur-xl"
+            ? "bg-white/92 shadow-[0_8px_32px_rgb(0,0,0,0.08)] backdrop-blur-2xl ring-1 ring-black/4"
+            : "bg-white/70 shadow-[0_4px_16px_rgb(0,0,0,0.04)] backdrop-blur-xl ring-1 ring-black/3"
         )}
       >
         {/* Logo */}
@@ -51,33 +51,33 @@ export function Navbar() {
           />
         </Link>
 
-        {/* Desktop anchor links */}
+        {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-0.5">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="px-3.5 py-1.5 text-sm font-medium text-white/65 hover:text-white rounded-full hover:bg-white/8 transition-colors"
+              className="px-3.5 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 rounded-full hover:bg-gray-100 transition-colors"
             >
               {link.label}
             </a>
           ))}
           <Link
             href={`/${locale}/login`}
-            className="px-3.5 py-1.5 text-sm font-medium text-white/65 hover:text-white rounded-full hover:bg-white/8 transition-colors"
+            className="px-3.5 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 rounded-full hover:bg-gray-100 transition-colors"
           >
             {t("login")}
           </Link>
         </div>
 
         <div className="hidden md:block shrink-0">
-          <LanguageSwitcher variant="topbar" />
+          <LanguageSwitcher variant="landing" />
         </div>
 
         {/* CTA */}
         <Link
           href={`/${locale}/login`}
-          className="hidden md:inline-flex shrink-0 items-center rounded-full bg-[#28B8B1] px-4 py-1.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(40,184,177,0.25)] hover:bg-[#22A69F] transition-colors"
+          className="hidden md:inline-flex shrink-0 items-center rounded-full bg-[#28B8B1] px-4 py-1.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(40,184,177,0.2)] hover:bg-[#22A69F] transition-colors"
         >
           {t("getStarted")}
         </Link>
@@ -87,7 +87,7 @@ export function Navbar() {
           type="button"
           onClick={() => setOpen(!open)}
           aria-label="Menu"
-          className="md:hidden h-8 w-8 flex items-center justify-center rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+          className="md:hidden h-8 w-8 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
         >
           {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
         </button>
@@ -101,14 +101,14 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full mt-2 w-full max-w-2xl rounded-2xl border border-white/10 bg-[#0A1628]/95 backdrop-blur-2xl p-3 shadow-2xl"
+            className="absolute top-full mt-2 w-full max-w-2xl rounded-2xl bg-white/98 backdrop-blur-2xl p-3 shadow-xl"
           >
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="block px-4 py-2.5 text-sm text-white/70 hover:text-white rounded-xl hover:bg-white/5 transition-colors"
+                className="block px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 rounded-xl hover:bg-gray-50 transition-colors"
               >
                 {link.label}
               </a>
@@ -116,7 +116,7 @@ export function Navbar() {
             <Link
               href={`/${locale}/login`}
               onClick={() => setOpen(false)}
-              className="block px-4 py-2.5 text-sm text-white/70 hover:text-white rounded-xl hover:bg-white/5 transition-colors"
+              className="block px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 rounded-xl hover:bg-gray-50 transition-colors"
             >
               {t("login")}
             </Link>
@@ -128,7 +128,7 @@ export function Navbar() {
               {t("getStarted")}
             </Link>
             <div className="mt-2 flex justify-center">
-              <LanguageSwitcher variant="topbar" />
+              <LanguageSwitcher variant="landing" />
             </div>
           </motion.div>
         )}
