@@ -6,10 +6,13 @@ import type {
   PaginatedResponse,
   TermCreate,
   TermHistoryDayGroupRead,
+  TermPublicRead,
   TermRead,
   TermType,
   TermUpdate,
 } from "@/types/api";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export function createTerm(
   payload: TermCreate
@@ -43,4 +46,15 @@ export function deleteTerm(
   termId: string
 ): Promise<ApiResponse<MessageResponse>> {
   return apiClient.delete(`/api/v1/beasy/terms/${termId}`);
+}
+
+export async function getPublicTermsByType(
+  termType: TermType
+): Promise<ApiResponse<TermPublicRead[]>> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/v1/public/terms/${termType}`);
+    return (await res.json()) as ApiResponse<TermPublicRead[]>;
+  } catch {
+    return { status_code: 500, Message: "Failed to load terms", Data: null };
+  }
 }

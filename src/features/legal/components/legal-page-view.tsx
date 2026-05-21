@@ -2,12 +2,35 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Pencil, Trash2, FileText, AlertCircle } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  FileText,
+  AlertCircle,
+  Clock,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { LegalSectionSheet } from "./legal-section-sheet";
-import { listTermsByType, deleteTerm } from "@/services/terms";
-import type { TermRead, TermType } from "@/types/api";
+import { listTermsByType, deleteTerm, listTermHistory } from "@/services/terms";
+import type {
+  TermRead,
+  TermType,
+  TermHistoryDayGroupRead,
+  TermHistoryVersionRead,
+  TermSnapshotItem,
+} from "@/types/api";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 
 /* ─── Doc type mapping ───────────────────────────────────────────── */
 type LegalDocType =
@@ -23,7 +46,10 @@ const TERM_TYPE_MAP: Record<LegalDocType, TermType> = {
   "refund-terms": "refund_terms",
 };
 
-const DOC_META: Record<LegalDocType, { titleEn: string; titleFr: string; titleAr: string }> = {
+const DOC_META: Record<
+  LegalDocType,
+  { titleEn: string; titleFr: string; titleAr: string }
+> = {
   "privacy-policy": {
     titleEn: "Privacy Policy",
     titleFr: "Politique de confidentialité",
@@ -97,7 +123,9 @@ function DeleteButton({ onConfirm }: { onConfirm: () => void }) {
   if (confirming) {
     return (
       <div className="flex items-center gap-1.5">
-        <span className="text-xs text-red-500 font-medium">{t("confirmDelete")}</span>
+        <span className="text-xs text-red-500 font-medium">
+          {t("confirmDelete")}
+        </span>
         <button
           onClick={onConfirm}
           className="rounded px-2 py-0.5 text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
@@ -125,6 +153,246 @@ function DeleteButton({ onConfirm }: { onConfirm: () => void }) {
   );
 }
 
+/* ─── History snapshot item ──────────────────────────────────────── */
+function SnapshotItem({ item }: { item: TermSnapshotItem }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div
+      className={cn(
+        "rounded-lg border p-3 text-xs transition-colors",
+        item.is_changed
+          ? "border-amber-200 bg-amber-50"
+          : "border-slate-100 bg-slate-50/50"
+      )}
+    >
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-2"
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          {item.is_changed && (
+            <span className="shrink-0 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 uppercase tracking-wide">
+              changed
+            </span>
+          )}
+          <span className="truncate font-medium text-slate-700">
+            {item.name_en}
+          </span>
+          <span className="shrink-0 text-slate-400">§{item.order}</span>
+        </div>
+        {open ? (
+          <ChevronUp className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+        ) : (
+          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+        )}
+      </button>
+
+      {open && (
+        <div className="mt-3 space-y-2 border-t border-slate-100 pt-3">
+          <p className="text-slate-600 leading-relaxed">{item.description_en}</p>
+          {item.name_fr && (
+            <p className="text-slate-500 italic">{item.name_fr}</p>
+          )}
+          {item.name_ar && (
+            <p
+              className="text-slate-500"
+              dir="rtl"
+              style={{ fontFamily: "var(--font-cairo)" }}
+            >
+              {item.name_ar}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── History version card ───────────────────────────────────────── */
+function VersionCard({
+  version,
+  locale,
+  t,
+}: {
+  version: TermHistoryVersionRead;
+  locale: string;
+  t: ReturnType<typeof useTranslations<"legal">>;
+}) {
+  const actionColors = {
+    created: "bg-emerald-50 text-emerald-700",
+    updated: "bg-amber-50 text-amber-700",
+    deleted: "bg-red-50 text-red-600",
+  } as const;
+
+  const dateStr = new Date(version.version_date).toLocaleString(
+    locale === "ar" ? "ar-EG" : "en-GB",
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }
+  );
+
+  return (
+    <div className="rounded-xl border border-slate-100 bg-white p-4 space-y-3">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <span
+          className={cn(
+            "rounded-full px-2.5 py-0.5 text-xs font-semibold",
+            actionColors[version.action_type] ?? "bg-slate-100 text-slate-600"
+          )}
+        >
+          {t(`historyAction.${version.action_type}`)}
+        </span>
+        <span className="text-xs text-slate-400 whitespace-nowrap">
+          {dateStr}
+        </span>
+      </div>
+
+      {version.performed_by && (
+        <p className="text-xs text-slate-500">
+          {t("performedBy")}:{" "}
+          <span className="font-mono text-slate-700">{version.performed_by}</span>
+        </p>
+      )}
+
+      {version.terms_snapshot.length > 0 && (
+        <div className="space-y-2">
+          {version.terms_snapshot.map((item, idx) => (
+            <SnapshotItem key={idx} item={item} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── History Sheet ──────────────────────────────────────────────── */
+function HistorySheet({
+  open,
+  onOpenChange,
+  termType,
+  locale,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  termType: TermType;
+  locale: string;
+}) {
+  const t = useTranslations("legal");
+  const [groups, setGroups] = useState<TermHistoryDayGroupRead[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const PAGE_SIZE = 5;
+
+  const load = useCallback(
+    async (p: number, reset: boolean) => {
+      setLoading(true);
+      const res = await listTermHistory(termType, { page: p, page_size: PAGE_SIZE });
+      if (res.Data) {
+        const { items, pages } = res.Data;
+        setGroups((prev) => (reset ? items : [...prev, ...items]));
+        setHasMore(p < pages);
+      }
+      setLoading(false);
+    },
+    [termType]
+  );
+
+  useEffect(() => {
+    if (open) {
+      setPage(1);
+      setGroups([]);
+      setHasMore(true);
+      load(1, true);
+    }
+  }, [open, load]);
+
+  const loadMore = () => {
+    const next = page + 1;
+    setPage(next);
+    load(next, false);
+  };
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="w-full max-w-lg flex flex-col">
+        <SheetHeader>
+          <SheetTitle className="flex items-center gap-2">
+            <Clock className="h-4 w-4 text-[#28B8B1]" />
+            {t("historyTitle")}
+          </SheetTitle>
+          <SheetDescription>{t("historyDesc")}</SheetDescription>
+        </SheetHeader>
+
+        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
+          {loading && groups.length === 0 ? (
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="rounded-xl border border-slate-100 p-4 space-y-2 animate-pulse"
+                >
+                  <div className="h-4 w-24 rounded bg-slate-100" />
+                  <div className="h-3 w-40 rounded bg-slate-100" />
+                  <div className="h-3 w-full rounded bg-slate-100" />
+                </div>
+              ))}
+            </div>
+          ) : groups.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-40 gap-3 text-slate-400">
+              <Clock className="h-8 w-8" />
+              <p className="text-sm">{t("noHistory")}</p>
+            </div>
+          ) : (
+            groups.map((group) => (
+              <div key={group.day}>
+                <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                  {new Date(group.day).toLocaleDateString(
+                    locale === "ar" ? "ar-EG" : "en-GB",
+                    { day: "2-digit", month: "long", year: "numeric" }
+                  )}
+                </p>
+                <div className="space-y-3">
+                  {group.versions.map((version, i) => (
+                    <motion.div
+                      key={`${version.version_date}-${i}`}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.04, duration: 0.2 }}
+                    >
+                      <VersionCard version={version} locale={locale} t={t} />
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
+
+          {hasMore && !loading && groups.length > 0 && (
+            <button
+              onClick={loadMore}
+              className="w-full rounded-xl border border-slate-200 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors"
+            >
+              Load more
+            </button>
+          )}
+
+          {loading && groups.length > 0 && (
+            <div className="flex justify-center py-4">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-200 border-t-[#28B8B1]" />
+            </div>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 /* ─── Main component ─────────────────────────────────────────────── */
 interface LegalPageViewProps {
   docType: LegalDocType;
@@ -142,6 +410,7 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
   const [error, setError] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingTerm, setEditingTerm] = useState<TermRead | undefined>(undefined);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -155,7 +424,9 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
     setLoading(false);
   }, [termType, tCommon]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const handleAdd = () => {
     setEditingTerm(undefined);
@@ -193,7 +464,7 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.24 }}
-        className="flex items-center justify-between gap-4"
+        className="flex items-center justify-between gap-4 flex-wrap"
       >
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EBF3FB]">
@@ -201,7 +472,11 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
           </div>
           <div>
             <h2 className="text-lg font-bold text-slate-900 leading-tight">
-              {locale === "ar" ? meta.titleAr : locale === "fr" ? meta.titleFr : meta.titleEn}
+              {locale === "ar"
+                ? meta.titleAr
+                : locale === "fr"
+                ? meta.titleFr
+                : meta.titleEn}
             </h2>
             <p className="text-sm text-slate-500">
               {locale === "en" ? meta.titleFr : meta.titleEn}
@@ -209,13 +484,23 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
           </div>
         </div>
 
-        <Button
-          onClick={handleAdd}
-          className="gap-2 bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90 shrink-0"
-        >
-          <Plus className="h-4 w-4" />
-          {t("addSection")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setHistoryOpen(true)}
+            className="gap-2 border-[#28B8B1] text-[#28B8B1] hover:bg-[#E6F7F7] hover:text-[#28B8B1] hover:border-[#28B8B1]"
+          >
+            <Clock className="h-4 w-4" />
+            {t("historyBtn")}
+          </Button>
+          <Button
+            onClick={handleAdd}
+            className="gap-2 bg-[#0A3D62] text-white hover:bg-[#0A3D62]/90 shrink-0"
+          >
+            <Plus className="h-4 w-4" />
+            {t("addSection")}
+          </Button>
+        </div>
       </motion.div>
 
       {/* ── Body ─────────────────────────────────────────────────── */}
@@ -277,7 +562,9 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
                       <h3 className="font-semibold text-slate-800 leading-snug mb-2">
                         {term.name_en}
                       </h3>
-                      <p className="text-sm text-slate-500 leading-relaxed">{term.description_en}</p>
+                      <p className="text-sm text-slate-500 leading-relaxed">
+                        {term.description_en}
+                      </p>
                     </div>
 
                     {/* French */}
@@ -290,14 +577,16 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
                       <h3 className="font-semibold text-slate-800 leading-snug mb-2">
                         {term.name_fr}
                       </h3>
-                      <p className="text-sm text-slate-500 leading-relaxed">{term.description_fr}</p>
+                      <p className="text-sm text-slate-500 leading-relaxed">
+                        {term.description_fr}
+                      </p>
                     </div>
 
                     {/* Arabic */}
                     <div
                       className="px-5 py-5 bg-slate-50/50 md:col-span-2 xl:col-span-1"
                       dir="rtl"
-                      style={{ fontFamily: "var(--font-tajawal)" }}
+                      style={{ fontFamily: "var(--font-cairo)" }}
                     >
                       <div className="mb-2 flex items-center gap-2">
                         <span className="rounded-full bg-[#E6F7F7] px-2 py-0.5 text-[10px] font-semibold text-[#28B8B1] uppercase tracking-wide">
@@ -307,7 +596,9 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
                       <h3 className="font-semibold text-slate-800 leading-snug mb-2">
                         {term.name_ar}
                       </h3>
-                      <p className="text-sm text-slate-500 leading-relaxed">{term.description_ar}</p>
+                      <p className="text-sm text-slate-500 leading-relaxed">
+                        {term.description_ar}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -317,13 +608,21 @@ export function LegalPageView({ docType }: LegalPageViewProps) {
         </AnimatePresence>
       )}
 
-      {/* ── Sheet ────────────────────────────────────────────────── */}
+      {/* ── Section Sheet (add / edit) ────────────────────────────── */}
       <LegalSectionSheet
         open={sheetOpen}
         onOpenChange={setSheetOpen}
         term={editingTerm}
         termType={termType}
         onSaved={handleSaved}
+      />
+
+      {/* ── History Sheet ─────────────────────────────────────────── */}
+      <HistorySheet
+        open={historyOpen}
+        onOpenChange={setHistoryOpen}
+        termType={termType}
+        locale={locale}
       />
     </div>
   );

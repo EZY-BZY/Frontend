@@ -100,17 +100,19 @@ const SCREENS = [
   ),
 ] as const;
 
-/* ── step section (triggers active step) ───────────────────────── */
+/* ── step section ───────────────────────────────────────────────── */
 function StepSection({
   index,
   title,
   desc,
   onVisible,
+  isLast,
 }: {
   index: number;
   title: string;
   desc: string;
   onVisible: (i: number) => void;
+  isLast?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -128,13 +130,19 @@ function StepSection({
   }, [index, onVisible]);
 
   return (
-    <div ref={ref} className="flex gap-5 py-16">
-      <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#28B8B1]/30 bg-[#28B8B1]/10 text-xs font-bold text-[#28B8B1]">
-        {index + 1}
+    <div ref={ref} className="flex gap-5 py-12">
+      {/* Number column with connecting line */}
+      <div className="flex shrink-0 flex-col items-center">
+        <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-teal-50 text-xs font-bold text-[#28B8B1] shadow-[0_0_0_4px_rgba(40,184,177,0.12)]">
+          {index + 1}
+        </div>
+        {!isLast && (
+          <div className="mt-3 flex-1 w-px bg-linear-to-b from-teal-200 via-teal-100 to-transparent" style={{ minHeight: 80 }} />
+        )}
       </div>
-      <div>
-        <h3 className="mb-2 text-lg font-semibold text-white">{title}</h3>
-        <p className="text-sm leading-relaxed text-white/50">{desc}</p>
+      <div className="pt-1">
+        <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
+        <p className="text-sm leading-relaxed text-gray-500">{desc}</p>
       </div>
     </div>
   );
@@ -154,14 +162,14 @@ export function StickyShowcase() {
   const Screen = SCREENS[active];
 
   return (
-    <section className="py-20">
+    <section className="py-20 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6 text-center">
-          <span className="mb-4 inline-block rounded-full border border-[#28B8B1]/30 bg-[#28B8B1]/10 px-3.5 py-1 text-xs font-semibold text-[#28B8B1]">
+          <span className="mb-4 inline-block rounded-full border border-teal-200 bg-teal-50 px-3.5 py-1 text-xs font-semibold text-[#28B8B1]">
             {t("badge")}
           </span>
-          <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             {t("title")}
           </h2>
         </div>
@@ -176,6 +184,7 @@ export function StickyShowcase() {
                 title={step.title}
                 desc={step.desc}
                 onVisible={setActive}
+                isLast={i === steps.length - 1}
               />
             ))}
           </div>
@@ -183,7 +192,10 @@ export function StickyShowcase() {
           {/* Right: sticky phone */}
           <div className="hidden lg:flex lg:w-64 lg:shrink-0 lg:items-start">
             <div className="sticky top-28 w-full">
-              <div className="relative h-[440px] w-full rounded-[2.5rem] border-2 border-[#1E3A5F] bg-[#080F1D] shadow-[0_0_60px_rgba(40,184,177,0.1)]">
+              {/* Soft asymmetric background shape — DOM order keeps it behind phone */}
+              <div className="absolute -inset-8 rounded-[3.5rem] bg-linear-to-br from-teal-50 via-sky-50/40 to-blue-50/20" />
+              <div className="absolute -inset-6 blur-2xl rounded-[3rem] bg-[#28B8B1]/6" />
+              <div className="relative z-10 h-[440px] w-full rounded-[2.5rem] border-2 border-[#1E3A5F] bg-[#080F1D] shadow-[0_0_80px_rgba(40,184,177,0.16),0_24px_48px_rgba(0,0,0,0.18)]">
                 {/* Pill notch */}
                 <div className="absolute left-1/2 top-2.5 h-1.5 w-14 -translate-x-1/2 rounded-full bg-[#0A1628]" />
 

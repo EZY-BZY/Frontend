@@ -11,7 +11,6 @@ const CARDS = [
     id: "card1",
     icon: "📦",
     color: "#0A3D62",
-    // top-start
     style: { top: "8%", insetInlineStart: "0" },
     delay: 0,
   },
@@ -19,7 +18,6 @@ const CARDS = [
     id: "card2",
     icon: "✅",
     color: "#28B8B1",
-    // mid-end
     style: { top: "36%", insetInlineEnd: "0" },
     delay: 0.45,
   },
@@ -27,7 +25,6 @@ const CARDS = [
     id: "card3",
     icon: "👤",
     color: "#6366f1",
-    // lower-start
     style: { bottom: "28%", insetInlineStart: "0" },
     delay: 0.9,
   },
@@ -35,7 +32,6 @@ const CARDS = [
     id: "card4",
     icon: "🚀",
     color: "#f59e0b",
-    // bottom-end
     style: { bottom: "6%", insetInlineEnd: "0" },
     delay: 1.35,
   },
@@ -63,20 +59,20 @@ function FloatingCard({
       transition={{
         opacity: { duration: 0.5, delay },
         scale: { duration: 0.5, delay },
-        y: { duration: 3, delay, repeat: Infinity, ease: "easeInOut" },
+        y: { duration: 3.5, delay, repeat: Infinity, ease: "easeInOut" },
       }}
       style={{ position: "absolute", ...style }}
-      className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-[#0A1628]/80 px-3.5 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl w-44"
+      className="flex items-center gap-2.5 rounded-2xl bg-white px-3.5 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.14),0_2px_8px_rgba(0,0,0,0.06)] w-44"
     >
       <span
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg"
-        style={{ backgroundColor: `${color}33` }}
+        style={{ backgroundColor: `${color}18` }}
       >
         {icon}
       </span>
       <div className="min-w-0">
-        <p className="truncate text-xs font-semibold text-white">{title}</p>
-        <p className="truncate text-[10px] text-white/50">{sub}</p>
+        <p className="truncate text-xs font-semibold text-gray-800">{title}</p>
+        <p className="truncate text-[10px] text-gray-400">{sub}</p>
       </div>
     </motion.div>
   );
@@ -85,7 +81,7 @@ function FloatingCard({
 /* ── mini phone mockup ─────────────────────────────────────────── */
 function PhoneMockup() {
   return (
-    <div className="relative mx-auto h-[460px] w-[220px] rounded-[2.5rem] border-2 border-[#1E3A5F] bg-linear-to-b from-[#0D1F3C] to-[#050E1A] shadow-[0_0_80px_rgba(40,184,177,0.12),0_40px_60px_rgba(0,0,0,0.5)]">
+    <div className="relative mx-auto h-[460px] w-[220px] rounded-[2.5rem] border-2 border-[#1E3A5F] bg-linear-to-b from-[#0D1F3C] to-[#050E1A] shadow-[0_0_80px_rgba(40,184,177,0.15),0_40px_60px_rgba(0,0,0,0.2)]">
       {/* Side buttons */}
       <div className="absolute inset-s-[-3px] top-20 h-7 w-[3px] rounded-s-full bg-[#1E3A5F]" />
       <div className="absolute inset-s-[-3px] top-32 h-10 w-[3px] rounded-s-full bg-[#1E3A5F]" />
@@ -183,20 +179,19 @@ export function Hero() {
   const locale = useLocale();
 
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden pt-24 pb-16">
+    <section className="relative flex min-h-screen items-center overflow-hidden pt-24 pb-16 bg-linear-to-b from-slate-50/60 to-white">
       {/* Background glows */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden="true"
-      >
-        <div className="absolute -top-40 inset-s-1/4 h-[600px] w-[600px] rounded-full bg-[#0A3D62]/20 blur-[120px]" />
-        <div className="absolute bottom-0 inset-e-1/4 h-[500px] w-[500px] rounded-full bg-[#28B8B1]/10 blur-[100px]" />
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute -top-40 inset-s-1/4 h-[700px] w-[700px] rounded-full bg-[#28B8B1]/8 blur-[140px]" />
+        <div className="absolute bottom-0 inset-e-1/4 h-[600px] w-[600px] rounded-full bg-[#0A3D62]/6 blur-[120px]" />
+        {/* Large teal mesh blob anchored to the phone side */}
+        <div className="absolute top-1/4 inset-e-0 h-[800px] w-[60%] rounded-full bg-linear-to-bl from-[#28B8B1]/10 via-[#28B8B1]/4 to-transparent blur-[80px]" />
         {/* Grid pattern */}
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.025]"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+              "linear-gradient(rgba(10,61,98,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(10,61,98,0.8) 1px, transparent 1px)",
             backgroundSize: "40px 40px",
           }}
         />
@@ -212,22 +207,22 @@ export function Hero() {
             className="flex flex-col items-start"
           >
             {/* Badge */}
-            <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#28B8B1]/30 bg-[#28B8B1]/10 px-3.5 py-1 text-xs font-semibold text-[#28B8B1]">
+            <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-teal-200 bg-teal-50 px-3.5 py-1 text-xs font-semibold text-[#28B8B1]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#28B8B1] animate-pulse" />
               {t("badge")}
             </span>
 
             {/* Headline */}
-            <h1 className="mb-5 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="mb-5 text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
               {t("title")}
               <br />
-              <span className="bg-linear-to-r from-[#28B8B1] to-[#4FD8D1] bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-[#28B8B1] to-[#0A3D62] bg-clip-text text-transparent">
                 {t("titleAccent")}
               </span>
             </h1>
 
             {/* Subtitle */}
-            <p className="mb-8 max-w-lg text-base leading-relaxed text-white/55 sm:text-lg">
+            <p className="mb-8 max-w-lg text-base leading-relaxed text-gray-500 sm:text-lg">
               {t("subtitle")}
             </p>
 
@@ -235,33 +230,33 @@ export function Hero() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href={`/${locale}/login`}
-                className="inline-flex items-center gap-2 rounded-full bg-[#28B8B1] px-6 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(40,184,177,0.35)] hover:bg-[#22A69F] transition-colors"
+                className="inline-flex items-center gap-2 rounded-full bg-[#28B8B1] px-6 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(40,184,177,0.25)] hover:bg-[#22A69F] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(40,184,177,0.35)] transition-all duration-200"
               >
                 {t("cta")}
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <button
                 type="button"
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-6 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
               >
                 <Play className="h-3.5 w-3.5 fill-current" />
                 {t("ctaSecondary")}
               </button>
             </div>
 
-            {/* Social proof dots */}
+            {/* Social proof */}
             <div className="mt-10 flex items-center gap-3">
               <div className="flex -space-x-2">
                 {["#0A3D62", "#28B8B1", "#6366f1", "#f59e0b"].map((c) => (
                   <div
                     key={c}
-                    className="h-8 w-8 rounded-full border-2 border-[#050E1A]"
+                    className="h-8 w-8 rounded-full border-2 border-white shadow-sm"
                     style={{ backgroundColor: c }}
                   />
                 ))}
               </div>
-              <p className="text-sm text-white/40">
-                <span className="font-semibold text-white">500+</span> businesses trust B-EASY
+              <p className="text-sm text-gray-400">
+                <span className="font-semibold text-gray-700">500+</span> businesses trust B-EASY
               </p>
             </div>
           </motion.div>
@@ -274,13 +269,12 @@ export function Hero() {
             className="relative mx-auto flex items-center justify-center"
             style={{ width: 540, height: 520 }}
           >
-            {/* Glow behind phone */}
-            <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#28B8B1]/15 blur-3xl" />
+            {/* Glow behind phone — layered for depth */}
+            <div className="absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#28B8B1]/14 blur-[70px]" />
+            <div className="absolute left-1/2 top-1/3 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#0A3D62]/10 blur-[60px]" />
 
-            {/* Phone */}
             <PhoneMockup />
 
-            {/* Floating action cards */}
             {CARDS.map((card) => (
               <FloatingCard
                 key={card.id}

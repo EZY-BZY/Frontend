@@ -353,6 +353,18 @@ export interface ListTermHistoryParams {
   page_size?: number;
 }
 
+export interface TermPublicRead {
+  id: string;
+  name_en: string;
+  name_ar: string;
+  name_fr: string;
+  description_en: string;
+  description_ar: string;
+  description_fr: string;
+  type: TermType;
+  order: number;
+}
+
 // ─── Owners ───────────────────────────────────────────────────────────────────
 
 export interface CompanyOwnerAdminRead {
@@ -566,6 +578,91 @@ export interface ListCompanyEmployeesParams {
   role?: CompanyEmployeeRole | null;
   department?: string | null;
   is_active?: boolean | null;
+}
+
+// ─── Bundles ──────────────────────────────────────────────────────────────────
+
+export type BundleType = "monthly" | "yearly";
+export type BundleStatus = "active" | "history";
+
+export interface BundleAbilitiesCreate {
+  number_of_products: number;
+  number_of_branches: number;
+  number_of_employees: number;
+  number_of_financial_accounts: number;
+}
+
+export type BundleAbilitiesRead = BundleAbilitiesCreate;
+
+export interface BundleCreate {
+  name_ar: string;
+  name_other_lang: string;
+  type: BundleType;
+  price: number;
+  currency_id: string;
+  country_ids: string[];
+  abilities: BundleAbilitiesCreate;
+}
+
+export interface BundleRead {
+  id: string;
+  name_ar: string;
+  name_other_lang: string;
+  type: BundleType;
+  price: number;
+  currency_id: string;
+  country_ids: string[];
+  abilities: BundleAbilitiesRead;
+  status: BundleStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ListBundlesParams {
+  type?: BundleType | null;
+  status?: BundleStatus | null;
+  country_id?: string | null;
+  page?: number;
+  page_size?: number;
+}
+
+// ─── Contact Requests ─────────────────────────────────────────────────────────
+
+export type ContactRequestApiStatus = "new" | "seen" | "solved";
+
+export type ContactRequestType =
+  | "contact_request"
+  | "report_issue"
+  | "suggestion"
+  | "other";
+
+export interface ContactRequestLandingCreate {
+  request_type: ContactRequestType;
+  requester_name: string;
+  company_name?: string | null;
+  business_category?: string | null;
+  message?: string | null;
+  email?: string | null;
+  phone?: string | null;
+}
+
+export interface ContactRequestRead {
+  id: string;
+  requester_name: string;
+  phone: string;
+  company_name: string | null;
+  request_type: string | null;
+  message: string | null;
+  status: ContactRequestApiStatus;
+  created_at: string;
+}
+
+export interface ListContactRequestsParams {
+  status?: ContactRequestApiStatus | null;
+  request_type?: string | null;
+  search?: string | null;
+  page?: number;
+  page_size?: number;
 }
 
 // ─── Categories ───────────────────────────────────────────────────────────────

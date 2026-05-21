@@ -139,19 +139,34 @@
     "filterByDate": "Filter by date",
     "from": "From",
     "to": "To",
-    "statuses": {
-      "all": "All Statuses",
-      "new": "New",
-      "inProgress": "In Progress",
-      "resolved": "Resolved",
-      "closed": "Closed"
-    },
     "noRequests": "No contact requests found",
     "totalRequests": "Total requests",
     "previous": "Previous",
     "next": "Next",
     "copy": "Copy",
-    "view": "View"
+    "view": "View",
+    "statuses": {
+      "all": "All Statuses",
+      "new": "New",
+      "seen": "Seen",
+      "solved": "Solved",
+      "inProgress": "In Progress",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "requestType": "Request Type",
+    "requestedAt": "Requested At",
+    "viewRequest": "View Request",
+    "markAsSolved": "Mark as Solved",
+    "solving": "Solving…",
+    "detailSheet": {
+      "title": "Request Details",
+      "desc": "Full details of the contact request."
+    },
+    "toast": {
+      "solveSuccess": "Request marked as solved",
+      "solveError": "Failed to mark request as solved"
+    }
   },
   "employees": {
     "title": "Employees",
@@ -353,51 +368,70 @@
       "active": "Active",
       "deactivated": "Deactivated"
     },
+    "form": {
+      "nameEn": "Name (English)",
+      "nameAr": "Name (Arabic)",
+      "nameOtherLang": "Name (Other Language)",
+      "price": "Price",
+      "currency": "Currency",
+      "currencyId": "Currency",
+      "selectCurrency": "Select currency…",
+      "bundleType": "Bundle Type",
+      "typeMonthly": "Monthly",
+      "typeYearly": "Yearly",
+      "countryIds": "Available Countries",
+      "selectCountries": "Select countries…",
+      "abilities": "Plan Limits",
+      "numberOfProducts": "Products",
+      "numberOfBranches": "Branches",
+      "numberOfEmployees": "Employees",
+      "numberOfFinancialAccounts": "Financial Accounts"
+    },
+    "abilities": {
+      "products": "{count} products",
+      "branches": "{count} branches",
+      "employees": "{count} employees",
+      "financialAccounts": "{count} financial accounts"
+    },
     "col": {
       "bundleName": "Bundle Name",
       "price": "Price",
+      "type": "Type",
       "duration": "Duration",
       "features": "Features",
+      "abilities": "Abilities",
+      "countries": "Countries",
       "status": "Status",
       "actions": "Actions",
       "deactivatedOn": "Deactivated On",
       "reason": "Reason"
     },
-    "form": {
-      "nameEn": "Name (English)",
-      "nameAr": "Name (Arabic)",
-      "price": "Price",
-      "currency": "Currency",
-      "durationEn": "Duration (English)",
-      "durationAr": "Duration (Arabic)",
-      "featuresEn": "Features (English)",
-      "featuresAr": "Features (Arabic)",
-      "separateWithCommas": "Separate features with commas",
-      "separateWithArabicComma": "Separate with Arabic comma ،",
-      "deactivationReasonEn": "Deactivation Reason (English)",
-      "deactivationReasonAr": "Deactivation Reason (Arabic)"
-    },
     "sheet": {
       "createTitle": "Create Bundle",
-      "createDesc": "Fill in bilingual details. The bundle will appear in Active Bundles immediately.",
-      "deactivateTitle": "Deactivate Bundle",
-      "deactivateWillMove": "\"{name}\" will be moved to Previous Bundles and hidden from users.",
-      "deactivateWarning": "This action is permanent. You can still duplicate this bundle later to create a new active one.",
+      "createDesc": "Fill in the bundle details. It will appear in Active Bundles immediately.",
+      "deactivateTitle": "Move to History",
+      "deactivateWillMove": "\"{name}\" will be moved to history and hidden from users.",
+      "deactivateWarning": "This action is permanent. You can view this bundle in the history tab.",
       "bundleDetailsDesc": "Bundle details — read only",
-      "deactivationInfo": "Deactivation Info",
+      "deactivationInfo": "History Info",
       "createdLabel": "Created:",
-      "englishName": "English Name",
+      "otherLangName": "Name (Other Language)",
       "arabicName": "Arabic Name"
     },
     "validation": {
-      "nameEnRequired": "English name required",
+      "nameEnRequired": "Name required",
       "nameArRequired": "Arabic name required",
       "priceMin": "Price must be ≥ 0",
-      "durationRequired": "Duration required",
-      "featuresEnRequired": "At least one English feature required",
-      "featuresArRequired": "At least one Arabic feature required",
-      "reasonEnRequired": "Reason required (min 5 characters)",
-      "reasonArRequired": "Reason required (min 5 characters)"
+      "typeRequired": "Bundle type required",
+      "currencyRequired": "Currency is required",
+      "countryRequired": "Select at least one country",
+      "abilityMin": "Must be 0 or greater"
+    },
+    "toast": {
+      "createSuccess": "Bundle created successfully",
+      "createError": "Failed to create bundle",
+      "deactivateSuccess": "Bundle moved to history",
+      "deactivateError": "Failed to move bundle to history"
     },
     "deactivating": "Deactivating…",
     "confirmDeactivation": "Confirm Deactivation",
@@ -625,10 +659,11 @@
       "badge": "Get In Touch",
       "title": "Let's Find the Right Plan for You",
       "subtitle": "Tell us about your business and our team will reach out within 24 hours.",
-      "roleLabel": "I am a",
-      "roleSeller": "Seller",
-      "roleSupplier": "Supplier",
-      "roleUser": "User",
+      "requestTypeLabel": "Request type",
+      "requestTypeContactRequest": "General inquiry",
+      "requestTypeReportIssue": "Report an issue",
+      "requestTypeSuggestion": "Suggestion",
+      "requestTypeOther": "Other",
       "nameLabel": "Full Name",
       "namePlaceholder": "Enter your full name",
       "phoneLabel": "Phone Number",
@@ -637,14 +672,33 @@
       "companyPlaceholder": "Your company or brand name",
       "categoryLabel": "Business Category",
       "categoryPlaceholder": "Select a category",
+      "categories": {
+        "retail": "Retail",
+        "wholesale": "Wholesale",
+        "ecommerce": "E-commerce",
+        "foodBeverage": "Food & Beverage",
+        "manufacturing": "Manufacturing",
+        "distribution": "Distribution",
+        "logistics": "Logistics",
+        "rawMaterials": "Raw Materials",
+        "personalUse": "Personal Use",
+        "smallTeam": "Small Team",
+        "enterprise": "Enterprise"
+      },
       "messageLabel": "Additional Notes",
       "messagePlaceholder": "Tell us more about your needs (optional)",
       "submit": "Send Message",
       "submitting": "Sending…",
       "successTitle": "Message Sent!",
       "successDesc": "We'll get back to you within 24 hours.",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "your@company.com",
       "nameRequired": "Full name is required",
-      "phoneRequired": "Phone number is required"
+      "phoneRequired": "Phone number is required",
+      "contactRequired": "Please provide at least an email or phone number",
+      "sendAnother": "Send Another Request",
+      "errorTitle": "Something went wrong",
+      "errorDesc": "Please try again or contact us directly."
     },
     "footer": {
       "tagline": "Empowering businesses across the region.",
@@ -789,6 +843,31 @@
     "confirmDelete": "Confirm?",
     "deleteSection": "Delete section",
     "editSectionBtn": "Edit section",
+    "historyBtn": "History",
+    "historyTitle": "Change History",
+    "historyDesc": "All recorded changes to this document's sections.",
+    "noHistory": "No history records found.",
+    "historyAction": {
+      "created": "Created",
+      "updated": "Updated",
+      "deleted": "Deleted"
+    },
+    "changedSection": "Changed Section",
+    "performedBy": "By",
+    "publicTitle": {
+      "privacy_policy": "Privacy Policy",
+      "terms_of_use": "Terms & Conditions",
+      "refund_terms": "Refund Terms",
+      "delivery_terms": "Delivery Terms"
+    },
+    "publicSubtitle": {
+      "privacy_policy": "How we collect, use, and protect your information.",
+      "terms_of_use": "The rules and guidelines for using our platform.",
+      "refund_terms": "Our policy for refunds and returns.",
+      "delivery_terms": "How we handle shipping and delivery."
+    },
+    "publicNoContent": "No content available yet.",
+    "publicLastUpdated": "Last updated",
     "sheet": {
       "editTitle": "Edit Section",
       "addTitle": "Add Section",

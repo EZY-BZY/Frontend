@@ -1,3 +1,5 @@
+import { readFileSync } from "fs";
+import { join } from "path";
 import { getRequestConfig } from "next-intl/server";
 import { routing } from "./routing";
 
@@ -37,6 +39,11 @@ function mergeMissingMessages(
   return out;
 }
 
+function loadMessages(locale: string): MessageTree {
+  const filePath = join(process.cwd(), "src/messages", `${locale}.json`);
+  return JSON.parse(readFileSync(filePath, "utf-8")) as MessageTree;
+}
+
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
 
@@ -44,16 +51,13 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale = routing.defaultLocale;
   }
 
-  const localeMessages = (await import(`../messages/${locale}.json`))
-    .default as MessageTree;
+  const localeMessages = loadMessages(locale);
 
   if (locale === routing.defaultLocale) {
     return { locale, messages: localeMessages };
   }
 
-  const defaultMessages = (
-    await import(`../messages/${routing.defaultLocale}.json`)
-  ).default as MessageTree;
+  const defaultMessages = loadMessages(routing.defaultLocale);
 
   return {
     locale,

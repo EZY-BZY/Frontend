@@ -76,10 +76,10 @@ const metadataItems: NavItem[] = [
 ];
 
 const legalItems: NavItem[] = [
-  { key: "privacyPolicy",   href: "/privacy-policy",   icon: Shield },
-  { key: "termsConditions", href: "/terms-conditions", icon: Scale },
-  { key: "deliveryTerms",   href: "/delivery-terms",   icon: Truck },
-  { key: "refundTerms",     href: "/refund-terms",     icon: RotateCcw },
+  { key: "privacyPolicy",   href: "/legal/privacy-policy",   icon: Shield },
+  { key: "termsConditions", href: "/legal/terms-conditions", icon: Scale },
+  { key: "deliveryTerms",   href: "/legal/delivery-terms",   icon: Truck },
+  { key: "refundTerms",     href: "/legal/refund-terms",     icon: RotateCcw },
 ];
 
 /* ─── isActive ───────────────────────────────────────────────────── */

@@ -9,7 +9,7 @@ import { Footer } from "./components/Footer";
 
 export function LandingPage() {
   return (
-    <div className="bg-[#050E1A] text-white min-h-screen overflow-x-hidden">
+    <div className="bg-white text-gray-900 min-h-screen overflow-x-hidden">
       <Navbar />
       <Hero />
       <BentoFeatures />
