@@ -311,29 +311,58 @@
   },
   "subscriptions": {
     "title": "Registre des abonnements",
-    "subtitle": "Gérez les abonnements clients et la facturation",
-    "searchPlaceholder": "Rechercher par client ou offre…",
-    "countLabel": "abonnements",
-    "activeMRR": "Revenu mensuel récurrent actif :",
-    "perYear": "/an",
+    "subtitle": "Gérer les abonnements des entreprises",
+    "searchPlaceholder": "Rechercher par ID de transaction…",
     "noSubscriptions": "Aucun abonnement trouvé",
-    "cancellableYes": "Oui",
-    "cancellableNo": "Non",
-    "col": {
-      "id": "ID",
-      "client": "Client",
-      "plan": "Offre",
-      "amount": "Montant",
-      "status": "Statut",
-      "startDate": "Date de début",
-      "cancellable": "Résiliable"
+    "totalSubscriptions": "abonnements",
+    "filters": {
+      "allMethods": "Toutes les méthodes",
+      "dateFrom": "Du",
+      "dateTo": "Au",
+      "companyIdPlaceholder": "ID de l'entreprise…"
     },
     "statuses": {
       "all": "Tous les statuts",
       "active": "Actif",
-      "trial": "Essai",
-      "cancelled": "Annulé",
-      "expired": "Expiré"
+      "inactive": "Inactif"
+    },
+    "paymentMethods": {
+      "paymob": "Paymob",
+      "paytabs": "PayTabs",
+      "bank": "Virement bancaire"
+    },
+    "col": {
+      "company": "Entreprise",
+      "bundle": "Offre",
+      "transactionId": "ID de transaction",
+      "paymentMethod": "Mode de paiement",
+      "subscriptionDate": "Date d'abonnement",
+      "expiryDate": "Date d'expiration",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "detail": {
+      "title": "Détails de l'abonnement",
+      "desc": "Informations complètes sur cet abonnement",
+      "subscriptionDate": "Date d'abonnement",
+      "expiryDate": "Date d'expiration",
+      "paymentMethod": "Mode de paiement",
+      "transactionId": "ID de transaction",
+      "bundleSection": "Offre",
+      "companySection": "Entreprise",
+      "bundleType": "Type",
+      "bundlePrice": "Prix",
+      "companyService": "Type de service",
+      "noTransaction": "Aucun ID de transaction"
+    },
+    "bundleTypes": {
+      "monthly": "Mensuel",
+      "yearly": "Annuel"
+    },
+    "serviceTypes": {
+      "services": "Services",
+      "products": "Produits",
+      "products_and_services": "Produits & Services"
     }
   },
   "bundles": {
@@ -371,8 +400,13 @@
     "form": {
       "nameEn": "Nom (anglais)",
       "nameAr": "Nom (arabe)",
+      "nameFr": "Nom (français)",
       "nameOtherLang": "Nom (autre langue)",
+      "descriptionEn": "Description (anglais)",
+      "descriptionAr": "Description (arabe)",
+      "descriptionFr": "Description (français)",
       "price": "Prix",
+      "priceBeforeDiscount": "Prix original (avant remise)",
       "currency": "Devise",
       "currencyId": "Devise",
       "selectCurrency": "Sélectionner une devise…",
@@ -385,7 +419,15 @@
       "numberOfProducts": "Produits",
       "numberOfBranches": "Succursales",
       "numberOfEmployees": "Employés",
-      "numberOfFinancialAccounts": "Comptes financiers"
+      "numberOfFinancialAccounts": "Comptes financiers",
+      "numberOfArchivedItems": "Éléments archivés",
+      "numberOfPosts": "Publications",
+      "bulletPoints": "Points forts",
+      "addBulletPoint": "Ajouter un point",
+      "removeBulletPoint": "Supprimer",
+      "bulletPointTextEn": "Texte anglais",
+      "bulletPointTextAr": "Texte arabe",
+      "bulletPointTextFr": "Texte français (optionnel)"
     },
     "abilities": {
       "products": "{count} produits",
@@ -403,16 +445,31 @@
       "deactivationInfo": "Informations d'historique",
       "createdLabel": "Créé le :",
       "otherLangName": "Nom (autre langue)",
-      "arabicName": "Nom arabe"
+      "arabicName": "Nom arabe",
+      "nameEn": "Nom (anglais)",
+      "nameAr": "Nom (arabe)",
+      "nameFr": "Nom (français)",
+      "descEn": "Description (anglais)",
+      "descAr": "Description (arabe)",
+      "descFr": "Description (français)",
+      "countries": "Pays",
+      "bulletPoints": "Points forts",
+      "currency": "Devise",
+      "priceBeforeDiscount": "Prix d'origine",
+      "createdBy": "Créé par",
+      "unlimited": "Illimité"
     },
     "validation": {
-      "nameEnRequired": "Nom requis",
+      "nameEnRequired": "Nom anglais requis",
       "nameArRequired": "Nom arabe requis",
+      "nameFrRequired": "Nom français requis",
       "priceMin": "Le prix doit être ≥ 0",
       "typeRequired": "Type de forfait requis",
       "currencyRequired": "La devise est requise",
       "countryRequired": "Sélectionnez au moins un pays",
-      "abilityMin": "La valeur doit être ≥ 0"
+      "abilityMin": "La valeur doit être ≥ 0",
+      "bulletPointEnRequired": "Texte anglais requis",
+      "bulletPointArRequired": "Texte arabe requis"
     },
     "toast": {
       "createSuccess": "Forfait créé avec succès",

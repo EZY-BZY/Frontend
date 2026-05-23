@@ -41,14 +41,7 @@
     "searchEllipsis": "Search…",
     "noOptions": "No options",
     "removeItem": "Remove",
-    "profile": "Profile",
-    "settings": "Settings",
-    "logout": "Logout",
-    "copy": "Copy",
-    "view": "View",
-    "yes": "Yes",
-    "no": "No",
-    "confirm": "Confirm"
+    "copy": "Copy"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -323,30 +316,59 @@
     }
   },
   "subscriptions": {
-    "title": "Subscription Ledger",
-    "subtitle": "Manage client subscriptions and billing",
-    "searchPlaceholder": "Search by client or plan…",
-    "countLabel": "subscriptions",
-    "activeMRR": "Active MRR:",
-    "perYear": "/yr",
+    "title": "Subscriptions",
+    "subtitle": "Manage company subscriptions",
+    "searchPlaceholder": "Search by transaction ID…",
     "noSubscriptions": "No subscriptions found",
-    "cancellableYes": "Yes",
-    "cancellableNo": "No",
-    "col": {
-      "id": "ID",
-      "client": "Client",
-      "plan": "Plan",
-      "amount": "Amount",
-      "status": "Status",
-      "startDate": "Start Date",
-      "cancellable": "Cancellable"
+    "totalSubscriptions": "subscriptions",
+    "filters": {
+      "allMethods": "All Methods",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "companyIdPlaceholder": "Company ID…"
     },
     "statuses": {
       "all": "All Statuses",
       "active": "Active",
-      "trial": "Trial",
-      "cancelled": "Cancelled",
-      "expired": "Expired"
+      "inactive": "Inactive"
+    },
+    "paymentMethods": {
+      "paymob": "Paymob",
+      "paytabs": "PayTabs",
+      "bank": "Bank Transfer"
+    },
+    "col": {
+      "company": "Company",
+      "bundle": "Bundle",
+      "transactionId": "Transaction ID",
+      "paymentMethod": "Payment Method",
+      "subscriptionDate": "Sub. Date",
+      "expiryDate": "Expiry Date",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "detail": {
+      "title": "Subscription Details",
+      "desc": "Full details for this subscription record",
+      "subscriptionDate": "Subscription Date",
+      "expiryDate": "Expiry Date",
+      "paymentMethod": "Payment Method",
+      "transactionId": "Transaction ID",
+      "bundleSection": "Bundle",
+      "companySection": "Company",
+      "bundleType": "Type",
+      "bundlePrice": "Price",
+      "companyService": "Service Type",
+      "noTransaction": "No transaction ID on record"
+    },
+    "bundleTypes": {
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "serviceTypes": {
+      "services": "Services",
+      "products": "Products",
+      "products_and_services": "Products & Services"
     }
   },
   "bundles": {
@@ -371,8 +393,13 @@
     "form": {
       "nameEn": "Name (English)",
       "nameAr": "Name (Arabic)",
+      "nameFr": "Name (French)",
       "nameOtherLang": "Name (Other Language)",
+      "descriptionEn": "Description (English)",
+      "descriptionAr": "Description (Arabic)",
+      "descriptionFr": "Description (French)",
       "price": "Price",
+      "priceBeforeDiscount": "Original Price (before discount)",
       "currency": "Currency",
       "currencyId": "Currency",
       "selectCurrency": "Select currency…",
@@ -385,7 +412,15 @@
       "numberOfProducts": "Products",
       "numberOfBranches": "Branches",
       "numberOfEmployees": "Employees",
-      "numberOfFinancialAccounts": "Financial Accounts"
+      "numberOfFinancialAccounts": "Financial Accounts",
+      "numberOfArchivedItems": "Archived Items",
+      "numberOfPosts": "Posts",
+      "bulletPoints": "Highlights",
+      "addBulletPoint": "Add Highlight",
+      "removeBulletPoint": "Remove",
+      "bulletPointTextEn": "English text",
+      "bulletPointTextAr": "Arabic text",
+      "bulletPointTextFr": "French text (optional)"
     },
     "abilities": {
       "products": "{count} products",
@@ -416,16 +451,31 @@
       "deactivationInfo": "History Info",
       "createdLabel": "Created:",
       "otherLangName": "Name (Other Language)",
-      "arabicName": "Arabic Name"
+      "arabicName": "Arabic Name",
+      "nameEn": "Name (English)",
+      "nameAr": "Name (Arabic)",
+      "nameFr": "Name (French)",
+      "descEn": "Description (English)",
+      "descAr": "Description (Arabic)",
+      "descFr": "Description (French)",
+      "countries": "Countries",
+      "bulletPoints": "Highlights",
+      "currency": "Currency",
+      "priceBeforeDiscount": "Original Price",
+      "createdBy": "Created by",
+      "unlimited": "Unlimited"
     },
     "validation": {
-      "nameEnRequired": "Name required",
+      "nameEnRequired": "English name required",
       "nameArRequired": "Arabic name required",
+      "nameFrRequired": "French name required",
       "priceMin": "Price must be ≥ 0",
       "typeRequired": "Bundle type required",
       "currencyRequired": "Currency is required",
       "countryRequired": "Select at least one country",
-      "abilityMin": "Must be 0 or greater"
+      "abilityMin": "Must be 0 or greater",
+      "bulletPointEnRequired": "English text required",
+      "bulletPointArRequired": "Arabic text required"
     },
     "toast": {
       "createSuccess": "Bundle created successfully",

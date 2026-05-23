@@ -311,29 +311,58 @@
   },
   "subscriptions": {
     "title": "سجل الاشتراكات",
-    "subtitle": "إدارة اشتراكات العملاء والفواتير",
-    "searchPlaceholder": "البحث بالعميل أو الخطة…",
-    "countLabel": "اشتراك",
-    "activeMRR": "الإيراد الشهري المتكرر:",
-    "perYear": "/سنة",
+    "subtitle": "إدارة اشتراكات الشركات",
+    "searchPlaceholder": "البحث برقم المعاملة…",
     "noSubscriptions": "لا توجد اشتراكات",
-    "cancellableYes": "نعم",
-    "cancellableNo": "لا",
-    "col": {
-      "id": "الرقم",
-      "client": "العميل",
-      "plan": "الخطة",
-      "amount": "المبلغ",
-      "status": "الحالة",
-      "startDate": "تاريخ البدء",
-      "cancellable": "قابل للإلغاء"
+    "totalSubscriptions": "اشتراك",
+    "filters": {
+      "allMethods": "كل الوسائل",
+      "dateFrom": "من",
+      "dateTo": "إلى",
+      "companyIdPlaceholder": "معرف الشركة…"
     },
     "statuses": {
-      "all": "جميع الحالات",
+      "all": "كل الحالات",
       "active": "نشط",
-      "trial": "تجريبي",
-      "cancelled": "ملغى",
-      "expired": "منتهي"
+      "inactive": "غير نشط"
+    },
+    "paymentMethods": {
+      "paymob": "بيموب",
+      "paytabs": "بيتابس",
+      "bank": "تحويل بنكي"
+    },
+    "col": {
+      "company": "الشركة",
+      "bundle": "الباقة",
+      "transactionId": "رقم المعاملة",
+      "paymentMethod": "طريقة الدفع",
+      "subscriptionDate": "تاريخ الاشتراك",
+      "expiryDate": "تاريخ الانتهاء",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "detail": {
+      "title": "تفاصيل الاشتراك",
+      "desc": "البيانات الكاملة لسجل الاشتراك",
+      "subscriptionDate": "تاريخ الاشتراك",
+      "expiryDate": "تاريخ الانتهاء",
+      "paymentMethod": "طريقة الدفع",
+      "transactionId": "رقم المعاملة",
+      "bundleSection": "الباقة",
+      "companySection": "الشركة",
+      "bundleType": "النوع",
+      "bundlePrice": "السعر",
+      "companyService": "نوع الخدمة",
+      "noTransaction": "لا يوجد رقم معاملة"
+    },
+    "bundleTypes": {
+      "monthly": "شهري",
+      "yearly": "سنوي"
+    },
+    "serviceTypes": {
+      "services": "خدمات",
+      "products": "منتجات",
+      "products_and_services": "منتجات وخدمات"
     }
   },
   "bundles": {
@@ -371,8 +400,13 @@
     "form": {
       "nameEn": "الاسم (إنجليزي)",
       "nameAr": "الاسم (عربي)",
+      "nameFr": "الاسم (فرنسي)",
       "nameOtherLang": "الاسم (لغة أخرى)",
+      "descriptionEn": "الوصف (إنجليزي)",
+      "descriptionAr": "الوصف (عربي)",
+      "descriptionFr": "الوصف (فرنسي)",
       "price": "السعر",
+      "priceBeforeDiscount": "السعر الأصلي (قبل الخصم)",
       "currency": "العملة",
       "currencyId": "العملة",
       "selectCurrency": "اختر العملة…",
@@ -385,7 +419,15 @@
       "numberOfProducts": "المنتجات",
       "numberOfBranches": "الفروع",
       "numberOfEmployees": "الموظفون",
-      "numberOfFinancialAccounts": "الحسابات المالية"
+      "numberOfFinancialAccounts": "الحسابات المالية",
+      "numberOfArchivedItems": "العناصر المؤرشفة",
+      "numberOfPosts": "المنشورات",
+      "bulletPoints": "مميزات الباقة",
+      "addBulletPoint": "إضافة ميزة",
+      "removeBulletPoint": "حذف",
+      "bulletPointTextEn": "النص الإنجليزي",
+      "bulletPointTextAr": "النص العربي",
+      "bulletPointTextFr": "النص الفرنسي (اختياري)"
     },
     "abilities": {
       "products": "{count} منتج",
@@ -403,16 +445,31 @@
       "deactivationInfo": "معلومات السجل",
       "createdLabel": "تاريخ الإنشاء:",
       "otherLangName": "الاسم (لغة أخرى)",
-      "arabicName": "الاسم العربي"
+      "arabicName": "الاسم العربي",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "nameFr": "الاسم (فرنسي)",
+      "descEn": "الوصف (إنجليزي)",
+      "descAr": "الوصف (عربي)",
+      "descFr": "الوصف (فرنسي)",
+      "countries": "الدول",
+      "bulletPoints": "المميزات",
+      "currency": "العملة",
+      "priceBeforeDiscount": "السعر الأصلي",
+      "createdBy": "أنشئ بواسطة",
+      "unlimited": "غير محدود"
     },
     "validation": {
-      "nameEnRequired": "الاسم مطلوب",
+      "nameEnRequired": "الاسم الإنجليزي مطلوب",
       "nameArRequired": "الاسم العربي مطلوب",
+      "nameFrRequired": "الاسم الفرنسي مطلوب",
       "priceMin": "يجب أن يكون السعر ٠ أو أكثر",
       "typeRequired": "نوع الباقة مطلوب",
       "currencyRequired": "العملة مطلوبة",
       "countryRequired": "اختر دولة واحدة على الأقل",
-      "abilityMin": "يجب أن تكون القيمة ٠ أو أكثر"
+      "abilityMin": "يجب أن تكون القيمة ٠ أو أكثر",
+      "bulletPointEnRequired": "النص الإنجليزي مطلوب",
+      "bulletPointArRequired": "النص العربي مطلوب"
     },
     "toast": {
       "createSuccess": "تم إنشاء الباقة بنجاح",

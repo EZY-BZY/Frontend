@@ -583,22 +583,63 @@ export interface ListCompanyEmployeesParams {
 // ─── Bundles ──────────────────────────────────────────────────────────────────
 
 export type BundleType = "monthly" | "yearly";
-export type BundleStatus = "active" | "history";
+export type BundleStatus = "active" | "history" | "inactive";
 
 export interface BundleAbilitiesCreate {
   number_of_products: number;
   number_of_branches: number;
   number_of_employees: number;
   number_of_financial_accounts: number;
+  archived_items: number;
+  posts: number;
 }
 
 export type BundleAbilitiesRead = BundleAbilitiesCreate;
 
-export interface BundleCreate {
+export interface BundleCurrencyRead {
+  id: string;
+  shortcut_en: string;
+  shortcut_ar: string;
+  shortcut_fr: string;
+  name_en: string;
   name_ar: string;
-  name_other_lang: string;
+  name_fr: string;
+}
+
+export interface BundleCountryRead {
+  id: string;
+  name_en: string;
+  name_ar: string;
+  name_fr: string;
+  phone_code: string;
+  flag_emoji: string;
+}
+
+export interface BundleBulletPoint {
+  id: string;
+  text_en: string;
+  text_ar: string;
+  text_fr: string;
+  order: number;
+  created_at: string;
+}
+
+export interface BundleAbility {
+  ability_key: string;
+  ability_value: number;
+  unlimited: boolean;
+}
+
+export interface BundleCreate {
+  name_en: string;
+  name_ar: string;
+  name_fr: string;
+  description_en?: string;
+  description_ar?: string;
+  description_fr?: string;
   type: BundleType;
   price: number;
+  price_before_discount?: number;
   currency_id: string;
   country_ids: string[];
   abilities: BundleAbilitiesCreate;
@@ -606,16 +647,24 @@ export interface BundleCreate {
 
 export interface BundleRead {
   id: string;
+  name_en: string;
   name_ar: string;
-  name_other_lang: string;
+  name_fr: string;
+  description_en: string;
+  description_ar: string;
+  description_fr: string;
   type: BundleType;
-  price: number;
+  price: string;
+  price_before_discount: string;
   currency_id: string;
-  country_ids: string[];
-  abilities: BundleAbilitiesRead;
   status: BundleStatus;
+  created_by: string;
   created_at: string;
   updated_at: string;
+  currency: BundleCurrencyRead;
+  countries: BundleCountryRead[];
+  bullet_points: BundleBulletPoint[];
+  abilities: BundleAbility[];
 }
 
 export interface ListBundlesParams {
@@ -710,6 +759,60 @@ export interface ListCategoriesParams {
   is_active?: boolean | null;
   is_global?: boolean | null;
   search?: string | null;
+  page?: number;
+  page_size?: number;
+}
+
+// ─── Subscriptions ────────────────────────────────────────────────────────────
+
+export type SubscriptionPaymentMethod = "paymob" | "paytabs" | "bank";
+
+/** Lightweight bundle snapshot embedded in subscription list & detail responses */
+export interface SubscriptionBundleSnapshot {
+  id: string;
+  name_en: string;
+  name_ar: string;
+  name_fr: string;
+  type: BundleType;
+  price: string;
+  currency: BundleCurrencyRead | null;
+}
+
+/** Lightweight company summary embedded in subscription list & detail responses */
+export interface SubscriptionCompanySummary {
+  id: string;
+  company_name_ar: string;
+  company_name_en: string | null;
+  service: CompanyServiceType;
+  image: string | null;
+}
+
+/** Single row returned by GET /api/v1/beasy/subscriptions (paginated list) */
+export interface SubscriptionRead {
+  id: string;
+  company_id: string;
+  bundle_id: string;
+  transaction_id: string | null;
+  payment_method: SubscriptionPaymentMethod | null;
+  subscription_date: string;
+  expiry_date: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  company: SubscriptionCompanySummary;
+  bundle: SubscriptionBundleSnapshot;
+}
+
+/** Full record returned by GET /api/v1/beasy/subscriptions/{subscription_id} */
+export type SubscriptionDetailRead = SubscriptionRead;
+
+export interface ListSubscriptionsParams {
+  is_active?: boolean | null;
+  company_id?: string | null;
+  transaction_id?: string | null;
+  payment_method?: SubscriptionPaymentMethod | null;
+  subscription_date_from?: string | null;
+  subscription_date_to?: string | null;
   page?: number;
   page_size?: number;
 }

@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { CheckCircle2, AlertCircle, Loader2, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createPublicContactRequest } from "@/services/contact-requests";
 import type { ContactRequestType } from "@/types/api";
@@ -76,15 +76,11 @@ export function ContactForm() {
     register,
     handleSubmit,
     reset,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { request_type: "contact_request" },
   });
-
-  const requestType = watch("request_type");
 
   const mutation = useMutation({
     mutationFn: (data: FormData) =>
@@ -184,24 +180,25 @@ export function ContactForm() {
 
                   {/* Request type selector */}
                   <div>
-                    <p className="mb-2 text-sm font-medium text-gray-700">{t("requestTypeLabel")}</p>
-                    <input type="hidden" {...register("request_type")} />
-                    <div className="grid grid-cols-2 gap-2">
-                      {requestTypeOptions.map(({ value, label }) => (
-                        <button
-                          key={value}
-                          type="button"
-                          onClick={() => setValue("request_type", value, { shouldValidate: true })}
-                          className={cn(
-                            "rounded-full py-2 px-3 text-xs font-semibold transition-all duration-200",
-                            requestType === value
-                              ? "bg-teal-50 text-[#28B8B1] shadow-[0_0_0_2px_rgba(40,184,177,0.4)]"
-                              : "bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                          )}
-                        >
-                          {label}
-                        </button>
-                      ))}
+                    <label className="mb-1.5 block text-xs font-medium text-gray-700">
+                      {t("requestTypeLabel")}
+                    </label>
+                    <div className="relative">
+                      <select
+                        {...register("request_type")}
+                        className={cn(
+                          inputBase,
+                          errors.request_type ? inputError : inputNormal,
+                          "cursor-pointer appearance-none pe-9"
+                        )}
+                      >
+                        {requestTypeOptions.map(({ value, label }) => (
+                          <option key={value} value={value}>
+                            {label}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute inset-e-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     </div>
                     {errors.request_type && (
                       <p className="mt-1 text-xs text-red-500">{errors.request_type.message}</p>
